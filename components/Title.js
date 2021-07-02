@@ -5,7 +5,6 @@ import { auth, projectFirestore } from "../firebase/config";
 
 const Title = () => {
     const [user, loading] = useAuthState(auth);
-    console.log(user);
 
     const showLogin = () => {
         if (user == null) {
@@ -40,7 +39,7 @@ const Title = () => {
                 <h1>GalleryIO</h1>
                 {showLogin()}
             </div>
-            <h2>Jason-Kyle De Lara's Photos</h2>
+            <h2>Photos</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
     );

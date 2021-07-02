@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import styled from "styled-components";
 import { auth, provider, projectFirestore } from "../firebase/config";
@@ -7,9 +7,18 @@ import { useRouter } from "next/router";
 
 function Login() {
     const [user, loading] = useAuthState(auth);
+    // const [isNew, setIsNew] = useState(true);
     const router = useRouter();
+    console.log(user);
     const signIn = () => {
-        auth.signInWithPopup(provider).catch(alert);
+        auth.signInWithPopup(provider)
+            .then((res) => {
+                console.log(res);
+                if (res.additionalUserInfo.isNewUser == true) {
+                    router.push("/create_username");
+                }
+            })
+            .catch(alert);
     };
 
     useEffect(() => {

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Title from "../components/Title";
 import UploadForm from "../components/UploadForm";
 import ImageGrid from "../components/ImageGrid";
+import UniversalGrid from "../components/UniversalGrid";
 import Modal from "../components/Modal";
 
 import { auth, projectFirestore } from "../firebase/config";
@@ -20,14 +21,13 @@ export default function Home() {
         <div className="App">
             <Title />
             <UploadForm />
-            <ImageGrid setSelectedImg={setSelectedImg} />
+            <UniversalGrid setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal
                     selectedImg={selectedImg}
                     setSelectedImg={setSelectedImg}
                 />
             )}
-            {console.log(user)}
         </div>
     );
 }
