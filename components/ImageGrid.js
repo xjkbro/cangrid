@@ -18,7 +18,7 @@ const ImageGrid = ({ setSelectedImg }) => {
             .onSnapshot((snap) => {
                 let documents = [];
                 snap.forEach((doc) => {
-                    console.log(doc);
+                    console.log(doc.id);
                     if (doc.id == router.query.uid) {
                         documents.push({ ...doc.data(), id: doc.id });
                     }

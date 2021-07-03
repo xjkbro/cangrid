@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Title from "../components/Title";
 import UploadForm from "../components/UploadForm";
 import ImageGrid from "../components/ImageGrid";
@@ -13,10 +13,13 @@ import { auth, projectFirestore } from "../firebase/config";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
+import { UserContext } from "../utils/UserContext";
 
 export default function Home() {
     const [selectedImg, setSelectedImg] = useState(null);
-    const [user, loading] = useAuthState(auth);
+    // const [user, loading] = useAuthState(auth);
+    const { userData, setUserData } = useContext(UserContext);
+    console.log(userData);
     return (
         <div className="App">
             <Title />
