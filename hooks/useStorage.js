@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
     auth,
     projectStorage,
     projectFirestore,
     timestamp,
 } from "../firebase/config";
+import { UserContext } from "../providers/UserContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const useStorage = (file, caption) => {
@@ -12,11 +13,15 @@ const useStorage = (file, caption) => {
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
     const [user, loading] = useAuthState(auth);
+    const { userData, setUserData } = useContext(UserContext);
 
     useEffect(() => {
         // references
         const storageRef = projectStorage.ref(file.name);
         const collectionRef = projectFirestore.collection("images");
+        const userImageCollectionRef = projectFirestore
+            .doc(`users/${user.uid}`)
+            .collection("images");
 
         storageRef.put(file).on(
             "state_changed",
@@ -35,6 +40,11 @@ const useStorage = (file, caption) => {
                     createdAt,
                     caption,
                     user: user.email,
+                });
+                userImageCollectionRef.add({
+                    url,
+                    createdAt,
+                    caption,
                 });
                 setUrl(url);
             }

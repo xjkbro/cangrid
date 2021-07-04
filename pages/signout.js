@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/router";
-import { UserContext } from "../utils/UserContext";
+import { UserContext } from "../providers/UserContext";
 
 function SignOut() {
     const router = useRouter();

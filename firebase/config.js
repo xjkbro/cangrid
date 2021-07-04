@@ -37,3 +37,47 @@ const auth = app.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 export { projectStorage, projectFirestore, timestamp, auth, provider };
+
+export const signInWithGoogle = () => {
+    auth.signInWithPopup(provider);
+};
+
+export const generateUserDocument = async (user, username) => {
+    if (!user) {
+        console.log("ha");
+        return;
+    }
+    console.log(user.uid);
+    console.log(username);
+    const userRef = projectFirestore.doc(`users/${user.uid}`);
+
+    const snapshot = await userRef.get();
+    console.log(snapshot);
+    if (!snapshot.exists) {
+        const { email, displayName, photoURL } = user;
+        console.log(username);
+        try {
+            await userRef.set({
+                displayName,
+                email,
+                photoURL,
+                username,
+            });
+        } catch (error) {
+            console.error("Error creating user document", error);
+        }
+    }
+    return getUserDocument(user.uid);
+};
+const getUserDocument = async (uid) => {
+    if (!uid) return null;
+    try {
+        const userDocument = await projectFirestore.doc(`users/${uid}`).get();
+        return {
+            uid,
+            ...userDocument.data(),
+        };
+    } catch (error) {
+        console.error("Error fetching user", error);
+    }
+};

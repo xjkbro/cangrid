@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Title from "../../components/Title";
 import UploadForm from "../../components/UploadForm";
 import ImageGrid from "../../components/ImageGrid";
@@ -10,11 +10,15 @@ import { auth, projectFirestore } from "../../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import { useRouter } from "next/router";
+import { UserContext } from "../../providers/UserContext";
 
-export default function SingleUser({ userData }) {
+export default function SingleUser({ userInfo, imgs }) {
     const [selectedImg, setSelectedImg] = useState(null);
     const [user, loading] = useAuthState(auth);
-    console.log(userData);
+    const { userData, setUserData } = useContext(UserContext);
+
+    console.log(userInfo);
+    console.log(imgs);
     return (
         <div className="App">
             <Title />
@@ -31,15 +35,25 @@ export default function SingleUser({ userData }) {
 }
 export async function getServerSideProps(context) {
     let ref = projectFirestore.collection("users").doc(context.query.id);
-    console.log(context.query.id + "asdasd");
+    // console.log(context.query.id);
+    const imgRes = await ref
+        .collection("images")
+        .orderBy("createdAt", "asc")
+        .get();
+
+    const imgs = imgRes.docs
+        .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }))
+        .map((img) => ({ url: img.url }));
     const userRes = await ref.get();
-    // const user = {
-    //     id: userRes.id,
-    //     name: JSON.stringify(userRes.name),
-    // };
+    const userInfo = { id: userRes.id, ...userRes.data() };
+
     return {
         props: {
-            userData: userRes.id,
+            userInfo,
+            imgs,
         },
     };
 }

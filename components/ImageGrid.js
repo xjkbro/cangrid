@@ -13,15 +13,15 @@ const ImageGrid = ({ setSelectedImg }) => {
     console.log(router.query);
     useEffect(() => {
         const unsub = projectFirestore
+            .collection("users")
+            .doc(router.query.id)
             .collection("images")
             .orderBy("createdAt", "desc")
             .onSnapshot((snap) => {
                 let documents = [];
                 snap.forEach((doc) => {
                     console.log(doc.id);
-                    if (doc.id == router.query.uid) {
-                        documents.push({ ...doc.data(), id: doc.id });
-                    }
+                    documents.push({ ...doc.data(), id: doc.id });
                 });
                 setDocs(documents);
             });

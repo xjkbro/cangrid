@@ -13,7 +13,7 @@ import { auth, projectFirestore } from "../firebase/config";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
-import { UserContext } from "../utils/UserContext";
+import { UserContext } from "../providers/UserContext";
 
 export default function Home() {
     const [selectedImg, setSelectedImg] = useState(null);

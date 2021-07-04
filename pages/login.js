@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import styled from "styled-components";
-import { auth, provider, projectFirestore } from "../firebase/config";
+import {
+    auth,
+    provider,
+    projectFirestore,
+    signInWithGoogle,
+} from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 
@@ -14,7 +19,7 @@ function Login() {
         auth.signInWithPopup(provider)
             .then((res) => {
                 console.log(res);
-                if (res.additionalUserInfo.isNewUser == true) {
+                if (res.additionalUserInfo.isNewUser === true) {
                     router.push("/create_username");
                 }
             })
