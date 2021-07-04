@@ -12,13 +12,7 @@ import { UserContext } from "../providers/UserContext";
 function MyApp({ Component, pageProps }) {
     const [user, loading] = useAuthState(auth);
     const [userData, setUserData] = useState({ user: null });
-    // const [userData, setUserData] = useState({
-    //     id: "",
-    //     name: "",
-    //     username: "",
-    //     email: "",
-    //     photoURL: "",
-    // });
+
     // useEffect(() => {
     //     if (user) {
     //         console.log(user);
@@ -26,29 +20,13 @@ function MyApp({ Component, pageProps }) {
     //             {
     //                 id: user.uid,
     //                 name: user.displayName,
-    //                 username: "",
     //                 email: user.email,
     //                 photoURL: user.photoURL,
     //             },
     //             { merge: true }
     //         );
-    //         setUserData({
-    //             id: user.uid,
-    //             name: user.displayName,
-    //             username: user.username,
-    //             email: user.email,
-    //             photoURL: user.photoURL,
-    //         });
-    //         console.log(userData);
     //     }
     // }, [user]);
-    // componentDidMount = async (ctx) => {
-    //     console.log("hello");
-    //     auth.onAuthStateChanged(async (userAuth) => {
-    //         const user = await generateUserDocument(userAuth);
-    //         setUserData({ user });
-    //     });
-    // };
     useEffect(async () => {
         console.log("hello");
         auth.onAuthStateChanged(async (userAuth) => {

@@ -15,36 +15,16 @@ import { UserContext } from "../providers/UserContext";
 function CreateUsername() {
     const [username, setUsername] = useState("");
     const { userData, setUserData } = useContext(UserContext);
-    // const [user, loading] = useAuthState(auth);
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
 
     const handleSubmit = async (event) => {
-        console.log(user);
-        console.log(username);
-        // alert("A name was submitted: " + username);
-        // const {user} = await auth.createUserWithEmailAndPassword(email, password);
         generateUserDocument(user, username);
-        // setUserData({ ...userData, username });
         console.log(userData);
         event.preventDefault();
         router.push("/");
     };
 
-    // useEffect(() => {
-    //     if (user) {
-    //         projectFirestore.collection("users").doc(user.uid).set(
-    //             {
-    //                 id: user.uid,
-    //                 name: user.displayName,
-    //                 username,
-    //                 email: user.email,
-    //                 photoURL: user.photoURL,
-    //             },
-    //             { merge: true }
-    //         );
-    //     }
-    // }, [userData]);
     if (user) {
         return (
             <Container>
