@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, projectFirestore } from "../firebase/config";
 
-const Title = () => {
+const Title = ({ userInfo }) => {
     const [user, loading] = useAuthState(auth);
 
     const showLogin = () => {
@@ -21,25 +21,42 @@ const Title = () => {
             );
         } else {
             return (
-                <Link href={"/signout"}>
-                    <Button
-                        variant="contained"
-                        component="span"
-                        className="loginButton"
-                    >
-                        Logout
-                    </Button>
-                </Link>
+                <div className="control">
+                    <Link href={"/profile"}>
+                        <Button
+                            variant="contained"
+                            component="span"
+                            className="profileButton"
+                        >
+                            Profile
+                        </Button>
+                    </Link>
+                    <Link href={"/signout"}>
+                        <Button
+                            variant="contained"
+                            component="span"
+                            className="logoutButton"
+                        >
+                            Logout
+                        </Button>
+                    </Link>
+                </div>
             );
         }
     };
     return (
         <div className="title">
             <div className="title-bar">
-                <h1>GalleryIO</h1>
+                <Link href={"/"}>
+                    <h1>GalleryIO</h1>
+                </Link>
                 {showLogin()}
             </div>
-            <h2>Photos</h2>
+            {userInfo ? (
+                <h2>{userInfo.username}'s Photos</h2>
+            ) : (
+                <h2>The Gallery</h2>
+            )}
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
     );

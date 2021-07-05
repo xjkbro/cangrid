@@ -18,11 +18,10 @@ export default function SingleUser({ userInfo, imgs }) {
     const { userData, setUserData } = useContext(UserContext);
 
     console.log(userInfo);
-    console.log(imgs);
+    console.log(user);
     return (
         <div className="App">
-            <Title />
-            <UploadForm />
+            <Title userInfo={userInfo} />
             <ImageGrid setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal

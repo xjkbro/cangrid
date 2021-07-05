@@ -52,8 +52,20 @@ body {
     display: flex;
     justify-content: space-between;
 }
+
+.profileButton {
+    margin: 0 5px !important;
+    color: white !important;
+    background-color: var(--primary) !important;
+}
 .loginButton {
+    color: white !important;
+    background-color: var(--secondary) !important;
     height: 100%;
+}
+.logoutButton {
+    color: white !important;
+    background-color: var(--secondary) !important;
 }
 /* upload form styles */
 form {
