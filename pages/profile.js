@@ -21,16 +21,18 @@ function Profile() {
                             "https://res.cloudinary.com/dqcsk8rsc/image/upload/v1577268053/avatar-1-bitmoji_upgwhc.png"
                         })  no-repeat center center`,
                         backgroundSize: "cover",
-                        height: "200px",
-                        width: "200px",
+                        height: "400px",
+                        width: "400px",
                     }}
                     className="border border-blue-300"
                 ></div>
                 <div className="md:pl-4">
                     <h2 className="text-2xl font-semibold">
-                        {user?.displayName}
+                        Display Name:{user?.displayName}
                     </h2>
-                    <h3 className="italic">{user?.email}</h3>
+                    <h3 className="italic">Username: {user?.username}</h3>
+                    <h3 className="italic">Email: {user?.email}</h3>
+                    <h3 className="italic">ID: {user?.uid}</h3>
                 </div>
             </div>
             <button
