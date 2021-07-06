@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Head from "next/head";
 import Button from "@material-ui/core/Button";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, provider, projectFirestore } from "../firebase/config";
@@ -56,6 +57,9 @@ const Title = ({ userInfo }) => {
     };
     return (
         <div className="title">
+            <Head>
+                <title> Profile </title>
+            </Head>
             <div className="title-bar">
                 <Link href={"/"}>
                     <h1 style={{ cursor: "pointer" }}>GalleryIO</h1>
