@@ -83,7 +83,10 @@ const Title = ({ userInfo }) => {
                 {showLogin()}
             </div>
             {userInfo ? (
-                <h2>{userInfo.username}'s Photos</h2>
+                <>
+                    <h2>{userInfo.username}'s Photos</h2>
+                    <p>{userInfo.description}</p>
+                </>
             ) : (
                 <>
                     <h2>The Gallery</h2>

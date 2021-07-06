@@ -69,6 +69,28 @@ export const generateUserDocument = async (user, username) => {
     }
     return getUserDocument(user.uid);
 };
+
+export const updateUserDocument = async (user, username, description) => {
+    if (!user) {
+        return;
+    }
+    const userRef = projectFirestore.doc(`users/${user.uid}`);
+
+    const snapshot = await userRef.get();
+    console.log(snapshot);
+    if (snapshot.exists) {
+        console.log(username);
+        try {
+            await userRef.update({
+                username: username,
+                description: description,
+            });
+        } catch (error) {
+            console.error("Error updating user document", error);
+        }
+    }
+    return getUserDocument(user.uid);
+};
 const getUserDocument = async (uid) => {
     if (!uid) return null;
     try {
