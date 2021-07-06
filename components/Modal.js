@@ -26,8 +26,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                     <motion.div
                         style={{
                             borderBottom: "1px solid gray",
-                            paddingBottom: "10px",
-                            margin: "5px",
+                            // paddingBottom: "15px",
                             width: "100%",
                         }}
                     >
@@ -50,7 +49,8 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                             />{" "}
                             <span
                                 style={{
-                                    margin: "5px",
+                                    margin: "15px",
+                                    color: "black",
                                 }}
                             >
                                 {selectedImg.userData.username}

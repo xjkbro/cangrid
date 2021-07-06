@@ -143,10 +143,10 @@ form {
 
 /* image grid styles */
 .img-grid {
-    margin: 20px auto;
+    margin: 35px auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: 40px;
+    grid-gap: 15px;
 }
 .img-wrap {
     overflow: hidden;
@@ -191,15 +191,15 @@ form {
     border-radius: 10px;
 }
 .backdrop > div > img {
-    max-width: 900px;
-    max-height: 900px;
+    max-width: 50vw;
+    max-height: 70vh;
     width: auto;
     height: auto;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 .backdrop > div > div {
-    min-width: 300px;
+    min-width: 20vw;
     width: auto;
     height: auto;
     border-top-right-radius: 10px;
