@@ -31,8 +31,9 @@ function Profile() {
                         <CreateUsername />
                     </div>
                 ) : (
-                    <>
+                    <div className="profileDiv">
                         <div
+                            className="profileImg"
                             style={{
                                 background: `url(${
                                     user?.photoURL ||
@@ -53,7 +54,7 @@ function Profile() {
                                 <h3>View Your Gallery</h3>
                             </a>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </div>

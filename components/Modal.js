@@ -23,13 +23,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         width: "100%",
                     }}
                 >
-                    <motion.div
-                        style={{
-                            borderBottom: "1px solid gray",
-                            // paddingBottom: "15px",
-                            width: "100%",
-                        }}
-                    >
+                    <motion.div className="modalUpload">
                         <a
                             href={`/users/${selectedImg.userData.uid}`}
                             style={{
