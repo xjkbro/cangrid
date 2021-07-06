@@ -27,6 +27,7 @@ function Profile() {
                 {user?.username == null ? (
                     <div>
                         <h1>Please finish Profile</h1>
+
                         <CreateUsername />
                     </div>
                 ) : (

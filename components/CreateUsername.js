@@ -23,21 +23,32 @@ function CreateUsername() {
         generateUserDocument(user, username);
         console.log(userData);
 
-        router.push("/");
+        auth.signOut();
+
+        router.push(`users/${userData.user.uid}`);
     };
 
     if (user) {
         return (
             <>
-                <form>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <button type="button" onClick={handleSubmit}>
+                <p>
+                    You may need to sign out after creating a username. Please
+                    sign back in to finish your profile.
+                </p>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Name:
+                        <input
+                            type="text"
+                            name="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </label>
+                    {/* <input type="submit" value="Submit" /> */}
+                    {/* <button type="button" onClick={handleSubmit}>
                         Submit
-                    </button>
+                    </button> */}
                 </form>
             </>
         );

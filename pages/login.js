@@ -18,6 +18,7 @@ function Login() {
     const signIn = () => {
         auth.signInWithRedirect(provider)
             .then((res) => {
+                console.log(res);
                 router.push("/profile");
             })
             .catch(alert);

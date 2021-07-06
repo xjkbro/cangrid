@@ -51,7 +51,7 @@ const UploadForm = () => {
                             value={caption}
                             onChange={(e) => setCaption(e.target.value)}
                         />
-                        <label className="uploadButton">
+                        <label className="uploadButton uploadLabel">
                             <input type="file" onChange={changeHandler} />
                             <span>+</span>
                         </label>

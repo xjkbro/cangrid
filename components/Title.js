@@ -12,7 +12,9 @@ const Title = ({ userInfo }) => {
     const signIn = () => {
         auth.signInWithPopup(provider)
             .then((res) => {
-                router.push("/profile");
+                console.log(res);
+                if (res.additionalUserInfo.isNewUser) router.push("/profile");
+                else router.push(`/users/${res.user.uid}`);
             })
             .catch(alert);
     };
@@ -34,6 +36,15 @@ const Title = ({ userInfo }) => {
         } else {
             return (
                 <div className="control">
+                    <Link href={`/users/${user.uid}`}>
+                        <Button
+                            variant="contained"
+                            component="span"
+                            className="profileButton"
+                        >
+                            Your Gallery
+                        </Button>
+                    </Link>
                     <Link href={"/profile"}>
                         <Button
                             variant="contained"
