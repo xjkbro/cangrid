@@ -19,15 +19,16 @@ function CreateUsername() {
     const router = useRouter();
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
         generateUserDocument(user, username);
         console.log(userData);
-        event.preventDefault();
+
         router.push("/");
     };
 
     if (user) {
         return (
-            <Container>
+            <>
                 <form>
                     <input
                         type="text"
@@ -38,7 +39,7 @@ function CreateUsername() {
                         Submit
                     </button>
                 </form>
-            </Container>
+            </>
         );
     } else return <></>;
 }

@@ -1,7 +1,10 @@
 import { useContext, useState, useEffect } from "react";
+import Title from "../components/ProfileTitle";
 import { UserContext } from "../providers/UserContext";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/router";
+import CreateUsername from "../components/CreateUsername";
+import Link from "next/link";
 
 function Profile() {
     const router = useRouter();
@@ -9,41 +12,49 @@ function Profile() {
 
     const [user, setUser] = useState(null);
     useEffect(() => {
-        setUser(userData.user);
+        setUser(userData?.user);
     }, [userData]);
     return (
-        <div>
-            <div>
-                <div
-                    style={{
-                        background: `url(${
-                            user?.photoURL ||
-                            "https://res.cloudinary.com/dqcsk8rsc/image/upload/v1577268053/avatar-1-bitmoji_upgwhc.png"
-                        })  no-repeat center center`,
-                        backgroundSize: "cover",
-                        height: "400px",
-                        width: "400px",
-                    }}
-                    className="border border-blue-300"
-                ></div>
-                <div className="md:pl-4">
-                    <h2 className="text-2xl font-semibold">
-                        Display Name:{user?.displayName}
-                    </h2>
-                    <h3 className="italic">Username: {user?.username}</h3>
-                    <h3 className="italic">Email: {user?.email}</h3>
-                    <h3 className="italic">ID: {user?.uid}</h3>
-                </div>
-            </div>
-            <button
-                className="w-full py-3 bg-red-600 mt-4 text-white"
-                onClick={() => {
-                    auth.signOut();
-                    router.push("/");
+        <div className="App">
+            <Title />
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                 }}
             >
-                Sign out
-            </button>
+                {user?.username == null ? (
+                    <div>
+                        <h1>Please finish Profile</h1>
+                        <CreateUsername />
+                    </div>
+                ) : (
+                    <>
+                        <div
+                            style={{
+                                background: `url(${
+                                    user?.photoURL ||
+                                    "https://i.stack.imgur.com/l60Hf.png"
+                                })  no-repeat center center`,
+                                backgroundSize: "contain",
+                                height: "200px",
+                                width: "200px",
+                                margin: "10px",
+                            }}
+                        ></div>
+                        <div>
+                            <h2>Display Name: {user?.displayName}</h2>
+                            <h3>Username: {user?.username}</h3>
+                            <h3>Email: {user?.email}</h3>
+                            <h3>ID: {user?.uid}</h3>
+                            <a href={`/users/${user?.uid}`}>
+                                <h3>View Your Gallery</h3>
+                            </a>
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
     );
 }

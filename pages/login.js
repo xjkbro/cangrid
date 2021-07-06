@@ -16,12 +16,9 @@ function Login() {
     const router = useRouter();
     console.log(user);
     const signIn = () => {
-        auth.signInWithPopup(provider)
+        auth.signInWithRedirect(provider)
             .then((res) => {
-                console.log(res);
-                if (res.additionalUserInfo.isNewUser === true) {
-                    router.push("/create_username");
-                }
+                router.push("/profile");
             })
             .catch(alert);
     };

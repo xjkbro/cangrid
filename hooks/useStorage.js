@@ -35,16 +35,18 @@ const useStorage = (file, caption) => {
             async () => {
                 const url = await storageRef.getDownloadURL();
                 const createdAt = timestamp();
+                console.log(userData);
                 collectionRef.add({
                     url,
                     createdAt,
                     caption,
-                    user: user.email,
+                    userData: userData.user,
                 });
                 userImageCollectionRef.add({
                     url,
                     createdAt,
                     caption,
+                    userData: userData.user,
                 });
                 setUrl(url);
             }

@@ -37,7 +37,8 @@ const UploadForm = () => {
 
     const showUploadForm = () => {
         if (user == null) {
-            return <p>Please Login to have the option to upload.</p>;
+            // return <p>Please Login to have the option to upload.</p>;
+            return <></>;
         } else {
             return (
                 <form onSubmit={submitForm}>

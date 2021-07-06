@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 const Title = ({ userInfo }) => {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
-
     const signIn = () => {
         auth.signInWithPopup(provider)
             .then((res) => {
@@ -63,17 +62,8 @@ const Title = ({ userInfo }) => {
                 </Link>
                 {showLogin()}
             </div>
-            {userInfo ? (
-                <h2>{userInfo.username}'s Photos</h2>
-            ) : (
-                <>
-                    <h2>The Gallery</h2>
-                    <p>
-                        Welcome to the Gallery. Please sign in or sign up to
-                        continue and upload your art.
-                    </p>
-                </>
-            )}
+            <h2>Profile</h2>
+            {/* <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
         </div>
     );
 };
