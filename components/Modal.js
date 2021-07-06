@@ -23,14 +23,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         width: "100%",
                     }}
                 >
-                    <motion.div
-                        style={{
-                            borderBottom: "1px solid gray",
-                            paddingBottom: "10px",
-                            margin: "5px",
-                            width: "100%",
-                        }}
-                    >
+                    <motion.div className="modalUpload">
                         <a
                             href={`/users/${selectedImg.userData.uid}`}
                             style={{
@@ -50,7 +43,8 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                             />{" "}
                             <span
                                 style={{
-                                    margin: "5px",
+                                    margin: "15px",
+                                    color: "black",
                                 }}
                             >
                                 {selectedImg.userData.username}

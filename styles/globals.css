@@ -143,10 +143,10 @@ form {
 
 /* image grid styles */
 .img-grid {
-    margin: 20px auto;
+    margin: 35px auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: 40px;
+    grid-gap: 15px;
 }
 .img-wrap {
     overflow: hidden;
@@ -191,20 +191,87 @@ form {
     border-radius: 10px;
 }
 .backdrop > div > img {
-    max-width: 900px;
-    max-height: 900px;
+    max-width: 50vw;
+    max-height: 70vh;
     width: auto;
     height: auto;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 .backdrop > div > div {
-    min-width: 300px;
+    min-width: 20vw;
     width: auto;
     height: auto;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-}
-.backdrop > div > div {
     padding: 30px;
+}
+.modalUpload {
+    border-bottom: 1px solid gray;
+    /* padding-bottom: 15px; */
+    width: 100%;
+}
+
+/*profile page styles*/
+.profileDiv {
+    display: flex;
+}
+@media screen and (max-width: 600px) {
+    /*Title Screen elements*/
+    .control {
+        margin-top: 10px;
+    }
+    .profileButton,
+    .loginButton,
+    .logoutButton {
+        font-size: 0.675rem !important;
+    }
+    /* image grid styles */
+    .img-grid {
+        margin: 35px auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 15px;
+    }
+
+    .backdrop > div {
+        display: flex;
+        max-width: 90%;
+        max-height: 90%;
+        flex-direction: column;
+        vertical-align: middle;
+        box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
+        background-color: white;
+    }
+    .backdrop > div > img {
+        max-width: 80vw;
+        max-height: 70vh;
+        width: auto;
+        height: auto;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 0px;
+    }
+    .backdrop > div > div {
+        min-width: 20vw;
+        width: auto;
+        height: auto;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        font-size: 10px;
+        padding: 10px;
+    }
+    .backdrop > div {
+        width: 80%;
+    }
+    .modalUpload {
+        border-bottom: 0px;
+        /* padding-bottom: 15px; */
+        width: 100%;
+    }
+    .profileDiv {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 }
