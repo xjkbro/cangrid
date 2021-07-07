@@ -55,13 +55,14 @@ export const generateUserDocument = async (user, username) => {
     console.log(snapshot);
     if (!snapshot.exists) {
         const { email, displayName, photoURL } = user;
-        console.log(username);
+        console.log(user);
         try {
             await userRef.set({
                 displayName,
                 email,
                 photoURL,
                 username,
+                description: "",
             });
         } catch (error) {
             console.error("Error creating user document", error);
@@ -79,7 +80,11 @@ export const updateUserDocument = async (user, username, description) => {
     const snapshot = await userRef.get();
     console.log(snapshot);
     if (snapshot.exists) {
+        console.log(user);
         console.log(username);
+        console.log(description);
+        if (description == undefined) description = "";
+        console.log(description);
         try {
             await userRef.update({
                 username: username,
@@ -102,4 +107,25 @@ const getUserDocument = async (uid) => {
     } catch (error) {
         console.error("Error fetching user", error);
     }
+};
+
+export const getUsernameDoc = async (username) => {
+    if (!username) return null;
+    let found = false;
+    try {
+        const userDocument = await projectFirestore
+            .collection(`users`)
+            .get()
+            .then((snap) => {
+                snap.forEach((doc) => {
+                    if (doc.get("username") == username) {
+                        console.log(doc.get("username"));
+                        found = true;
+                    }
+                });
+            });
+    } catch (error) {
+        console.error("Error fetching user", error);
+    }
+    return found;
 };

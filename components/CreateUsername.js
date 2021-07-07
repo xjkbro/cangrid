@@ -6,6 +6,7 @@ import {
     provider,
     projectFirestore,
     generateUserDocument,
+    getUsernameDoc,
 } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
@@ -17,15 +18,25 @@ function CreateUsername() {
     const { userData, setUserData } = useContext(UserContext);
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
+    const [error, setError] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        generateUserDocument(user, username);
-        console.log(userData);
+        if (error) {
+            console.log("TRY ANOTHER");
+        } else {
+            generateUserDocument(user, username);
+            console.log(userData);
 
-        auth.signOut();
+            auth.signOut();
 
-        router.push(`users/${userData.user.uid}`);
+            router.push(`users/${userData.user.uid}`);
+        }
+    };
+
+    const UsernameCheck = async (e) => {
+        let err = await getUsernameDoc(e);
+        setError(await getUsernameDoc(e));
     };
 
     if (user) {
@@ -37,18 +48,32 @@ function CreateUsername() {
                 </p>
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Name:
+                        Username:
                         <input
                             type="text"
                             name="username"
+                            style={{ padding: "5px", marginLeft: "10px" }}
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                UsernameCheck(e.target.value);
+                            }}
                         />
+                        <button type="button" onClick={handleSubmit}>
+                            Submit
+                        </button>
                     </label>
+                    <div>
+                        <p>
+                            {username}{" "}
+                            {username != ""
+                                ? error
+                                    ? "is not available!"
+                                    : "is available! :)"
+                                : ""}
+                        </p>
+                    </div>
                     {/* <input type="submit" value="Submit" /> */}
-                    {/* <button type="button" onClick={handleSubmit}>
-                        Submit
-                    </button> */}
                 </form>
             </>
         );
