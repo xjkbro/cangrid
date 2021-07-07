@@ -33,6 +33,15 @@ const Title = ({ userInfo }) => {
         } else {
             return (
                 <div className="control">
+                    <Link href={`/users/${user.uid}`}>
+                        <Button
+                            variant="contained"
+                            component="span"
+                            className="profileButton"
+                        >
+                            Your Gallery
+                        </Button>
+                    </Link>
                     <Link href={"/profile"}>
                         <Button
                             variant="contained"

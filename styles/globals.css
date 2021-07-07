@@ -215,6 +215,14 @@ form {
 /*profile page styles*/
 .profileDiv {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px #bbb;
+    padding: 10vw;
+    background-color: #ddd;
 }
 @media screen and (max-width: 600px) {
     /*Title Screen elements*/
@@ -270,8 +278,5 @@ form {
         width: 100%;
     }
     .profileDiv {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
     }
 }

@@ -11,28 +11,27 @@ function Profile() {
     const { userData, setUserData } = useContext(UserContext);
     const [username, setUsername] = useState("");
     const [description, setDescription] = useState("");
+    const [descriptionLimit, setDescriptionLimit] = useState(150);
     const [error, setError] = useState(false);
+    const [toggleUsernameChange, setToggleUsernameChange] = useState(false);
 
     const [user, setUser] = useState(null);
     useEffect(() => {
         setUser(userData?.user);
         setUsername(userData?.user?.username);
         setDescription(userData?.user?.description);
+        // setDescriptionLimit(
+        //     descriptionLimit - userData?.user?.description.length
+        // );
     }, [userData]);
 
-    const changeUsername = async (event) => {
+    const changeUserFields = async (event) => {
         event.preventDefault();
         updateUserDocument(user, username, description);
         console.log(userData);
         const tempUser = { ...userData.user, username, description };
         console.log(tempUser);
         setUserData({ user: tempUser });
-    };
-
-    const changeDescription = async (event) => {
-        event.preventDefault();
-        updateUserDocument(user, username, description);
-        console.log(userData);
     };
     const UsernameCheck = async (e) => {
         let err = await getUsernameDoc(e);
@@ -66,7 +65,7 @@ function Profile() {
                         <CreateUsername />
                     </div>
                 ) : (
-                    <div className="profileDiv">
+                    <div className="profileDiv" style={{ width: "75vw" }}>
                         <div
                             className="profileImg"
                             style={{
@@ -75,57 +74,104 @@ function Profile() {
                                     "https://i.stack.imgur.com/l60Hf.png"
                                 })  no-repeat center center`,
                                 backgroundSize: "contain",
+                                borderRadius: "50%",
                                 height: "200px",
                                 width: "200px",
                                 margin: "10px",
                             }}
                         ></div>
-                        <div>
-                            <h2>Display Name: {user?.displayName}</h2>
-                            <h3>Username: {user.username}</h3>
-                            <div>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    value={username}
-                                    onChange={(e) => {
-                                        setUsername(e.target.value);
-                                        UsernameCheck(e.target.value);
+                        <div style={{ width: "75%" }}>
+                            <h2>Name: {user?.displayName}</h2>
+                            <h3>
+                                Username: {user.username}{" "}
+                                <span
+                                    style={{
+                                        cursor: "pointer",
+                                        fontSize: "12px",
+                                        marginLeft: "10px",
                                     }}
-                                />
-                                <button type="button" onClick={changeUsername}>
+                                    onClick={() =>
+                                        setToggleUsernameChange(
+                                            !toggleUsernameChange
+                                        )
+                                    }
+                                >
                                     Change Username
-                                </button>
-                                <p>
-                                    {username}{" "}
-                                    {username != user.username
-                                        ? error
-                                            ? "is not available!"
-                                            : "is available! :)"
-                                        : "is your current username"}
-                                </p>
-                            </div>
+                                </span>
+                            </h3>
+                            {toggleUsernameChange ? (
+                                <div
+                                    style={{
+                                        width: "90%",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        style={{ width: "74%" }}
+                                        value={username}
+                                        onChange={(e) => {
+                                            setUsername(e.target.value);
+                                            UsernameCheck(e.target.value);
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        style={{ width: "24%" }}
+                                        onClick={changeUserFields}
+                                    >
+                                        Change Username
+                                    </button>
+                                    <p>
+                                        {username != user.username &&
+                                        username != ""
+                                            ? error
+                                                ? `${username} is not available!`
+                                                : `${username} is available! :)`
+                                            : ""}
+                                    </p>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
 
                             <h3>Email: {user?.email}</h3>
-                            <h3>ID: {user?.uid}</h3>
-                            <a href={`/users/${user?.uid}`}>
+                            {console.log(user?.uid)}
+                            {/* <h3>ID: {user?.uid}</h3> */}
+                            {/* <Link href={`/users/${user?.uid}`}>
                                 <h3>View Your Gallery</h3>
-                            </a>
-                            <h3>
-                                Profile Description:{" "}
-                                <textarea
-                                    type="text"
-                                    name="username"
-                                    value={description}
-                                    onChange={(e) =>
-                                        setDescription(e.target.value)
+                            </Link> */}
+                            <h3>Profile Description: </h3>
+                            <textarea
+                                type="text"
+                                name="description"
+                                style={{
+                                    fontSize: "14px",
+                                    width: "100%",
+                                    height: "100px",
+                                    resize: "none",
+                                }}
+                                value={description}
+                                onChange={(e) => {
+                                    if (
+                                        e.target.value.length < descriptionLimit
+                                    ) {
+                                        let val =
+                                            description.length -
+                                            e.target.value.length;
+                                        setDescription(e.target.value);
+                                    } else {
+                                        setDescription(description);
                                     }
-                                />
-                                <button type="button" onClick={changeUsername}>
-                                    Save
-                                </button>
-                            </h3>
+                                }}
+                            />
+                            <div>Character Limit: {descriptionLimit}</div>
                         </div>
+                        <button type="button" onClick={changeUserFields}>
+                            Save
+                        </button>
                     </div>
                 )}
             </div>
