@@ -12,7 +12,7 @@ import firebase from "firebase";
 import { useRouter } from "next/router";
 import { UserContext } from "../../providers/UserContext";
 
-export default function SingleUser({ userInfo, imgs }) {
+export default function SingleUser({ userInfo, images }) {
     const [selectedImg, setSelectedImg] = useState(null);
     const [user, loading] = useAuthState(auth);
     const { userData, setUserData } = useContext(UserContext);
@@ -22,8 +22,8 @@ export default function SingleUser({ userInfo, imgs }) {
     return (
         <div className="App">
             <Title userInfo={userInfo} />
-            {userInfo.id == user?.uid ? <UploadForm /> : <></>}
-            <ImageGrid setSelectedImg={setSelectedImg} />
+            {userInfo?.id == user?.uid ? <UploadForm /> : <></>}
+            <ImageGrid images={images} setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal
                     selectedImg={selectedImg}
@@ -34,26 +34,55 @@ export default function SingleUser({ userInfo, imgs }) {
     );
 }
 export async function getServerSideProps(context) {
-    let ref = projectFirestore.collection("users").doc(context.query.id);
-    // console.log(context.query.id);
-    const imgRes = await ref
+    let collectionRef = projectFirestore.collection("users");
+    let userRef = null;
+    var query = await collectionRef
+        .where("username", "==", context.query.username)
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                userRef = doc.ref;
+                console.log(doc.id, " => ", doc.data());
+            });
+        });
+
+    // let userRef = projectFirestore.collection("users").doc(context.query.username);
+
+    // console.log(context.query.username);
+    // console.log(query);
+
+    // console.log(userRef);
+
+    const imgRes = await userRef
         .collection("images")
         .orderBy("createdAt", "asc")
         .get();
 
-    const imgs = imgRes.docs
+    // console.log(imgRes);
+
+    const images = imgRes.docs
         .map((doc) => ({
             id: doc.id,
             ...doc.data(),
         }))
-        .map((img) => ({ url: img.url }));
-    const userRes = await ref.get();
+        .map((img) => {
+            console.log(img);
+            return {
+                id: img.id,
+                caption: img.caption,
+                url: img.url,
+                userData: img.userData,
+            };
+        });
+    const userRes = await userRef.get();
     const userInfo = { id: userRes.id, ...userRes.data() };
 
     return {
         props: {
             userInfo,
-            imgs,
+            images,
         },
     };
 }

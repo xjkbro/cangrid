@@ -159,7 +159,7 @@ function Profile() {
                                         e.target.value.length < descriptionLimit
                                     ) {
                                         let val =
-                                            description.length -
+                                            description?.length -
                                             e.target.value.length;
                                         setDescription(e.target.value);
                                     } else {

@@ -25,7 +25,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                 >
                     <motion.div className="modalUpload">
                         <a
-                            href={`/users/${selectedImg.userData.uid}`}
+                            href={`/users/${selectedImg?.userData?.username}`}
                             style={{
                                 display: "inline-flex",
                                 alignItems: "center",
@@ -38,7 +38,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                     width: "25px",
                                     borderRadius: "50%",
                                 }}
-                                src={selectedImg.userData.photoURL}
+                                src={selectedImg?.userData?.photoURL}
                                 alt=""
                             />{" "}
                             <span
@@ -47,7 +47,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                     color: "black",
                                 }}
                             >
-                                {selectedImg.userData.username}
+                                {selectedImg?.userData?.username}
                             </span>
                         </a>
                     </motion.div>
@@ -60,8 +60,8 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         {" "}
                         Caption:
                         <motion.p>
-                            {selectedImg.caption !== "" ? (
-                                selectedImg.caption
+                            {selectedImg?.caption !== "" ? (
+                                selectedImg?.caption
                             ) : (
                                 <p>
                                     <i>No Caption</i>

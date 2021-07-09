@@ -3,11 +3,14 @@ import Head from "next/head";
 import Button from "@material-ui/core/Button";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, provider, projectFirestore } from "../firebase/config";
+import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 const Title = ({ userInfo }) => {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
+    const { userData, setUserData } = useContext(UserContext);
 
     const signIn = () => {
         auth.signInWithPopup(provider)
@@ -36,7 +39,8 @@ const Title = ({ userInfo }) => {
         } else {
             return (
                 <div className="control">
-                    <Link href={`/users/${user.uid}`}>
+                    {/* <Link href={`/users/${user.uid}`}> */}
+                    <Link href={`/users/${userData?.user?.username}`}>
                         <Button
                             variant="contained"
                             component="span"
@@ -84,7 +88,7 @@ const Title = ({ userInfo }) => {
             </div>
             {userInfo ? (
                 <>
-                    <h2>{userInfo.username}'s Photos</h2>
+                    <h2>{userInfo.username}'s Gallery</h2>
                     <p>{userInfo.description}</p>
                 </>
             ) : (
