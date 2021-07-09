@@ -63,10 +63,7 @@ export async function getServerSideProps(context) {
 
     // console.log(userRef);
 
-    const imgRes = await userRef
-        .collection("images")
-        .orderBy("createdAt", "asc")
-        .get();
+    const imgRes = await userRef.collection("images").get();
 
     // console.log(imgRes);
 
