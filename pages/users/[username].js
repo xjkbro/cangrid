@@ -47,7 +47,15 @@ export async function getServerSideProps(context) {
                 console.log(doc.id, " => ", doc.data());
             });
         });
-
+    console.log(query);
+    if (userRef == undefined)
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/users/404",
+            },
+            props: {},
+        };
     // let userRef = projectFirestore.collection("users").doc(context.query.username);
 
     // console.log(context.query.username);

@@ -7,7 +7,7 @@ import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 
-const Title = ({ userInfo }) => {
+const Title = ({ userInfo, isError }) => {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
@@ -17,7 +17,9 @@ const Title = ({ userInfo }) => {
             .then((res) => {
                 console.log(res);
                 if (res.additionalUserInfo.isNewUser) router.push("/profile");
-                else router.push(`/users/${res.user.uid}`);
+                else {
+                    router.push(`/`);
+                }
             })
             .catch(alert);
     };
@@ -71,6 +73,34 @@ const Title = ({ userInfo }) => {
             );
         }
     };
+
+    const TitleDisplay = () => {
+        if (userInfo && !isError) {
+            return (
+                <>
+                    <h2>{userInfo.username}'s Gallery</h2>
+                    <p>{userInfo.description}</p>
+                </>
+            );
+        } else if (isError) {
+            return (
+                <>
+                    <h2>Something Went Wrong</h2>
+                    {/* <p></p> */}
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <h2>The Gallery</h2>
+                    <p>
+                        Welcome to the Gallery. Please sign in to continue and
+                        upload your art.
+                    </p>
+                </>
+            );
+        }
+    };
     return (
         <div className="title">
             <Head>
@@ -86,20 +116,7 @@ const Title = ({ userInfo }) => {
                 </Link>
                 {showLogin()}
             </div>
-            {userInfo ? (
-                <>
-                    <h2>{userInfo.username}'s Gallery</h2>
-                    <p>{userInfo.description}</p>
-                </>
-            ) : (
-                <>
-                    <h2>The Gallery</h2>
-                    <p>
-                        Welcome to the Gallery. Please sign in or sign up to
-                        continue and upload your art.
-                    </p>
-                </>
-            )}
+            {TitleDisplay()}
         </div>
     );
 };
