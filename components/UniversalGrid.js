@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 const ImageGrid = ({ setSelectedImg }) => {
     const { docs } = useFirestore("images");
     console.log(docs);
+
     return (
         <div className="img-grid">
             {docs &&
                 docs
+                    .sort(() => 0.5 - Math.random()) //shuffles current grid
                     .filter((item, idx) => idx < 30) //limits the number of items on main page to max at 30
                     .map((doc) => (
                         <motion.div

@@ -8,6 +8,48 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
         }
     };
 
+    const ImgMetaData = () => {
+        const { exif } = selectedImg;
+        console.log(exif);
+
+        // if (JSON.stringify(exif) != "{}") {
+        if (exif) {
+            return (
+                <motion.div
+                    style={{
+                        margin: "5px",
+                        width: "100%",
+                    }}
+                >
+                    <motion.p>
+                        {exif?.model ? exif?.model : "Unidentiied Camera"}{" "}
+                        running{" "}
+                        {exif?.cameraFunction
+                            ? exif?.cameraFunction
+                            : "Unidentified Function"}{" "}
+                        where Exposure was
+                        {exif?.exposure?.numerator
+                            ? exif?.exposure?.numerator
+                            : "1"}
+                        /
+                        {exif?.exposure?.denominator
+                            ? exif?.exposure?.denominator
+                            : "∞"}
+                        s, focal length was{" "}
+                        {exif?.focalLength?.value
+                            ? exif?.focalLength?.value
+                            : "Unidentified"}{" "}
+                        and aperature was{" f"}
+                        {exif?.aperature?.value
+                            ? exif?.aperature?.value
+                            : "Unidentified"}
+                    </motion.p>
+                </motion.div>
+            );
+        } else {
+            return <></>;
+        }
+    };
     console.log(selectedImg);
     return (
         <motion.div
@@ -69,6 +111,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                             )}
                         </motion.p>
                     </motion.div>
+                    <ImgMetaData />
                 </motion.div>
             </motion.div>
         </motion.div>
