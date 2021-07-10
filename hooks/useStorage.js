@@ -8,7 +8,7 @@ import {
 import { UserContext } from "../providers/UserContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const useStorage = (file, caption) => {
+const useStorage = (file, caption, exifInfo) => {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
@@ -36,18 +36,18 @@ const useStorage = (file, caption) => {
                 const url = await storageRef.getDownloadURL();
                 const createdAt = timestamp();
                 console.log(userData);
-                collectionRef.add({
+
+                console.log(exifInfo);
+                let insert = {
                     url,
                     createdAt,
                     caption,
+                    exif: exifInfo,
                     userData: userData.user,
-                });
-                userImageCollectionRef.add({
-                    url,
-                    createdAt,
-                    caption,
-                    userData: userData.user,
-                });
+                };
+                console.log(insert);
+                collectionRef.add(insert);
+                userImageCollectionRef.add(insert);
                 setUrl(url);
             }
         );

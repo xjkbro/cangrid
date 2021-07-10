@@ -2,8 +2,16 @@ import { useEffect } from "react";
 import useStorage from "../hooks/useStorage";
 import { motion } from "framer-motion";
 
-const ProgressBar = ({ file, setFile, caption, setCaption, setForm }) => {
-    const { progress, url } = useStorage(file, caption);
+const ProgressBar = ({
+    file,
+    setFile,
+    caption,
+    setCaption,
+    exifInfo,
+    setExifInfo,
+    setForm,
+}) => {
+    const { progress, url } = useStorage(file, caption, exifInfo);
     // console.log(progress);
 
     useEffect(() => {
@@ -11,6 +19,7 @@ const ProgressBar = ({ file, setFile, caption, setCaption, setForm }) => {
             setFile(null);
             setCaption("");
             setForm(null);
+            setExifInfo(null);
         }
     }, [url, setFile]);
 
