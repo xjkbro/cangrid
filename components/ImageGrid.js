@@ -11,30 +11,32 @@ const ImageGrid = ({ images, setSelectedImg }) => {
     const [docs, setDocs] = useState([]);
     const router = useRouter();
     console.log(router.query);
-    // useEffect(() => {
-    // const unsub = projectFirestore
-    //     .collection("users")
-    //     .doc(router.query.id)
-    //     .collection("images")
-    //     .orderBy("createdAt", "desc")
-    //     .onSnapshot((snap) => {
-    //         let documents = [];
-    //         snap.forEach((doc) => {
-    //             console.log(doc.id);
-    //             documents.push({ ...doc.data(), id: doc.id });
-    //         });
-    //         setDocs(documents);
-    //     });
-    // return () => unsub();
-    // this is a cleanup function that react will run when
-    // a component using the hook unmounts
-    // }, [images]);
+
+    useEffect(() => {
+        //necessary to have image automatically appear as soon as a user uploads on their page
+        const unsub = projectFirestore
+            .collection("users")
+            .doc(user.uid)
+            .collection("images")
+            .orderBy("createdAt", "desc")
+            .onSnapshot((snap) => {
+                let documents = [];
+                snap.forEach((doc) => {
+                    // console.log(doc.id);
+                    documents.push({ ...doc.data(), id: doc.id });
+                });
+                setDocs(documents);
+            });
+        return () => unsub();
+        // this is a cleanup function that react will run when
+        // a component using the hook unmounts
+    }, [user]);
 
     console.log(docs);
     return (
         <div className="img-grid">
-            {images &&
-                images?.map((doc) => {
+            {docs &&
+                docs?.map((doc) => {
                     // if (doc.user == user?.email) {
                     return (
                         <motion.div

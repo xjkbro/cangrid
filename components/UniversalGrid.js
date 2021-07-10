@@ -1,15 +1,21 @@
 import useFirestore from "../hooks/useFirestore";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import Router from "next/router";
 
 const ImageGrid = ({ setSelectedImg }) => {
     const { docs } = useFirestore("images");
-    console.log(docs);
+    const [imgs, setImgs] = useState([]);
+
+    useEffect(() => {
+        // setImgs(docs.sort(() => 0.5 - Math.random()));
+    }, [docs]);
+    console.log(imgs);
 
     return (
         <div className="img-grid">
             {docs &&
-                docs
-                    .sort(() => 0.5 - Math.random()) //shuffles current grid
+                docs //shuffles current grid
                     .filter((item, idx) => idx < 30) //limits the number of items on main page to max at 30
                     .map((doc) => (
                         <motion.div
