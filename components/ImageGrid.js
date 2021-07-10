@@ -4,19 +4,46 @@ import { auth, projectFirestore } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import Image from "next/image";
+import { UserContext } from "../providers/UserContext";
 
 const ImageGrid = ({ images, setSelectedImg }) => {
     const [user] = useAuthState(auth);
+    const { userData, setUserData } = useContext(UserContext);
     const [docs, setDocs] = useState([]);
     const router = useRouter();
     console.log(router.query);
-
-    useEffect(() => {
+    console.log(userData);
+    useEffect(async () => {
         //necessary to have image automatically appear as soon as a user uploads on their page
-        const unsub = projectFirestore
-            .collection("users")
-            .doc(user.uid)
+        // const unsub = projectFirestore
+        //     .collection("users")
+        //     .doc(await userData.user.uid)
+        //     .collection("images")
+        //     .orderBy("createdAt", "desc")
+        //     .onSnapshot((snap) => {
+        //         let documents = [];
+        //         snap.forEach((doc) => {
+        //             // console.log(doc.id);
+        //             documents.push({ ...doc.data(), id: doc.id });
+        //         });
+        //         setDocs(documents);
+        //     });
+
+        let collectionRef = projectFirestore.collection("users");
+        let userRef = null;
+        var query = await collectionRef
+            .where("username", "==", router.query.username)
+            .limit(1)
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    userRef = doc.ref;
+                });
+            });
+
+        const imgRes = await userRef
             .collection("images")
             .orderBy("createdAt", "desc")
             .onSnapshot((snap) => {
@@ -27,9 +54,6 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                 });
                 setDocs(documents);
             });
-        return () => unsub();
-        // this is a cleanup function that react will run when
-        // a component using the hook unmounts
     }, [user]);
 
     console.log(docs);
@@ -47,6 +71,7 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                             s
                             onClick={() => setSelectedImg(doc)}
                         >
+                            {/* <img src={doc.url} alt="uploaded pic" /> */}
                             <motion.img
                                 src={doc.url}
                                 alt="uploaded pic"
