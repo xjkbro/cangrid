@@ -224,6 +224,7 @@ form {
     padding: 10vw;
     background-color: #ddd;
 }
+
 @media screen and (max-width: 600px) {
     /*Title Screen elements*/
     .control {

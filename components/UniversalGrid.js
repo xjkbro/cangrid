@@ -2,6 +2,8 @@ import useFirestore from "../hooks/useFirestore";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { FadeTransform, Stagger } from "react-animation-components";
+import { TransitionGroup } from "react-transition-group";
 
 const ImageGrid = ({ setSelectedImg }) => {
     const { docs } = useFirestore("images");
@@ -13,29 +15,36 @@ const ImageGrid = ({ setSelectedImg }) => {
     console.log(imgs);
 
     return (
-        <div className="img-grid">
-            {docs &&
-                docs //shuffles current grid
-                    .filter((item, idx) => idx < 30) //limits the number of items on main page to max at 30
-                    .map((doc) => (
-                        <motion.div
-                            className="img-wrap"
-                            key={doc.id}
-                            layout
-                            whileHover={{ opacity: 1 }}
-                            s
-                            onClick={() => setSelectedImg(doc)}
-                        >
-                            <motion.img
-                                src={doc.url}
-                                alt="uploaded pic"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1 }}
-                            />
-                        </motion.div>
-                    ))}
-        </div>
+        <TransitionGroup>
+            <Stagger in className="img-grid">
+                {docs &&
+                    docs
+                        .filter((item, idx) => idx < 30) //limits the number of items on main page to max at 30
+                        .map((doc) => (
+                            <FadeTransform
+                                in
+                                fadeProps={{
+                                    enterOpacity: 1,
+                                    exitOpacity: 0,
+                                }}
+                                transformProps={{
+                                    exitTransform: "translateY(100px)",
+                                }}
+                            >
+                                <div
+                                    className="img-wrap"
+                                    key={doc.id}
+                                    onClick={() => setSelectedImg(doc)}
+                                >
+                                    <motion.img
+                                        src={doc.url}
+                                        alt="uploaded pic"
+                                    />
+                                </div>
+                            </FadeTransform>
+                        ))}
+            </Stagger>
+        </TransitionGroup>
     );
 };
 

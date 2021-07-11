@@ -8,6 +8,9 @@ import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { UserContext } from "../providers/UserContext";
 
+import { FadeTransform, Stagger } from "react-animation-components";
+import { TransitionGroup } from "react-transition-group";
+
 const ImageGrid = ({ images, setSelectedImg }) => {
     const [user] = useAuthState(auth);
     const { userData, setUserData } = useContext(UserContext);
@@ -58,32 +61,37 @@ const ImageGrid = ({ images, setSelectedImg }) => {
 
     console.log(docs);
     return (
-        <div className="img-grid">
-            {docs &&
-                docs?.map((doc) => {
-                    // if (doc.user == user?.email) {
-                    return (
-                        <motion.div
-                            className="img-wrap"
-                            key={doc.id}
-                            layout
-                            whileHover={{ opacity: 1 }}
-                            s
-                            onClick={() => setSelectedImg(doc)}
-                        >
-                            {/* <img src={doc.url} alt="uploaded pic" /> */}
-                            <motion.img
-                                src={doc.url}
-                                alt="uploaded pic"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1 }}
-                            />
-                        </motion.div>
-                    );
-                    // }
-                })}
-        </div>
+        <TransitionGroup>
+            <Stagger in className="img-grid">
+                {docs &&
+                    docs?.map((doc) => {
+                        // if (doc.user == user?.email) {
+                        return (
+                            <FadeTransform
+                                in
+                                fadeProps={{
+                                    enterOpacity: 1,
+                                    exitOpacity: 0,
+                                }}
+                                transformProps={{
+                                    exitTransform: "translateY(100px)",
+                                }}
+                            >
+                                <div
+                                    className="img-wrap"
+                                    key={doc.id}
+                                    onClick={() => setSelectedImg(doc)}
+                                >
+                                    <motion.img
+                                        src={doc.url}
+                                        alt="uploaded pic"
+                                    />
+                                </div>
+                            </FadeTransform>
+                        );
+                    })}
+            </Stagger>
+        </TransitionGroup>
     );
 };
 
