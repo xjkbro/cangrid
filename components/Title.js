@@ -13,7 +13,7 @@ const Title = ({ userInfo, isError }) => {
     const { userData, setUserData } = useContext(UserContext);
 
     const signIn = () => {
-        auth.signInWithPopup(provider)
+        auth.signInWithRedirect(provider)
             .then((res) => {
                 console.log(res);
                 if (res.additionalUserInfo.isNewUser) router.push("/profile");
@@ -93,10 +93,14 @@ const Title = ({ userInfo, isError }) => {
             return (
                 <>
                     <h2>The Gallery</h2>
-                    <p>
-                        Welcome to the Gallery. Please sign in to continue and
-                        upload your art.
-                    </p>
+                    {userInfo ? (
+                        <p>
+                            Welcome to the Gallery. Please sign in to continue
+                            and upload your art.
+                        </p>
+                    ) : (
+                        <></>
+                    )}
                 </>
             );
         }
