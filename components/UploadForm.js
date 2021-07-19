@@ -4,8 +4,50 @@ import Button from "@material-ui/core/Button";
 import ProgressBar from "./ProgressBar";
 import { auth } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
+import styled from "styled-components";
 import EXIF from "exif-js";
+import CameraIcon from "@material-ui/icons/CameraAlt";
+import AperatureIcon from "@material-ui/icons/Camera";
+import IsoIcon from "@material-ui/icons/Iso";
+import ShutterSpeedIcon from "@material-ui/icons/ShutterSpeed";
 
+const Container = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-width: 500px;
+    > .MuiFormControl-root {
+        width: 100%;
+        height: 200px;
+    }
+    .MuiInputBase-root {
+        width: 100%;
+        height: 100%;
+    }
+    .MuiFilledInput-multiline {
+        padding: 50px 14px 14px;
+    }
+    > .uploadButton {
+        position: absolute;
+        left: 15px;
+        top: 0px;
+    }
+    > span {
+        position: absolute;
+        right: 15px;
+        top: 20px;
+    }
+`;
+const Form = styled.form`
+    margin: 0px auto;
+    text-align: center;
+    width: 100%;
+`;
+const ExifContainer = styled.div`
+    display: flex;
+    align-items: center;
+`;
 const UploadForm = () => {
     const [user, loading] = useAuthState(auth);
 
@@ -83,36 +125,6 @@ const UploadForm = () => {
                         dateCaptured: imgDate,
                     };
                 console.log(exifData);
-                // let exifInfo = EXIF.getAllTags(selected);
-                // let exifData = {
-                //     make: exifInfo?.Make,
-                //     model: exifInfo?.Model,
-                //     iso: exifInfo?.ISOSpeedRatings,
-                //     focalLength: {
-                //         value:
-                //             exifInfo?.FocalLength?.numerator /
-                //             exifInfo?.FocalLength?.denominator,
-                //         numerator: exifInfo?.FocalLength?.numerator,
-                //         denominator: exifInfo?.FocalLength?.denominator,
-                //     },
-                //     aperature: {
-                //         value:
-                //             exifInfo?.FNumber?.numerator /
-                //             exifInfo?.FNumber?.denominator,
-                //         numerator: exifInfo?.FNumber?.numerator,
-                //         denominator: exifInfo?.FNumber?.denominator,
-                //     },
-                //     exposure: {
-                //         value:
-                //             exifInfo?.ExposureTime?.numerator /
-                //             exifInfo?.ExposureTime?.denominator,
-                //         numerator: exifInfo?.ExposureTime?.numerator,
-                //         denominator: exifInfo?.ExposureTime?.denominator,
-                //     },
-                //     flash: exifInfo?.Flash,
-                //     cameraFunction: exifInfo?.ExposureProgram,
-                //     dateCaptured: exifInfo?.DateTime,
-                // };
 
                 if (exifData) {
                     setExifInfo(exifData);
@@ -147,8 +159,9 @@ const UploadForm = () => {
             return <></>;
         } else {
             return (
-                <form onSubmit={submitForm}>
-                    <div className="fileContainer">
+                <Form onSubmit={submitForm}>
+                    {file && <div>{file.name}</div>}
+                    <Container>
                         <TextField
                             multiline
                             rows={4}
@@ -170,10 +183,35 @@ const UploadForm = () => {
                         >
                             Upload
                         </Button>
-                    </div>
+                    </Container>
                     <div className="output">
                         {error && <div className="error">{error}</div>}
-                        {file && <div>{file.name}</div>}
+
+                        {file && (
+                            <>
+                                <ExifContainer>
+                                    <CameraIcon fontSize="large" />
+                                    <span>
+                                        {exifInfo?.model ||
+                                            "Unidentified Camera"}
+                                    </span>
+                                </ExifContainer>
+                                <ExifContainer>
+                                    <AperatureIcon fontSize="large" /> <i>f</i>/
+                                    {exifInfo?.aperature?.value || "N/A"}
+                                </ExifContainer>
+                                <ExifContainer>
+                                    <ShutterSpeedIcon fontSize="large" />
+                                    {exifInfo?.exposure?.numerator || "1"}/
+                                    {exifInfo?.exposure?.denominator || "N/A"}
+                                </ExifContainer>
+                                <ExifContainer>
+                                    <IsoIcon fontSize="large" />{" "}
+                                    {exifInfo?.iso || "N/A"}
+                                </ExifContainer>
+                            </>
+                        )}
+
                         {form && (
                             <ProgressBar
                                 file={file}
@@ -186,7 +224,7 @@ const UploadForm = () => {
                             />
                         )}
                     </div>
-                </form>
+                </Form>
             );
         }
     };

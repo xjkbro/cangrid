@@ -5,14 +5,17 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, provider, projectFirestore } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import Logo from "../public/images/candydio-white.png";
+import UploadModal from "./UploadModal";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const Title = ({ userInfo, isError }) => {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
+    const [selectUpload, setSelectUpload] = useState(null);
 
     const signIn = () => {
         auth.signInWithRedirect(provider)
@@ -44,6 +47,21 @@ const Title = ({ userInfo, isError }) => {
             return (
                 <div className="control">
                     {/* <Link href={`/users/${user.uid}`}> */}
+                    <label
+                        className="uploadButton uploadLabel"
+                        style={{
+                            display: "inline-block",
+                            width: "40px",
+                            height: "40px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <input onClick={() => setSelectUpload(true)}></input>
+                        <span style={{ position: "absolute", top: "47px" }}>
+                            <CloudUploadIcon />
+                        </span>
+                    </label>
+
                     <Link href={`/users/${userData?.user?.username}`}>
                         <Button
                             variant="contained"
@@ -113,10 +131,12 @@ const Title = ({ userInfo, isError }) => {
                 {userInfo ? (
                     <title>{userInfo.username} | GalleryIO</title>
                 ) : (
-                    <title> GalleryIO</title>
+                    <>
+                        <title> GalleryIO</title>
+                    </>
                 )}
             </Head>
-
+            {selectUpload && <UploadModal setSelectUpload={setSelectUpload} />}
             <div className="title-bar">
                 <Link href={"/"}>
                     <a>

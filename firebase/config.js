@@ -44,23 +44,21 @@ export const signInWithGoogle = () => {
 
 export const generateUserDocument = async (user, username) => {
     if (!user) {
-        console.log("ha");
         return;
     }
-    console.log(user.uid);
-    console.log(username);
+
     const userRef = projectFirestore.doc(`users/${user.uid}`);
 
     const snapshot = await userRef.get();
-    console.log(snapshot);
     if (!snapshot.exists) {
         const { email, displayName, photoURL } = user;
-        console.log(user);
+        let newPhotoURL = photoURL.substring(0, photoURL.length - 4);
+        newPhotoURL += "900-c";
         try {
             await userRef.set({
                 displayName,
                 email,
-                photoURL,
+                photoURL: newPhotoURL,
                 username,
                 description: "",
             });
@@ -78,17 +76,16 @@ export const updateUserDocument = async (user, username, description) => {
     const userRef = projectFirestore.doc(`users/${user.uid}`);
 
     const snapshot = await userRef.get();
-    console.log(snapshot);
     if (snapshot.exists) {
-        console.log(user);
-        console.log(username);
-        console.log(description);
+        const { photoURL } = user;
+        let newPhotoURL = photoURL.substring(0, photoURL.length - 4);
+        newPhotoURL += "900-c";
         if (description == undefined) description = "";
-        console.log(description);
         try {
             await userRef.update({
                 username: username,
                 description: description,
+                photoURL: newPhotoURL,
             });
         } catch (error) {
             console.error("Error updating user document", error);

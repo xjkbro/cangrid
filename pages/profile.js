@@ -73,7 +73,7 @@ function Profile() {
                                     user?.photoURL ||
                                     "https://i.stack.imgur.com/l60Hf.png"
                                 })  no-repeat center center`,
-                                backgroundSize: "contain",
+                                backgroundSize: "cover",
                                 borderRadius: "50%",
                                 height: "200px",
                                 width: "200px",

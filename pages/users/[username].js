@@ -22,7 +22,7 @@ export default function SingleUser({ userInfo, images }) {
     return (
         <div className="App">
             <Title userInfo={userInfo} />
-            {userInfo?.id == user?.uid ? <UploadForm /> : <></>}
+            {/* {userInfo?.id == user?.uid ? <UploadForm /> : <></>} */}
             <ImageGrid images={images} setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal

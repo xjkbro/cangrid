@@ -23,7 +23,7 @@ export default function Home() {
     return (
         <div className="App">
             <Title />
-            <UploadForm />
+            {/* <UploadForm /> */}
             <UniversalGrid setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal
