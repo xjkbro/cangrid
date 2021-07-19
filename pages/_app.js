@@ -8,7 +8,24 @@ import {
 } from "../firebase/config";
 import firebase from "firebase";
 import { UserContext } from "../providers/UserContext";
+import { ThemeProvider } from "styled-components";
+import styled from "styled-components";
+const theme = {
+    colors: {
+        primary: "#333",
+    },
+};
 
+const Line = styled.div`
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(
+        270deg,
+        #b0ae89 25.28%,
+        #89b0ae 59.7%,
+        #ad89b0 97.75%
+    );
+`;
 function MyApp({ Component, pageProps }) {
     const [user, loading] = useAuthState(auth);
     const [userData, setUserData] = useState({ user: null });
@@ -36,7 +53,10 @@ function MyApp({ Component, pageProps }) {
     }, []);
     return (
         <UserContext.Provider value={{ userData, setUserData }}>
-            <Component {...pageProps} />
+            <ThemeProvider theme={theme}>
+                <Line />
+                <Component {...pageProps} />
+            </ThemeProvider>
         </UserContext.Provider>
     );
 }

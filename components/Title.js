@@ -6,6 +6,8 @@ import { auth, provider, projectFirestore } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import Image from "next/image";
+import Logo from "../public/images/candydio-white.png";
 
 const Title = ({ userInfo, isError }) => {
     const [user, loading] = useAuthState(auth);
@@ -114,9 +116,17 @@ const Title = ({ userInfo, isError }) => {
                     <title> GalleryIO</title>
                 )}
             </Head>
+
             <div className="title-bar">
                 <Link href={"/"}>
-                    <h1 style={{ cursor: "pointer" }}>GalleryIO</h1>
+                    <a>
+                        <Image
+                            // style={{ cursor: "pointer" }}
+                            width={200}
+                            height={50}
+                            src={Logo}
+                        />
+                    </a>
                 </Link>
                 {showLogin()}
             </div>
