@@ -7,7 +7,7 @@ import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import Image from "next/image";
-import Logo from "../public/images/candydio-white.png";
+import Logo from "../public/images/candydio-white.jpg";
 import UploadModal from "./UploadModal";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
@@ -142,8 +142,8 @@ const Title = ({ userInfo, isError }) => {
                     <a>
                         <Image
                             // style={{ cursor: "pointer" }}
-                            width={200}
-                            height={50}
+                            // width={200}
+                            // height={50}
                             src={Logo}
                         />
                     </a>
