@@ -10,8 +10,10 @@ const ProgressBar = ({
     exifInfo,
     setExifInfo,
     setForm,
+    tags,
+    setTags,
 }) => {
-    const { progress, url } = useStorage(file, caption, exifInfo);
+    const { progress, url } = useStorage(file, tags, caption, exifInfo);
     // console.log(progress);
 
     useEffect(() => {
@@ -20,6 +22,7 @@ const ProgressBar = ({
             setCaption("");
             setForm(null);
             setExifInfo(null);
+            setTags([]);
         }
     }, [url, setFile]);
 

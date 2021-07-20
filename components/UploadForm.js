@@ -13,20 +13,31 @@ import ShutterSpeedIcon from "@material-ui/icons/ShutterSpeed";
 
 const Container = styled.div`
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-flow: column wrap;
+    /* align-items: center; */
+    /* justify-content: center; */
     position: relative;
     min-width: 500px;
+    min-height: auto;
+    > * {
+    }
     > .MuiFormControl-root {
         width: 100%;
-        height: 200px;
+        /* height: 200px; */
+        margin: 5px 0;
     }
-    .MuiInputBase-root {
+    .MuiInputBase-root .MuiFilledInput-root {
         width: 100%;
         height: 100%;
     }
+    .MuiInputBase-root .MuiOutlinedInput-root {
+        width: 100%;
+    }
     .MuiFilledInput-multiline {
-        padding: 50px 14px 14px;
+        /* padding: 50px 14px 14px; */
+    }
+    .MuiInputBase-inputMultiline {
+        height: 175px;
     }
     > .uploadButton {
         position: absolute;
@@ -39,7 +50,7 @@ const Container = styled.div`
         top: 20px;
     }
 `;
-const Form = styled.form`
+const Form = styled.div`
     margin: 0px auto;
     text-align: center;
     width: 100%;
@@ -47,6 +58,53 @@ const Form = styled.form`
 const ExifContainer = styled.div`
     display: flex;
     align-items: center;
+`;
+const UploadLabel = styled.label`
+    display: block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+    /* margin: 10px auto; */
+    line-height: 30px;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 24px;
+    border-bottom: 1px solid gray;
+    /* padding-bottom: 15px; */
+    /* width: 100%; */
+    input {
+        height: 0;
+        width: 0;
+        opacity: 0;
+    }
+    :hover {
+        background: var(--primary);
+        color: white;
+    }
+`;
+const UploadButton = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 10px 10px;
+    top: 0;
+    left: 0;
+`;
+const UploadOutput = styled.div`
+    /* display: absolute; */
+    padding-left: 10px;
+`;
+const Tag = styled.span`
+    margin: 3px 3px;
+    padding: 5px 12px;
+    background-color: #89b0ae;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+`;
+const Tags = styled.div`
+    display: flex;
+    justify-content: left;
 `;
 const UploadForm = () => {
     const [user, loading] = useAuthState(auth);
@@ -56,6 +114,9 @@ const UploadForm = () => {
     const [error, setError] = useState(null);
     const typeCheck = ["image/png", "image/jpeg", "image/jpg"];
     const [form, setForm] = useState(null);
+    const [tags, setTags] = useState([]);
+    const [singleTag, setSingleTag] = useState("");
+
     const [exifInfo, setExifInfo] = useState(null);
 
     const changeHandler = (e) => {
@@ -160,8 +221,17 @@ const UploadForm = () => {
         } else {
             return (
                 <Form onSubmit={submitForm}>
-                    {file && <div>{file.name}</div>}
                     <Container>
+                        <UploadButton>
+                            <UploadLabel>
+                                <input type="file" onChange={changeHandler} />
+                                <span>+</span>
+                            </UploadLabel>
+                            <UploadOutput>
+                                {file && <span>{file.name}</span>}
+                                {error && <div className="error">{error}</div>}
+                            </UploadOutput>
+                        </UploadButton>
                         <TextField
                             multiline
                             rows={4}
@@ -170,60 +240,85 @@ const UploadForm = () => {
                             value={caption}
                             onChange={(e) => setCaption(e.target.value)}
                         />
-                        <label className="uploadButton uploadLabel">
-                            <input type="file" onChange={changeHandler} />
-                            <span>+</span>
-                        </label>
-                        <Button
-                            variant="contained"
-                            component="span"
-                            className="submitButton"
-                            // color="primary"
-                            onClick={submitForm}
-                        >
-                            Upload
-                        </Button>
+                        <Tags>
+                            {tags.map((item) => (
+                                <Tag
+                                    onClick={(e) =>
+                                        setTags(
+                                            tags.filter(
+                                                (item) =>
+                                                    item !== e.target.innerHTML
+                                            )
+                                        )
+                                    }
+                                >
+                                    {item}
+                                </Tag>
+                            ))}
+                        </Tags>
+                        <TextField
+                            placeholder="Tags"
+                            variant="outlined"
+                            value={singleTag}
+                            onChange={(e) => setSingleTag(e.target.value)}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    setTags([...tags, singleTag]);
+                                    setSingleTag("");
+                                }
+                            }}
+                        />
+                        <div className="output">
+                            {file && (
+                                <>
+                                    <ExifContainer>
+                                        <CameraIcon fontSize="large" />
+                                        <span>
+                                            {exifInfo?.model ||
+                                                "Unidentified Camera"}
+                                        </span>
+                                    </ExifContainer>
+                                    <ExifContainer>
+                                        <AperatureIcon fontSize="large" />{" "}
+                                        <i>f</i>/
+                                        {exifInfo?.aperature?.value || "N/A"}
+                                    </ExifContainer>
+                                    <ExifContainer>
+                                        <ShutterSpeedIcon fontSize="large" />
+                                        {exifInfo?.exposure?.numerator || "1"}/
+                                        {exifInfo?.exposure?.denominator ||
+                                            "N/A"}
+                                    </ExifContainer>
+                                    <ExifContainer>
+                                        <IsoIcon fontSize="large" />{" "}
+                                        {exifInfo?.iso || "N/A"}
+                                    </ExifContainer>
+                                </>
+                            )}
+                            <Button
+                                variant="contained"
+                                component="span"
+                                className="submitButton"
+                                // color="primary"
+                                onClick={submitForm}
+                            >
+                                Upload
+                            </Button>
+                            {form && (
+                                <ProgressBar
+                                    file={file}
+                                    setFile={setFile}
+                                    exifInfo={exifInfo}
+                                    setExifInfo={setExifInfo}
+                                    caption={caption}
+                                    setCaption={setCaption}
+                                    setForm={setForm}
+                                    tags={tags}
+                                    setTags={setTags}
+                                />
+                            )}
+                        </div>
                     </Container>
-                    <div className="output">
-                        {error && <div className="error">{error}</div>}
-
-                        {file && (
-                            <>
-                                <ExifContainer>
-                                    <CameraIcon fontSize="large" />
-                                    <span>
-                                        {exifInfo?.model ||
-                                            "Unidentified Camera"}
-                                    </span>
-                                </ExifContainer>
-                                <ExifContainer>
-                                    <AperatureIcon fontSize="large" /> <i>f</i>/
-                                    {exifInfo?.aperature?.value || "N/A"}
-                                </ExifContainer>
-                                <ExifContainer>
-                                    <ShutterSpeedIcon fontSize="large" />
-                                    {exifInfo?.exposure?.numerator || "1"}/
-                                    {exifInfo?.exposure?.denominator || "N/A"}
-                                </ExifContainer>
-                                <ExifContainer>
-                                    <IsoIcon fontSize="large" />{" "}
-                                    {exifInfo?.iso || "N/A"}
-                                </ExifContainer>
-                            </>
-                        )}
-
-                        {form && (
-                            <ProgressBar
-                                file={file}
-                                setFile={setFile}
-                                exifInfo={exifInfo}
-                                setExifInfo={setExifInfo}
-                                caption={caption}
-                                setCaption={setCaption}
-                                setForm={setForm}
-                            />
-                        )}
-                    </div>
                 </Form>
             );
         }

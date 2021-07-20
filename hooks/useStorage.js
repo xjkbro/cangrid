@@ -8,7 +8,7 @@ import {
 import { UserContext } from "../providers/UserContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const useStorage = (file, caption, exifInfo) => {
+const useStorage = (file, tags, caption, exifInfo) => {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
@@ -42,6 +42,7 @@ const useStorage = (file, caption, exifInfo) => {
                     url,
                     createdAt,
                     caption,
+                    tags,
                     exif: exifInfo,
                     userData: userData.user,
                 };
