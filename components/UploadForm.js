@@ -10,6 +10,7 @@ import CameraIcon from "@material-ui/icons/CameraAlt";
 import AperatureIcon from "@material-ui/icons/Camera";
 import IsoIcon from "@material-ui/icons/Iso";
 import ShutterSpeedIcon from "@material-ui/icons/ShutterSpeed";
+import { ImageMetaData } from "./ImageMetaData";
 
 const Container = styled.div`
     display: flex;
@@ -106,7 +107,7 @@ const Tags = styled.div`
     display: flex;
     justify-content: left;
 `;
-const UploadForm = () => {
+const UploadForm = ({ setSelectUpload }) => {
     const [user, loading] = useAuthState(auth);
 
     const [caption, setCaption] = useState("");
@@ -125,9 +126,10 @@ const UploadForm = () => {
             EXIF.getData(selected, () => {
                 // let exifData = EXIF.getAllTags(selected);
                 // let lensModel = EXIF.getTag(selected, "LensModel");  Unfortunately no lens model on my pictures :c
+                console.log(EXIF.getAllTags(selected));
                 let imgMake = EXIF.getTag(selected, "Make");
                 let imgModel = EXIF.getTag(selected, "Model");
-                let imgISO = EXIF.getTag(selected, "ISOSpeedRating");
+                let imgISO = EXIF.getTag(selected, "ISOSpeedRatings");
                 let imgFocalLength = EXIF.getTag(selected, "FocalLength");
                 let imgAperature = EXIF.getTag(selected, "FNumber");
                 let imgExposure = EXIF.getTag(selected, "ExposureTime");
@@ -186,6 +188,7 @@ const UploadForm = () => {
                         dateCaptured: imgDate,
                     };
                 console.log(exifData);
+                console.log(imgISO);
 
                 if (exifData) {
                     setExifInfo(exifData);
@@ -270,30 +273,31 @@ const UploadForm = () => {
                         />
                         <div className="output">
                             {file && (
-                                <>
-                                    <ExifContainer>
-                                        <CameraIcon fontSize="large" />
-                                        <span>
-                                            {exifInfo?.model ||
-                                                "Unidentified Camera"}
-                                        </span>
-                                    </ExifContainer>
-                                    <ExifContainer>
-                                        <AperatureIcon fontSize="large" />{" "}
-                                        <i>f</i>/
-                                        {exifInfo?.aperature?.value || "N/A"}
-                                    </ExifContainer>
-                                    <ExifContainer>
-                                        <ShutterSpeedIcon fontSize="large" />
-                                        {exifInfo?.exposure?.numerator || "1"}/
-                                        {exifInfo?.exposure?.denominator ||
-                                            "N/A"}
-                                    </ExifContainer>
-                                    <ExifContainer>
-                                        <IsoIcon fontSize="large" />{" "}
-                                        {exifInfo?.iso || "N/A"}
-                                    </ExifContainer>
-                                </>
+                                <ImageMetaData exifInfo={exifInfo} />
+                                // <>
+                                //     <ExifContainer>
+                                //         <CameraIcon fontSize="large" />
+                                //         <span>
+                                //             {exifInfo?.model ||
+                                //                 "Unidentified Camera"}
+                                //         </span>
+                                //     </ExifContainer>
+                                //     <ExifContainer>
+                                //         <AperatureIcon fontSize="large" />{" "}
+                                //         <i>f</i>/
+                                //         {exifInfo?.aperature?.value || "N/A"}
+                                //     </ExifContainer>
+                                //     <ExifContainer>
+                                //         <ShutterSpeedIcon fontSize="large" />
+                                //         {exifInfo?.exposure?.numerator || "1"}/
+                                //         {exifInfo?.exposure?.denominator ||
+                                //             "N/A"}
+                                //     </ExifContainer>
+                                //     <ExifContainer>
+                                //         <IsoIcon fontSize="large" />{" "}
+                                //         {exifInfo?.iso || "N/A"}
+                                //     </ExifContainer>
+                                // </>
                             )}
                             <Button
                                 variant="contained"
@@ -315,6 +319,7 @@ const UploadForm = () => {
                                     setForm={setForm}
                                     tags={tags}
                                     setTags={setTags}
+                                    setSelectUpload={setSelectUpload}
                                 />
                             )}
                         </div>

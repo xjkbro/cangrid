@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { ImageMetaData } from "./ImageMetaData";
+import { Tags } from "./Tags";
 
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const handleClick = (e) => {
@@ -10,7 +12,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
 
     const ImgMetaData = () => {
         const { exif } = selectedImg;
-        console.log(exif);
 
         // if (JSON.stringify(exif) != "{}") {
         if (exif) {
@@ -111,7 +112,12 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                             )}
                         </motion.p>
                     </motion.div>
-                    <ImgMetaData />
+                    {/* <ImgMetaData /> */}
+                    <Tags
+                        tags={selectedImg?.tags}
+                        setSelectedImg={setSelectedImg}
+                    />
+                    <ImageMetaData exifInfo={selectedImg.exif} />
                 </motion.div>
             </motion.div>
         </motion.div>

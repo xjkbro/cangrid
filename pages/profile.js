@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import Title from "../components/ProfileTitle";
+import Title from "../components/Title";
 import { UserContext } from "../providers/UserContext";
 import { auth, updateUserDocument, getUsernameDoc } from "../firebase/config";
 import { useRouter } from "next/router";

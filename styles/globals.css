@@ -69,11 +69,11 @@ body {
     background-color: var(--secondary) !important;
 }
 /* upload form styles */
-form {
-    /* margin: 30px auto;
+/* form { */
+/* margin: 30px auto;
     text-align: center;
     width: 100%; */
-}
+/* } */
 .fileContainer {
     display: flex;
     align-items: center;
@@ -156,6 +156,7 @@ form {
     /* padding controls height, will always be perfectly square regardless of width */
     position: relative;
     opacity: 0.8;
+    cursor: pointer;
 }
 .img-wrap img {
     min-width: 100%;
@@ -278,7 +279,5 @@ form {
         border-bottom: 0px;
         /* padding-bottom: 15px; */
         width: 100%;
-    }
-    .profileDiv {
     }
 }

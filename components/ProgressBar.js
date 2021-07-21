@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import useStorage from "../hooks/useStorage";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 const ProgressBar = ({
     file,
@@ -12,10 +13,14 @@ const ProgressBar = ({
     setForm,
     tags,
     setTags,
+    setSelectUpload,
 }) => {
     const { progress, url } = useStorage(file, tags, caption, exifInfo);
     // console.log(progress);
-
+    const router = useRouter();
+    const refreshData = () => {
+        router.replace(router.asPath);
+    };
     useEffect(() => {
         if (url) {
             setFile(null);
@@ -23,7 +28,9 @@ const ProgressBar = ({
             setForm(null);
             setExifInfo(null);
             setTags([]);
+            setSelectUpload(false);
         }
+        refreshData();
     }, [url, setFile]);
 
     return (

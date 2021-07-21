@@ -5,17 +5,52 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, provider, projectFirestore } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Logo from "../public/images/candydio-white.jpg";
 import UploadModal from "./UploadModal";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import MenuIcon from "@material-ui/icons/Menu";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Grow from "@material-ui/core/Grow";
+import Paper from "@material-ui/core/Paper";
+import Popper from "@material-ui/core/Popper";
+import MenuItem from "@material-ui/core/MenuItem";
+import MenuList from "@material-ui/core/MenuList";
 
 const Title = ({ userInfo, isError }) => {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
-    const [selectUpload, setSelectUpload] = useState(null);
+    const [selectUpload, setSelectUpload] = useState(false);
+    const [openMenu, setOpenMenu] = useState(false);
+    const anchorRef = useRef(null);
+    const prevOpen = useRef(openMenu);
+
+    const handleToggle = () => {
+        setOpenMenu((prevOpen) => !prevOpen);
+    };
+
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        setOpenMenu(false);
+    };
+    function handleListKeyDown(event) {
+        if (event.key === "Tab") {
+            event.preventDefault();
+            setOpenMenu(false);
+        }
+    }
+
+    useEffect(() => {
+        if (prevOpen.current === true && openMenu === false) {
+            anchorRef.current.focus();
+        }
+        prevOpen.current = openMenu;
+    }, [openMenu]);
 
     const signIn = () => {
         auth.signInWithRedirect(provider)
@@ -30,6 +65,7 @@ const Title = ({ userInfo, isError }) => {
     };
 
     const showLogin = () => {
+        //Default Title Bar
         if (user == null) {
             return (
                 <>
@@ -44,6 +80,7 @@ const Title = ({ userInfo, isError }) => {
                 </>
             );
         } else {
+            // Logged in user dashboard/homescreen
             return (
                 <div className="control">
                     {/* <Link href={`/users/${user.uid}`}> */}
@@ -62,7 +99,69 @@ const Title = ({ userInfo, isError }) => {
                         </span>
                     </label>
 
-                    <Link href={`/users/${userData?.user?.username}`}>
+                    <Button
+                        ref={anchorRef}
+                        aria-controls={openMenu ? "menu-list-grow" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleToggle}
+                    >
+                        <MenuIcon fontSize="Large" />
+                    </Button>
+                    {/* <MenuList>
+                        <MenuItem>Profile</MenuItem>
+                        <MenuItem>My account</MenuItem>
+                        <MenuItem>Logout</MenuItem>
+                    </MenuList> */}
+                    <Popper
+                        open={openMenu}
+                        anchorEl={anchorRef.current}
+                        role={undefined}
+                        transition
+                        disablePortal
+                    >
+                        {({ TransitionProps, placement }) => (
+                            <Grow
+                                {...TransitionProps}
+                                style={{
+                                    transformOrigin:
+                                        placement === "bottom"
+                                            ? "center top"
+                                            : "center bottom",
+                                }}
+                            >
+                                <Paper>
+                                    <ClickAwayListener
+                                        onClickAway={handleClose}
+                                    >
+                                        <MenuList
+                                            autoFocusItem={openMenu}
+                                            id="menu-list-grow"
+                                            onKeyDown={handleListKeyDown}
+                                        >
+                                            <MenuItem onClick={handleClose}>
+                                                <Link
+                                                    href={`/users/${userData?.user?.username}`}
+                                                >
+                                                    My Gallery
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <Link href={"/profile"}>
+                                                    My account
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <Link href={"/signout"}>
+                                                    Logout
+                                                </Link>
+                                            </MenuItem>
+                                        </MenuList>
+                                    </ClickAwayListener>
+                                </Paper>
+                            </Grow>
+                        )}
+                    </Popper>
+                    {/* <Link href={`/users/${userData?.user?.username}`}>
                         <Button
                             variant="contained"
                             component="span"
@@ -79,7 +178,7 @@ const Title = ({ userInfo, isError }) => {
                         >
                             Profile
                         </Button>
-                    </Link>
+                    </Link> 
                     <Link href={"/signout"}>
                         <Button
                             variant="contained"
@@ -88,42 +187,84 @@ const Title = ({ userInfo, isError }) => {
                         >
                             Logout
                         </Button>
-                    </Link>
+                    </Link>*/}
                 </div>
             );
         }
     };
 
     const TitleDisplay = () => {
-        if (userInfo && !isError) {
-            return (
-                <>
-                    <h2>{userInfo.username}'s Gallery</h2>
-                    <p>{userInfo.description}</p>
-                </>
-            );
-        } else if (isError) {
-            return (
-                <>
-                    <h2>Something Went Wrong</h2>
-                    {/* <p></p> */}
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <h2>The Gallery</h2>
-                    {userInfo ? (
-                        <p>
-                            Welcome to the Gallery. Please sign in to continue
-                            and upload your art.
-                        </p>
-                    ) : (
-                        <></>
-                    )}
-                </>
-            );
+        //User is on a user gallery
+        console.log(userData);
+        switch (router.pathname) {
+            case "/tags/[tag]":
+                return (
+                    <>
+                        <h2>Tag: {router.query.tag}</h2>
+                    </>
+                );
+            case "/users/[username]":
+                return (
+                    <>
+                        <h2>{userInfo.username}'s Gallery</h2>
+                        <p>{userInfo.description}</p>
+                    </>
+                );
+            case "/users/404":
+                return (
+                    <>
+                        <h2>Something Went Wrong</h2>
+                    </>
+                );
+            case "/":
+                if (userData.user != null)
+                    return (
+                        <>
+                            <h2>The Gallery</h2>
+                        </>
+                    );
+                else
+                    return (
+                        <>
+                            <h2>The Gallery</h2>
+                            <p>
+                                Welcome to the Gallery. Please sign in to
+                                continue and upload your art.
+                            </p>
+                        </>
+                    );
+            default:
         }
+        // if (userInfo && !isError) {
+        //     return (
+        //         <>
+        //             <h2>{userInfo.username}'s Gallery</h2>
+        //             <p>{userInfo.description}</p>
+        //         </>
+        //     );
+        // } else if (isError) {
+        //     return (
+        //         <>
+        //             <h2>Something Went Wrong</h2>
+        //             {/* <p></p> */}
+        //         </>
+        //     );
+        // } else {
+        //     //User is on homepage and not logged in
+        //     return (
+        //         <>
+        //             <h2>The Gallery</h2>
+        //             {userInfo ? (
+        //                 <p>
+        //                     Welcome to the Gallery. Please sign in to continue
+        //                     and upload your art.
+        //                 </p>
+        //             ) : (
+        //                 <></>
+        //             )}
+        //         </>
+        //     );
+        // }
     };
     return (
         <div className="title">
@@ -132,7 +273,7 @@ const Title = ({ userInfo, isError }) => {
                     <title>{userInfo.username} | GalleryIO</title>
                 ) : (
                     <>
-                        <title> GalleryIO</title>
+                        <title>GalleryIO</title>
                     </>
                 )}
             </Head>

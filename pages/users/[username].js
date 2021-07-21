@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { UserContext } from "../../providers/UserContext";
 
 export default function SingleUser({ userInfo, images }) {
+    console.log(images);
     const [selectedImg, setSelectedImg] = useState(null);
     const [user, loading] = useAuthState(auth);
     const { userData, setUserData } = useContext(UserContext);
@@ -78,6 +79,8 @@ export async function getServerSideProps(context) {
                 id: img.id,
                 caption: img.caption,
                 url: img.url,
+                exif: img.exif,
+                tags: img.tags,
                 userData: img.userData,
             };
         });

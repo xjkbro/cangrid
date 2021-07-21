@@ -1,27 +1,15 @@
-import useFirestore from "../hooks/useFirestore";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import Router from "next/router";
+
 import { FadeTransform, Stagger } from "react-animation-components";
 import { TransitionGroup } from "react-transition-group";
-import { projectFirestore } from "../firebase/config";
 
 const ImageGrid = ({ images, setSelectedImg }) => {
-    const { docs } = useFirestore("images");
-    const [imgs, setImgs] = useState([]);
-
-    useEffect(() => {
-        // setImgs(docs.sort(() => 0.5 - Math.random()));
-    }, [docs]);
-    console.log(images);
-
     return (
         <TransitionGroup>
             <Stagger in className="img-grid">
                 {images &&
-                    images
-                        .filter((item, idx) => idx < 30) //limits the number of items on main page to max at 30
-                        .map((doc) => (
+                    images?.map((doc) => {
+                        return (
                             <FadeTransform
                                 in
                                 fadeProps={{
@@ -43,7 +31,8 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                                     />
                                 </div>
                             </FadeTransform>
-                        ))}
+                        );
+                    })}
             </Stagger>
         </TransitionGroup>
     );

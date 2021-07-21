@@ -18,7 +18,7 @@ const UploadModal = ({ setSelectUpload }) => {
                         width: "100%",
                     }}
                 >
-                    <UploadForm />
+                    <UploadForm setSelectUpload={setSelectUpload} />
                 </motion.div>
             </motion.div>
         </motion.div>

@@ -19,21 +19,6 @@ const ImageGrid = ({ images, setSelectedImg }) => {
     console.log(router.query);
     console.log(userData);
     useEffect(async () => {
-        //necessary to have image automatically appear as soon as a user uploads on their page
-        // const unsub = projectFirestore
-        //     .collection("users")
-        //     .doc(await userData.user.uid)
-        //     .collection("images")
-        //     .orderBy("createdAt", "desc")
-        //     .onSnapshot((snap) => {
-        //         let documents = [];
-        //         snap.forEach((doc) => {
-        //             // console.log(doc.id);
-        //             documents.push({ ...doc.data(), id: doc.id });
-        //         });
-        //         setDocs(documents);
-        //     });
-
         let collectionRef = projectFirestore.collection("users");
         let userRef = null;
         var query = await collectionRef
@@ -63,8 +48,8 @@ const ImageGrid = ({ images, setSelectedImg }) => {
     return (
         <TransitionGroup>
             <Stagger in className="img-grid">
-                {docs &&
-                    docs?.map((doc) => {
+                {images &&
+                    images?.map((doc) => {
                         // if (doc.user == user?.email) {
                         return (
                             <FadeTransform
