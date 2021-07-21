@@ -7,7 +7,7 @@ import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Logo from "../public/images/candydio-white.jpg";
+import Logo from "../public/images/cangrid.png";
 import UploadModal from "./UploadModal";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -94,7 +94,7 @@ const Title = ({ userInfo, isError }) => {
                         }}
                     >
                         <input onClick={() => setSelectUpload(true)}></input>
-                        <span style={{ position: "absolute", top: "47px" }}>
+                        <span style={{ position: "absolute", top: "50px" }}>
                             <CloudUploadIcon />
                         </span>
                     </label>
@@ -104,6 +104,8 @@ const Title = ({ userInfo, isError }) => {
                         aria-controls={openMenu ? "menu-list-grow" : undefined}
                         aria-haspopup="true"
                         onClick={handleToggle}
+                        // style={{ color: "#89b0ae" }}
+                        className="menuButton"
                     >
                         <MenuIcon fontSize="Large" />
                     </Button>
@@ -118,6 +120,7 @@ const Title = ({ userInfo, isError }) => {
                         role={undefined}
                         transition
                         disablePortal
+                        className="menulist"
                     >
                         {({ TransitionProps, placement }) => (
                             <Grow
@@ -142,12 +145,12 @@ const Title = ({ userInfo, isError }) => {
                                                 <Link
                                                     href={`/users/${userData?.user?.username}`}
                                                 >
-                                                    My Gallery
+                                                    My Grid
                                                 </Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
                                                 <Link href={"/profile"}>
-                                                    My account
+                                                    My Account
                                                 </Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
@@ -161,33 +164,6 @@ const Title = ({ userInfo, isError }) => {
                             </Grow>
                         )}
                     </Popper>
-                    {/* <Link href={`/users/${userData?.user?.username}`}>
-                        <Button
-                            variant="contained"
-                            component="span"
-                            className="profileButton"
-                        >
-                            Your Gallery
-                        </Button>
-                    </Link>
-                    <Link href={"/profile"}>
-                        <Button
-                            variant="contained"
-                            component="span"
-                            className="profileButton"
-                        >
-                            Profile
-                        </Button>
-                    </Link> 
-                    <Link href={"/signout"}>
-                        <Button
-                            variant="contained"
-                            component="span"
-                            className="logoutButton"
-                        >
-                            Logout
-                        </Button>
-                    </Link>*/}
                 </div>
             );
         }
@@ -195,7 +171,7 @@ const Title = ({ userInfo, isError }) => {
 
     const TitleDisplay = () => {
         //User is on a user gallery
-        console.log(userData);
+        console.log(user);
         switch (router.pathname) {
             case "/tags/[tag]":
                 return (
@@ -206,7 +182,7 @@ const Title = ({ userInfo, isError }) => {
             case "/users/[username]":
                 return (
                     <>
-                        <h2>{userInfo.username}'s Gallery</h2>
+                        <h2>{userInfo.username}'s Grid</h2>
                         <p>{userInfo.description}</p>
                     </>
                 );
@@ -217,63 +193,33 @@ const Title = ({ userInfo, isError }) => {
                     </>
                 );
             case "/":
-                if (userData.user != null)
-                    return (
-                        <>
-                            <h2>The Gallery</h2>
-                        </>
-                    );
-                else
-                    return (
-                        <>
-                            <h2>The Gallery</h2>
-                            <p>
-                                Welcome to the Gallery. Please sign in to
-                                continue and upload your art.
-                            </p>
-                        </>
-                    );
+            // if (user != null)
+            //     return (
+            //         <>
+            //             <h2>The Gallery</h2>
+            //         </>
+            //     );
+            // else
+            //     return (
+            //         <>
+            //             <h2>The Gallery</h2>
+            //             <p>
+            //                 Welcome to the Gallery. Please sign in to
+            //                 continue and upload your art.
+            //             </p>
+            //         </>
+            //     );
             default:
         }
-        // if (userInfo && !isError) {
-        //     return (
-        //         <>
-        //             <h2>{userInfo.username}'s Gallery</h2>
-        //             <p>{userInfo.description}</p>
-        //         </>
-        //     );
-        // } else if (isError) {
-        //     return (
-        //         <>
-        //             <h2>Something Went Wrong</h2>
-        //             {/* <p></p> */}
-        //         </>
-        //     );
-        // } else {
-        //     //User is on homepage and not logged in
-        //     return (
-        //         <>
-        //             <h2>The Gallery</h2>
-        //             {userInfo ? (
-        //                 <p>
-        //                     Welcome to the Gallery. Please sign in to continue
-        //                     and upload your art.
-        //                 </p>
-        //             ) : (
-        //                 <></>
-        //             )}
-        //         </>
-        //     );
-        // }
     };
     return (
         <div className="title">
             <Head>
                 {userInfo ? (
-                    <title>{userInfo.username} | GalleryIO</title>
+                    <title>{userInfo.username} | Cangrid</title>
                 ) : (
                     <>
-                        <title>GalleryIO</title>
+                        <title>Cangrid</title>
                     </>
                 )}
             </Head>
@@ -283,8 +229,8 @@ const Title = ({ userInfo, isError }) => {
                     <a>
                         <Image
                             // style={{ cursor: "pointer" }}
-                            // width={200}
-                            // height={50}
+                            width={300}
+                            height={89}
                             src={Logo}
                         />
                     </a>

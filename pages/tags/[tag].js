@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import Title from "../../components/Title";
 import UploadForm from "../../components/UploadForm";
-import ImageGrid from "../../components/TagGrid";
+import ImageGrid from "../../components/ImageGrid";
 import UniversalGrid from "../../components/UniversalGrid";
 import Modal from "../../components/Modal";
 

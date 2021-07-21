@@ -12,7 +12,10 @@ import { ThemeProvider } from "styled-components";
 import styled from "styled-components";
 const theme = {
     colors: {
-        primary: "#333",
+        primary: "#89b0ae",
+        secondary: "#555b6e",
+        overlay: "#ffd6ba",
+        error: "#ff4a4a",
     },
 };
 

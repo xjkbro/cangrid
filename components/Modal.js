@@ -2,10 +2,80 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ImageMetaData } from "./ImageMetaData";
 import { Tags } from "./Tags";
+import styled from "styled-components";
 
+const ProfilePic = styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+`;
+const ProfileName = styled.span`
+    color: ${(props) => props.theme.colors.secondary};
+    margin-left: 15px;
+`;
+const BackDrop = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > div {
+        display: flex;
+        max-width: 90%;
+        max-height: 90%;
+        vertical-align: middle;
+        box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
+        background-color: white;
+        border-radius: 10px;
+    }
+    > div > img {
+        max-width: 50vw;
+        max-height: 70vh;
+        width: auto;
+        height: auto;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+    > div > div {
+        min-width: 20vw;
+        width: auto;
+        height: auto;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        /* padding: 30px; */
+    }
+`;
+const ModalUpload = styled.div`
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    /* width: 100%; */
+    padding: 10px;
+`;
+const Description = styled.div`
+    width: 100%;
+    max-width: 500px;
+    min-width: 400px;
+`;
+const Caption = styled.div`
+    padding: 15px;
+    width: 90%;
+`;
+const TagsContainer = styled.div`
+    padding: 10px;
+    width: 90%;
+`;
+const MetaTagContainer = styled.div`
+    position: absolute;
+    bottom: 10px;
+    padding-left: 10px;
+    color: ${(props) => props.theme.colors.primary};
+`;
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const handleClick = (e) => {
-        if (e.target.classList.contains("backdrop")) {
+        if (e.target.id == "backdrop") {
             setSelectedImg(null);
         }
     };
@@ -53,20 +123,21 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     };
     console.log(selectedImg);
     return (
-        <motion.div
-            className="backdrop"
+        <BackDrop
+            id="backdrop"
+            as={motion.div}
             onClick={handleClick}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
             <motion.div initial={{ x: "100vw" }} animate={{ x: 0 }}>
                 <motion.img src={selectedImg.url} alt="enlarged pic" />
-                <motion.div
+                <Description
                     style={{
                         width: "100%",
                     }}
                 >
-                    <motion.div className="modalUpload">
+                    <ModalUpload>
                         <a
                             href={`/users/${selectedImg?.userData?.username}`}
                             style={{
@@ -75,52 +146,42 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                 textDecoration: "none",
                             }}
                         >
-                            <img
-                                style={{
-                                    height: "25px",
-                                    width: "25px",
-                                    borderRadius: "50%",
-                                }}
+                            <ProfilePic
                                 src={selectedImg?.userData?.photoURL}
                                 alt=""
                             />{" "}
-                            <span
-                                style={{
-                                    margin: "15px",
-                                    color: "black",
-                                }}
-                            >
+                            <ProfileName>
                                 {selectedImg?.userData?.username}
-                            </span>
+                            </ProfileName>
                         </a>
-                    </motion.div>
-                    <motion.div
-                        style={{
-                            margin: "5px",
-                            width: "100%",
-                        }}
-                    >
-                        {" "}
-                        Caption:
-                        <motion.p>
-                            {selectedImg?.caption !== "" ? (
-                                selectedImg?.caption
-                            ) : (
-                                <p>
-                                    <i>No Caption</i>
-                                </p>
-                            )}
-                        </motion.p>
-                    </motion.div>
+                    </ModalUpload>
+                    <Caption>
+                        {/* <motion.p> */}
+                        {selectedImg?.caption !== "" ? (
+                            selectedImg?.caption
+                        ) : (
+                            <p>
+                                <i>No Caption</i>
+                            </p>
+                        )}
+                        {/* </motion.p> */}
+                    </Caption>
                     {/* <ImgMetaData /> */}
-                    <Tags
-                        tags={selectedImg?.tags}
-                        setSelectedImg={setSelectedImg}
-                    />
-                    <ImageMetaData exifInfo={selectedImg.exif} />
-                </motion.div>
+                    <TagsContainer>
+                        <Tags
+                            tags={selectedImg?.tags}
+                            setSelectedImg={setSelectedImg}
+                        />
+                    </TagsContainer>
+                    <MetaTagContainer>
+                        <ImageMetaData
+                            exifInfo={selectedImg.exif}
+                            modal={true}
+                        />
+                    </MetaTagContainer>
+                </Description>
             </motion.div>
-        </motion.div>
+        </BackDrop>
     );
 };
 

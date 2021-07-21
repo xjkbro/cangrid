@@ -5,6 +5,25 @@ import { auth, updateUserDocument, getUsernameDoc } from "../firebase/config";
 import { useRouter } from "next/router";
 import CreateUsername from "../components/CreateUsername";
 import Link from "next/link";
+import styled from "styled-components";
+
+const ProfileContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+const ProfileBackDrop = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px #bbb;
+    /* padding: 10vw; */
+    padding: 20px;
+    background-color: #ddd;
+`;
 
 function Profile() {
     const router = useRouter();
@@ -20,9 +39,6 @@ function Profile() {
         setUser(userData?.user);
         setUsername(userData?.user?.username);
         setDescription(userData?.user?.description);
-        // setDescriptionLimit(
-        //     descriptionLimit - userData?.user?.description.length
-        // );
     }, [userData]);
 
     const changeUserFields = async (event) => {
@@ -41,31 +57,17 @@ function Profile() {
     return (
         <div className="App">
             <Title />
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
+            <ProfileContainer>
                 {user?.username == null ? (
-                    <div
-                        style={{
-                            border: "1px solid #ddd",
-                            borderRadius: "10px",
-                            boxShadow: "0px 10px 10px #bbb",
-                            padding: "10vw",
-                            backgroundColor: "#ddd",
-                        }}
-                    >
+                    <ProfileBackDrop>
                         <h1 style={{ textAlign: "center" }}>
                             Please finish your profile
                         </h1>
 
                         <CreateUsername />
-                    </div>
+                    </ProfileBackDrop>
                 ) : (
-                    <div className="profileDiv" style={{ width: "75vw" }}>
+                    <ProfileBackDrop style={{ width: "75vw" }}>
                         <div
                             className="profileImg"
                             style={{
@@ -83,7 +85,7 @@ function Profile() {
                         <div style={{ width: "75%" }}>
                             <h2>Name: {user?.displayName}</h2>
                             <h3>
-                                Username: {user.username}{" "}
+                                Username: {user?.username}{" "}
                                 <span
                                     style={{
                                         cursor: "pointer",
@@ -172,9 +174,9 @@ function Profile() {
                         <button type="button" onClick={changeUserFields}>
                             Save
                         </button>
-                    </div>
+                    </ProfileBackDrop>
                 )}
-            </div>
+            </ProfileContainer>
         </div>
     );
 }

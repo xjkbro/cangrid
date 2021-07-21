@@ -19,6 +19,7 @@ const Container = styled.div`
     /* justify-content: center; */
     position: relative;
     min-width: 500px;
+    max-width: 500px;
     min-height: auto;
     > * {
     }
@@ -105,6 +106,7 @@ const Tag = styled.span`
 `;
 const Tags = styled.div`
     display: flex;
+    flex-wrap: wrap;
     justify-content: left;
 `;
 const UploadForm = ({ setSelectUpload }) => {

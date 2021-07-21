@@ -6,7 +6,7 @@ import { useState, useEffect, useContext } from "react";
 import Title from "../components/Title";
 import UploadForm from "../components/UploadForm";
 import ImageGrid from "../components/ImageGrid";
-import UniversalGrid from "../components/UniversalGrid";
+// import UniversalGrid from "../components/UniversalGrid";
 import Modal from "../components/Modal";
 
 import { auth, projectFirestore } from "../firebase/config";
@@ -14,17 +14,22 @@ import { auth, projectFirestore } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import { UserContext } from "../providers/UserContext";
+import { useRouter } from "next/router";
 
 export default function Home({ images }) {
     const [selectedImg, setSelectedImg] = useState(null);
     // const [user, loading] = useAuthState(auth);
+    const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
     console.log(userData);
+    if (userData?.user?.uid && userData?.user?.username == null) {
+        router.push("/profile");
+    }
     return (
         <div className="App">
             <Title />
             {/* <UploadForm /> */}
-            <UniversalGrid images={images} setSelectedImg={setSelectedImg} />
+            <ImageGrid images={images} setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal
                     selectedImg={selectedImg}

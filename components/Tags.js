@@ -13,6 +13,7 @@ const Item = styled.span`
 const Container = styled.div`
     display: flex;
     justify-content: left;
+    flex-wrap: wrap;
 `;
 export const Tags = ({ tags, setSelectedImg }) => {
     return (

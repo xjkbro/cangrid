@@ -1,16 +1,16 @@
 import { motion } from "framer-motion";
-
 import { FadeTransform, Stagger } from "react-animation-components";
 import { TransitionGroup } from "react-transition-group";
 
 const ImageGrid = ({ images, setSelectedImg }) => {
     return (
         <TransitionGroup>
-            <Stagger in className="img-grid">
+            <Stagger in className="img-grid" duration={300} delay={50}>
                 {images &&
                     images?.map((doc) => {
                         return (
                             <FadeTransform
+                                key={doc.id}
                                 in
                                 fadeProps={{
                                     enterOpacity: 1,
@@ -22,7 +22,6 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                             >
                                 <div
                                     className="img-wrap"
-                                    key={doc.id}
                                     onClick={() => setSelectedImg(doc)}
                                 >
                                     <motion.img
