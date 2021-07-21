@@ -13,24 +13,87 @@ const ProfileContainer = styled.div`
     justify-content: center;
 `;
 const ProfileBackDrop = styled.div`
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0px 10px 10px #bbb;
     /* padding: 10vw; */
     padding: 20px;
     background-color: #ddd;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
 `;
+const ProfileImage = styled.div`
+    background: url(${(props) => props.user?.photoURL}) no-repeat center center;
+    background-size: cover;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    margin: 10px auto;
+`;
+const UsernameForm = styled.form`
+    position: relative;
+    padding: 15px 0 0;
+    margin-top: 10px;
+    width: 100%;
+    > span > input {
+        font-family: inherit;
+        width: 300px;
+        border: 0;
+        border-bottom: 2px solid #9b9b9b;
+        outline: 0;
+        font-size: 1.3rem;
+        color: ${(props) => props.theme.colors.secondary};
+        padding: 7px 0;
+        background: transparent;
+        transition: border-color 0.2s;
+    }
+    > span > input::placeholder {
+        color: transparent;
+    }
+    > span > input:focus {
+        padding-bottom: 6px;
+        font-weight: 700;
+        border-width: 3px;
+        /* border-image: linear-gradient(to right, #11998e, #38ef7d); */
+        border-image: ${(props) => props.theme.colors.secondary};
+        border-image-slice: 1;
+    }
+    > span > input:focus ~ label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+        color: #11998e;
+        font-weight: 700;
+    }
+    > span > label > button {
+        background-color: #061922;
+        padding: 10px;
+    }
+    > span > label {
+        position: absolute;
+        top: 0;
 
+        left: 10px;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+        color: #9b9b9b;
+    }
+`;
 function Profile() {
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
     const [username, setUsername] = useState("");
     const [description, setDescription] = useState("");
     const [descriptionLimit, setDescriptionLimit] = useState(150);
+    const [usernameLength, setUsernameLength] = useState(20);
     const [error, setError] = useState(false);
     const [toggleUsernameChange, setToggleUsernameChange] = useState(false);
 
@@ -43,11 +106,13 @@ function Profile() {
 
     const changeUserFields = async (event) => {
         event.preventDefault();
-        updateUserDocument(user, username, description);
-        console.log(userData);
-        const tempUser = { ...userData.user, username, description };
-        console.log(tempUser);
-        setUserData({ user: tempUser });
+        if (!error) {
+            updateUserDocument(user, username, description);
+            console.log(userData);
+            const tempUser = { ...userData.user, username, description };
+            console.log(tempUser);
+            setUserData({ user: tempUser });
+        }
     };
     const UsernameCheck = async (e) => {
         let err = await getUsernameDoc(e);
@@ -68,112 +133,134 @@ function Profile() {
                     </ProfileBackDrop>
                 ) : (
                     <ProfileBackDrop style={{ width: "75vw" }}>
-                        <div
-                            className="profileImg"
-                            style={{
-                                background: `url(${
-                                    user?.photoURL ||
-                                    "https://i.stack.imgur.com/l60Hf.png"
-                                })  no-repeat center center`,
-                                backgroundSize: "cover",
-                                borderRadius: "50%",
-                                height: "200px",
-                                width: "200px",
-                                margin: "10px",
-                            }}
-                        ></div>
-                        <div style={{ width: "75%" }}>
-                            <h2>Name: {user?.displayName}</h2>
-                            <h3>
-                                Username: {user?.username}{" "}
-                                <span
-                                    style={{
-                                        cursor: "pointer",
-                                        fontSize: "12px",
-                                        marginLeft: "10px",
-                                    }}
-                                    onClick={() =>
-                                        setToggleUsernameChange(
-                                            !toggleUsernameChange
-                                        )
-                                    }
-                                >
-                                    Change Username
-                                </span>
-                            </h3>
-                            {toggleUsernameChange ? (
-                                <div
-                                    style={{
-                                        width: "90%",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        style={{ width: "74%" }}
-                                        value={username}
-                                        onChange={(e) => {
-                                            setUsername(e.target.value);
-                                            UsernameCheck(e.target.value);
+                        {/* <h1>Profile</h1> */}
+                        <div>
+                            <ProfileImage
+                                user={user}
+                                // style={{
+                                //     background: `url(${
+                                //         user?.photoURL ||
+                                //         "https://i.stack.imgur.com/l60Hf.png"
+                                //     })  no-repeat center center`,
+                                // }}
+                            />
+                            <div style={{ textAlign: "center" }}>
+                                To change profile image, change your Google
+                                Account's profile image and log back in.
+                            </div>
+                        </div>
+                        <div>
+                            <div style={{ width: "75%" }}>
+                                <h4>Name: {user?.displayName}</h4>
+                                <h4>
+                                    Username: {user?.username}{" "}
+                                    <div
+                                        style={{
+                                            cursor: "pointer",
+                                            fontSize: "12px",
+                                            marginLeft: "10px",
                                         }}
-                                    />
-                                    <button
-                                        type="button"
-                                        style={{ width: "24%" }}
-                                        onClick={changeUserFields}
+                                        onClick={() =>
+                                            setToggleUsernameChange(
+                                                !toggleUsernameChange
+                                            )
+                                        }
                                     >
                                         Change Username
-                                    </button>
-                                    <p>
-                                        {username != user.username &&
-                                        username != ""
-                                            ? error
-                                                ? `${username} is not available!`
-                                                : `${username} is available! :)`
-                                            : ""}
-                                    </p>
-                                </div>
-                            ) : (
-                                <></>
-                            )}
+                                    </div>
+                                </h4>
+                                {toggleUsernameChange ? (
+                                    <UsernameForm onSubmit={changeUserFields}>
+                                        <span>
+                                            <input
+                                                type="text"
+                                                name="username"
+                                                style={{
+                                                    padding: "5px",
+                                                    marginLeft: "10px",
+                                                }}
+                                                value={username}
+                                                // onChange={(e) => {
+                                                //     setUsername(e.target.value);
+                                                //     UsernameCheck(e.target.value);
+                                                // }}
+                                                onChange={(e) => {
+                                                    if (
+                                                        e.target.value.length <
+                                                        usernameLength
+                                                    ) {
+                                                        let val =
+                                                            username?.length -
+                                                            e.target.value
+                                                                .length;
+                                                        setUsername(
+                                                            e.target.value
+                                                        );
+                                                        UsernameCheck(
+                                                            e.target.value
+                                                        );
+                                                    } else {
+                                                        setUsername(username);
+                                                        UsernameCheck(
+                                                            e.target.value
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                            <label for="username">
+                                                Username
+                                            </label>
+                                        </span>
+                                        <span>
+                                            {username != ""
+                                                ? error
+                                                    ? `❌${username} is not available!`
+                                                    : `✔️ ${username} is available! :)`
+                                                : ""}
+                                        </span>
+                                        {/* <input type="submit" value="Submit" /> */}
+                                    </UsernameForm>
+                                ) : (
+                                    <></>
+                                )}
 
-                            <h3>Email: {user?.email}</h3>
-                            {console.log(user?.uid)}
-                            {/* <h3>ID: {user?.uid}</h3> */}
-                            {/* <Link href={`/users/${user?.uid}`}>
+                                <h4>Email: {user?.email}</h4>
+                                {console.log(user?.uid)}
+                                {/* <h3>ID: {user?.uid}</h3> */}
+                                {/* <Link href={`/users/${user?.uid}`}>
                                 <h3>View Your Gallery</h3>
                             </Link> */}
-                            <h3>Profile Description: </h3>
-                            <textarea
-                                type="text"
-                                name="description"
-                                style={{
-                                    fontSize: "14px",
-                                    width: "100%",
-                                    height: "100px",
-                                    resize: "none",
-                                }}
-                                value={description}
-                                onChange={(e) => {
-                                    if (
-                                        e.target.value.length < descriptionLimit
-                                    ) {
-                                        let val =
-                                            description?.length -
-                                            e.target.value.length;
-                                        setDescription(e.target.value);
-                                    } else {
-                                        setDescription(description);
-                                    }
-                                }}
-                            />
-                            <div>Character Limit: {descriptionLimit}</div>
+                                <h4>Profile Description: </h4>
+                                <textarea
+                                    type="text"
+                                    name="description"
+                                    style={{
+                                        fontSize: "14px",
+                                        width: "100%",
+                                        height: "100px",
+                                        resize: "none",
+                                    }}
+                                    value={description}
+                                    onChange={(e) => {
+                                        if (e.target.value.length <= 150) {
+                                            let val =
+                                                description?.length -
+                                                e.target.value.length;
+                                            setDescription(e.target.value);
+                                            setDescriptionLimit(
+                                                descriptionLimit + val
+                                            );
+                                        } else {
+                                            setDescription(description);
+                                        }
+                                    }}
+                                />
+                                <div>Character Limit: {descriptionLimit}</div>
+                            </div>
+                            <button type="button" onClick={changeUserFields}>
+                                Save
+                            </button>
                         </div>
-                        <button type="button" onClick={changeUserFields}>
-                            Save
-                        </button>
                     </ProfileBackDrop>
                 )}
             </ProfileContainer>

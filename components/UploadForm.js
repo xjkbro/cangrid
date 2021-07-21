@@ -268,39 +268,13 @@ const UploadForm = ({ setSelectUpload }) => {
                             onChange={(e) => setSingleTag(e.target.value)}
                             onKeyPress={(e) => {
                                 if (e.key === "Enter") {
-                                    setTags([...tags, singleTag]);
+                                    setTags([...tags, singleTag.toLowerCase()]);
                                     setSingleTag("");
                                 }
                             }}
                         />
                         <div className="output">
-                            {file && (
-                                <ImageMetaData exifInfo={exifInfo} />
-                                // <>
-                                //     <ExifContainer>
-                                //         <CameraIcon fontSize="large" />
-                                //         <span>
-                                //             {exifInfo?.model ||
-                                //                 "Unidentified Camera"}
-                                //         </span>
-                                //     </ExifContainer>
-                                //     <ExifContainer>
-                                //         <AperatureIcon fontSize="large" />{" "}
-                                //         <i>f</i>/
-                                //         {exifInfo?.aperature?.value || "N/A"}
-                                //     </ExifContainer>
-                                //     <ExifContainer>
-                                //         <ShutterSpeedIcon fontSize="large" />
-                                //         {exifInfo?.exposure?.numerator || "1"}/
-                                //         {exifInfo?.exposure?.denominator ||
-                                //             "N/A"}
-                                //     </ExifContainer>
-                                //     <ExifContainer>
-                                //         <IsoIcon fontSize="large" />{" "}
-                                //         {exifInfo?.iso || "N/A"}
-                                //     </ExifContainer>
-                                // </>
-                            )}
+                            {file && <ImageMetaData exifInfo={exifInfo} />}
                             <Button
                                 variant="contained"
                                 component="span"
