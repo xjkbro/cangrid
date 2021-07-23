@@ -76,6 +76,10 @@ const MetaTagContainer = styled.div`
     padding-left: 10px;
     color: ${(props) => props.theme.colors.primary};
 `;
+const CommentForm = styled.form``;
+const Comments = styled.ul`
+    height: 50%;
+`;
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const [comment, setComment] = useState();
     const handleClick = (e) => {
@@ -138,17 +142,30 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                             setSelectedImg={setSelectedImg}
                         />
                     </TagsContainer>
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            multiline
-                            rows={2}
-                            placeholder="Comment"
-                            variant="filled"
-                            value={comment}
-                            style={{ width: "100%" }}
-                            onChange={(e) => setComment(e.target.value)}
-                        />
-                    </form>
+                    <Comments>
+                        {selectedImg.comments.map((img, i) => {
+                            console.log(img);
+                            return <li key={i}>{img}</li>;
+                        })}
+                    </Comments>
+                    {/* <CommentForm onSubmit={handleSubmit}> */}
+                    <TextField
+                        id="outlined-multiline-static"
+                        multiline
+                        rows={2}
+                        label="Comment"
+                        variant="outlined"
+                        value={comment}
+                        style={{ width: "100%" }}
+                        onChange={(e) => setComment(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                console.log("jaksldj");
+                                handleSubmit();
+                            }
+                        }}
+                    />
+                    {/* </CommentForm> */}
                     <MetaTagContainer>
                         <ImageMetaData
                             exifInfo={selectedImg.exif}

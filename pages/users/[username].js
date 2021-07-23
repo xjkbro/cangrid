@@ -177,8 +177,15 @@ export async function getServerSideProps(context) {
     const images = imgCollection
         .map((doc) => {
             return doc.imageRef.get().then((img) => {
-                const { exif, url, userData, createdAt, tags, caption } =
-                    img.data();
+                const {
+                    exif,
+                    url,
+                    userData,
+                    createdAt,
+                    tags,
+                    caption,
+                    comments,
+                } = img.data();
                 console.log(createdAt.toDate());
                 return {
                     id: doc.id,
@@ -186,9 +193,9 @@ export async function getServerSideProps(context) {
                     url,
                     tags,
                     userData,
-                    tags,
                     caption,
                     createdAt: createdAt.toDate().toString(),
+                    comments,
                 };
             });
         })

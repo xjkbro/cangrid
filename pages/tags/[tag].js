@@ -47,6 +47,8 @@ export async function getServerSideProps(context) {
                 exif: img.exif,
                 tags: img.tags,
                 userData: img.userData,
+                createdAt: img.createdAt.toDate().toString(),
+                comments: img.comments,
             };
         });
 

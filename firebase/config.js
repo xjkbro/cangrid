@@ -95,14 +95,19 @@ export const updateUserDocument = async (user, username, description) => {
 };
 export const addImgComment = async (image, comment) => {
     const { userData, id } = image;
-
+    console.log(comment);
     //update images collection
     const imageRef = projectFirestore.doc(`images/${id}`);
     const snapshotImgCollection = await imageRef.get();
+    let newComments = snapshotImgCollection.data().comments;
+    console.log(newComments);
+    newComments.push(comment);
+    console.log(newComments);
+
     if (snapshotImgCollection.exists) {
         try {
-            await userRef.update({
-                comments: [...comments, comment],
+            await imageRef.update({
+                comments: newComments,
             });
         } catch (error) {
             console.error("Error adding comment to document", error);
