@@ -59,6 +59,7 @@ export async function getServerSideProps(context) {
                 userData: img.userData,
                 createdAt: img.createdAt.toDate().toString(),
                 comments: img.comments,
+                likes: img.likes,
             };
         });
 

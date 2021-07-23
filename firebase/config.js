@@ -93,7 +93,7 @@ export const updateUserDocument = async (user, username, description) => {
     }
     return getUserDocument(user.uid);
 };
-export const addImgComment = async (image, comment) => {
+export const addImgComment = async (user, image, comment) => {
     const { userData, id } = image;
     console.log(comment);
     //update images collection
@@ -101,13 +101,31 @@ export const addImgComment = async (image, comment) => {
     const snapshotImgCollection = await imageRef.get();
     let newComments = snapshotImgCollection.data().comments;
     console.log(newComments);
-    newComments.push(comment);
+    newComments.push({ user, comment });
     console.log(newComments);
 
     if (snapshotImgCollection.exists) {
         try {
             await imageRef.update({
                 comments: newComments,
+            });
+        } catch (error) {
+            console.error("Error adding comment to document", error);
+        }
+    }
+    //update users/images collection
+};
+export const imgLike = async (image) => {
+    const { userData, id } = image;
+    //update images collection
+    const imageRef = projectFirestore.doc(`images/${id}`);
+    const snapshotImgCollection = await imageRef.get();
+    let likeCount = snapshotImgCollection.data().likes;
+    console.log(likeCount);
+    if (snapshotImgCollection.exists) {
+        try {
+            await imageRef.update({
+                likes: ++likeCount,
             });
         } catch (error) {
             console.error("Error adding comment to document", error);

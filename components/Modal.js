@@ -4,8 +4,10 @@ import { ImageMetaData } from "./ImageMetaData";
 import TextField from "@material-ui/core/TextField";
 import { Tags } from "./Tags";
 import styled from "styled-components";
-import { useState } from "react";
-import { addImgComment } from "../firebase/config";
+import { useContext, useEffect, useState } from "react";
+import { addImgComment, imgLike } from "../firebase/config";
+import { UserContext } from "../providers/UserContext";
+import { useRouter } from "next/router";
 
 const ProfilePic = styled.img`
     width: 40px;
@@ -78,17 +80,31 @@ const MetaTagContainer = styled.div`
 `;
 const CommentForm = styled.form``;
 const Comments = styled.ul`
-    height: 50%;
+    min-height: 40%;
 `;
 const Modal = ({ setSelectedImg, selectedImg }) => {
+    const { userData, setUserData } = useContext(UserContext);
     const [comment, setComment] = useState();
+    const router = useRouter();
+    const refreshData = () => {
+        router.replace(router.asPath);
+    };
+    useEffect(() => {
+        refreshData();
+    }, []);
+
     const handleClick = (e) => {
         if (e.target.id == "backdrop") {
             setSelectedImg(null);
         }
     };
+    const handleLike = (e) => {
+        if (e.target.id == "like") {
+            imgLike(selectedImg);
+        }
+    };
     const handleSubmit = (e) => {
-        addImgComment(selectedImg, comment);
+        addImgComment(userData.user, selectedImg, comment);
     };
     console.log(selectedImg);
     return (
@@ -143,12 +159,24 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         />
                     </TagsContainer>
                     <Comments>
-                        {selectedImg.comments.map((img, i) => {
-                            console.log(img);
-                            return <li key={i}>{img}</li>;
+                        {selectedImg.comments.map((item, i) => {
+                            return (
+                                <li key={i}>
+                                    <Link href={`/users/${item.user.username}`}>
+                                        {item.user.username}
+                                    </Link>
+                                    : {item.comment}
+                                </li>
+                            );
                         })}
                     </Comments>
                     {/* <CommentForm onSubmit={handleSubmit}> */}
+                    <div>
+                        <span>Total Likes: {selectedImg.likes}</span>
+                        <button id="like" onClick={handleLike}>
+                            Like
+                        </button>
+                    </div>
                     <TextField
                         id="outlined-multiline-static"
                         multiline
@@ -160,8 +188,8 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         onChange={(e) => setComment(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key === "Enter") {
-                                console.log("jaksldj");
                                 handleSubmit();
+                                setComment("");
                             }
                         }}
                     />

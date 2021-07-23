@@ -185,10 +185,11 @@ export async function getServerSideProps(context) {
                     tags,
                     caption,
                     comments,
+                    likes,
                 } = img.data();
                 console.log(createdAt.toDate());
                 return {
-                    id: doc.id,
+                    id: img.id,
                     exif,
                     url,
                     tags,
@@ -196,6 +197,7 @@ export async function getServerSideProps(context) {
                     caption,
                     createdAt: createdAt.toDate().toString(),
                     comments,
+                    likes,
                 };
             });
         })
