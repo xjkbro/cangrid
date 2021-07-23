@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ImageMetaData } from "./ImageMetaData";
+import TextField from "@material-ui/core/TextField";
 import { Tags } from "./Tags";
 import styled from "styled-components";
+import { useState } from "react";
+import { addImgComment } from "../firebase/config";
 
 const ProfilePic = styled.img`
     width: 40px;
@@ -74,52 +77,14 @@ const MetaTagContainer = styled.div`
     color: ${(props) => props.theme.colors.primary};
 `;
 const Modal = ({ setSelectedImg, selectedImg }) => {
+    const [comment, setComment] = useState();
     const handleClick = (e) => {
         if (e.target.id == "backdrop") {
             setSelectedImg(null);
         }
     };
-
-    const ImgMetaData = () => {
-        const { exif } = selectedImg;
-
-        // if (JSON.stringify(exif) != "{}") {
-        if (exif) {
-            return (
-                <motion.div
-                    style={{
-                        margin: "5px",
-                        width: "100%",
-                    }}
-                >
-                    <motion.p>
-                        {exif?.model ? exif?.model : "Unidentiied Camera"}{" "}
-                        running{" "}
-                        {exif?.cameraFunction
-                            ? exif?.cameraFunction
-                            : "Unidentified Function"}{" "}
-                        where Exposure was
-                        {exif?.exposure?.numerator
-                            ? exif?.exposure?.numerator
-                            : "1"}
-                        /
-                        {exif?.exposure?.denominator
-                            ? exif?.exposure?.denominator
-                            : "∞"}
-                        s, focal length was{" "}
-                        {exif?.focalLength?.value
-                            ? exif?.focalLength?.value
-                            : "Unidentified"}{" "}
-                        and aperature was{" f"}
-                        {exif?.aperature?.value
-                            ? exif?.aperature?.value
-                            : "Unidentified"}
-                    </motion.p>
-                </motion.div>
-            );
-        } else {
-            return <></>;
-        }
+    const handleSubmit = (e) => {
+        addImgComment(selectedImg, comment);
     };
     console.log(selectedImg);
     return (
@@ -173,6 +138,17 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                             setSelectedImg={setSelectedImg}
                         />
                     </TagsContainer>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            multiline
+                            rows={2}
+                            placeholder="Comment"
+                            variant="filled"
+                            value={comment}
+                            style={{ width: "100%" }}
+                            onChange={(e) => setComment(e.target.value)}
+                        />
+                    </form>
                     <MetaTagContainer>
                         <ImageMetaData
                             exifInfo={selectedImg.exif}

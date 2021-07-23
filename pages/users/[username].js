@@ -12,7 +12,7 @@ import firebase from "firebase";
 import { useRouter } from "next/router";
 import { UserContext } from "../../providers/UserContext";
 
-export default function SingleUser({ userInfo, images }) {
+function SingleUser({ userInfo, images }) {
     console.log(images);
     const [selectedImg, setSelectedImg] = useState(null);
     const [user, loading] = useAuthState(auth);
@@ -45,10 +45,10 @@ export async function getServerSideProps(context) {
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 userRef = doc.ref;
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
             });
         });
-    console.log(query);
+    // console.log(query);
     if (userRef == undefined)
         return {
             redirect: {
@@ -57,40 +57,159 @@ export async function getServerSideProps(context) {
             },
             props: {},
         };
-    // let userRef = projectFirestore.collection("users").doc(context.query.username);
 
-    // console.log(context.query.username);
-    // console.log(query);
+    // let arr = [];
+    // var imagesMap = await projectFirestore
+    //     .collection("images")
+    //     .get()
+    //     .then((querySnapshot) => {
+    //         querySnapshot.forEach((img) => {
+    //             const imgData = img.data();
+    //             console.log(imgData);
+    //             arr.push({
+    //                 id: img.id,
+    //                 caption: imgData.caption,
+    //                 url: imgData.url,
+    //                 exif: imgData.exif,
+    //                 tags: imgData.tags,
+    //             });
+    //         });
+    //     });
+    // console.log(arr);
 
-    // console.log(userRef);
+    // let arr = [];
+    // var images = await userRef
+    //     .collection("images")
+    //     .get()
+    //     .then((querySnapshot) => {
+    //         querySnapshot.forEach(async (img) => {
+    //             const { imageRef } = img.data();
+    //             const { exif, url, userData, createdAt, tags, caption } =
+    //                 await imageRef.get().then((img) => {
+    //                     const imgData = img.data();
+    //                     return imgData;
+    //                 });
+
+    //             let data = await {
+    //                 id: img.id,
+    //                 exif,
+    //                 url,
+    //                 tags,
+    //                 userData,
+    //                 createdAt,
+    //                 tags,
+    //                 caption,
+    //             };
+    //             // console.log(data);
+    //             arr.push(async () => {
+    //                 return await {
+    //                     id: img.id,
+    //                     exif,
+    //                     url,
+    //                     tags,
+    //                     userData,
+    //                     createdAt,
+    //                     tags,
+    //                     caption,
+    //                 };
+    //             });
+    //         });
+    //     });
+
+    // const imgRes = await userRef.collection("images").get();
+
+    // array of docs for /users/images
+    // const imgCollection = imgRes.docs.map((doc) => {
+    //     console.log("imgcollection", doc);
+    //     return {
+    //         id: doc.id,
+    //         ...doc.data(),
+    //     };
+    // });
+    // console.log(imgRes);
+    // console.log(imgCollection);
+
+    // const images = await imgCollection.map(async (doc) => {
+    //     const imgs = await doc.imageRef.get().then(async (img) => {
+    //         const imgData = img.data();
+    //         // console.log("you", imgData);
+    //         return await imgData;
+    //     });
+    //     // console.log("asdasd", imgs);
+    //     return {
+    //         id: doc.id,
+    //         ...imgs,
+    //     };
+    // });
+
+    // console.log(images);
+    // const images = imgRes.docs
+    //     .map((doc) => {
+    //         return {
+    //             id: doc.id,
+    //             ...doc.data(),
+    //         };
+    //     })
+    //     .map((img) => {
+    //         // console.log(img);
+    //         return {
+    //             id: img.id,
+    //             caption: img.caption,
+    //             url: img.url,
+    //             exif: img.exif,
+    //             tags: img.tags,
+    //             userData: img.userData,
+    //         };
+    //     });
 
     const imgRes = await userRef.collection("images").get();
 
-    // console.log(imgRes);
-
-    const images = imgRes.docs
-        .map((doc) => ({
+    // array of docs for /users/images
+    const imgCollection = imgRes.docs.map((doc) => {
+        return {
             id: doc.id,
             ...doc.data(),
-        }))
-        .map((img) => {
-            console.log(img);
-            return {
-                id: img.id,
-                caption: img.caption,
-                url: img.url,
-                exif: img.exif,
-                tags: img.tags,
-                userData: img.userData,
-            };
-        });
-    const userRes = await userRef.get();
-    const userInfo = { id: userRes.id, ...userRes.data() };
+        };
+    });
+    // console.log(imgRes);
+    // console.log(imgCollection);
+
+    const images = imgCollection
+        .map((doc) => {
+            return doc.imageRef.get().then((img) => {
+                const { exif, url, userData, createdAt, tags, caption } =
+                    img.data();
+                console.log(createdAt.toDate());
+                return {
+                    id: doc.id,
+                    exif,
+                    url,
+                    tags,
+                    userData,
+                    tags,
+                    caption,
+                    createdAt: createdAt.toDate().toString(),
+                };
+            });
+        })
+        .reverse();
+    // Promise.all(images).then(function (results) {
+    //     console.log(results);
+    // });
+
+    const userRes = await userRef.get().then((item) => {
+        return { id: item.id, ...item.data() };
+    });
+    // console.log("user:", userRes);
+    // console.log("images:", images);
 
     return {
         props: {
-            userInfo,
-            images,
+            userInfo: userRes,
+            images: await Promise.all(images),
+            // images,
+            // images: arr,
         },
     };
 }
+export default SingleUser;

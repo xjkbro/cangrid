@@ -6,10 +6,6 @@ import { auth } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
 import EXIF from "exif-js";
-import CameraIcon from "@material-ui/icons/CameraAlt";
-import AperatureIcon from "@material-ui/icons/Camera";
-import IsoIcon from "@material-ui/icons/Iso";
-import ShutterSpeedIcon from "@material-ui/icons/ShutterSpeed";
 import { ImageMetaData } from "./ImageMetaData";
 
 const Container = styled.div`

@@ -16,13 +16,15 @@ const useStorage = (file, tags, caption, exifInfo) => {
     const { userData, setUserData } = useContext(UserContext);
 
     useEffect(() => {
-        // references
+        // References
+        // Reference to file
         const storageRef = projectStorage.ref(file.name);
+        console.log(storageRef);
         const collectionRef = projectFirestore.collection("images");
         const userImageCollectionRef = projectFirestore
             .doc(`users/${user.uid}`)
             .collection("images");
-
+        const userRef = projectFirestore.doc(`users/${user.uid}`);
         storageRef.put(file).on(
             "state_changed",
             (snap) => {
@@ -34,10 +36,8 @@ const useStorage = (file, tags, caption, exifInfo) => {
             },
             async () => {
                 const url = await storageRef.getDownloadURL();
+                console.log(storageRef.storage);
                 const createdAt = timestamp();
-                console.log(userData);
-
-                console.log(exifInfo);
                 let insert = {
                     url,
                     createdAt,
@@ -46,9 +46,19 @@ const useStorage = (file, tags, caption, exifInfo) => {
                     exif: exifInfo,
                     userData: userData.user,
                 };
+                // let insert = {
+                //     url,
+                //     createdAt,
+                //     caption,
+                //     tags,
+                //     exif: exifInfo,
+                //     user: userRef,
+                // };
                 console.log(insert);
-                collectionRef.add(insert);
-                userImageCollectionRef.add(insert);
+                const imgRef = await collectionRef.add(insert);
+                userImageCollectionRef.add({ imageRef: imgRef });
+
+                // userImageCollectionRef.add(insert);
                 setUrl(url);
             }
         );

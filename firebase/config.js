@@ -93,6 +93,23 @@ export const updateUserDocument = async (user, username, description) => {
     }
     return getUserDocument(user.uid);
 };
+export const addImgComment = async (image, comment) => {
+    const { userData, id } = image;
+
+    //update images collection
+    const imageRef = projectFirestore.doc(`images/${id}`);
+    const snapshotImgCollection = await imageRef.get();
+    if (snapshotImgCollection.exists) {
+        try {
+            await userRef.update({
+                comments: [...comments, comment],
+            });
+        } catch (error) {
+            console.error("Error adding comment to document", error);
+        }
+    }
+    //update users/images collection
+};
 const getUserDocument = async (uid) => {
     if (!uid) return null;
     try {
