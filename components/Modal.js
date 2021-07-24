@@ -85,10 +85,13 @@ const Comments = styled.ul`
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const { userData, setUserData } = useContext(UserContext);
     const [comment, setComment] = useState();
+    let [tempLikes, setTempLikes] = useState(selectedImg.likes)
+    let [tempCommentsArr, setTempCommentsArr] = useState(selectedImg.comments)
     const router = useRouter();
     const refreshData = () => {
         router.replace(router.asPath);
     };
+
     useEffect(() => {
         refreshData();
     }, []);
@@ -96,15 +99,21 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     const handleClick = (e) => {
         if (e.target.id == "backdrop") {
             setSelectedImg(null);
+            refreshData();
         }
     };
-    const handleLike = (e) => {
-        if (e.target.id == "like") {
-            imgLike(selectedImg);
-        }
+    const handleLike = async (e) => {
+            const newCount = await imgLike(selectedImg);
+            setTempLikes(newCount)
     };
-    const handleSubmit = (e) => {
-        addImgComment(userData.user, selectedImg, comment);
+    const handleSubmit = async (e) => {
+        
+        console.log(userData)
+        if(userData.user) {
+        const newComments = await addImgComment(userData.user, selectedImg, comment);
+        setTempCommentsArr(newComments);
+    }
+
     };
     console.log(selectedImg);
     return (
@@ -159,7 +168,8 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         />
                     </TagsContainer>
                     <Comments>
-                        {selectedImg.comments.map((item, i) => {
+                        {tempCommentsArr.map((item, i) => {
+                            console.log(item)
                             return (
                                 <li key={i}>
                                     <Link href={`/users/${item.user.username}`}>
@@ -172,7 +182,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                     </Comments>
                     {/* <CommentForm onSubmit={handleSubmit}> */}
                     <div>
-                        <span>Total Likes: {selectedImg.likes}</span>
+                        <span>Total Likes: {tempLikes}</span>
                         <button id="like" onClick={handleLike}>
                             Like
                         </button>
