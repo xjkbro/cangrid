@@ -40,6 +40,8 @@ const BackDrop = styled.div`
     > div > img {
         max-width: 50vw;
         max-height: 70vh;
+        min-width: 30vw;
+        min-height: 30vh;
         width: auto;
         height: auto;
         border-top-left-radius: 10px;
@@ -79,8 +81,11 @@ const MetaTagContainer = styled.div`
     color: ${(props) => props.theme.colors.primary};
 `;
 const CommentForm = styled.form``;
-const Comments = styled.ul`
+const Comments = styled.div`
     min-height: 40%;
+    /* list-style:none; */
+    margin: 5px 10px;
+    div {padding-top:3px;}
 `;
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const { userData, setUserData } = useContext(UserContext);
@@ -171,12 +176,12 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         {tempCommentsArr.map((item, i) => {
                             console.log(item)
                             return (
-                                <li key={i}>
+                                <div key={i}>
                                     <Link href={`/users/${item.user.username}`}>
                                         {item.user.username}
                                     </Link>
                                     : {item.comment}
-                                </li>
+                                </div>
                             );
                         })}
                     </Comments>
