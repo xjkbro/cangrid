@@ -8,6 +8,8 @@ import { useContext, useEffect, useState } from "react";
 import { addImgComment, imgLike } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const ProfilePic = styled.img`
     width: 40px;
@@ -32,6 +34,8 @@ const BackDrop = styled.div`
         display: flex;
         max-width: 90%;
         max-height: 90%;
+        min-width: 70%;
+        min-height: 70%;
         vertical-align: middle;
         box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
         background-color: white;
@@ -40,8 +44,6 @@ const BackDrop = styled.div`
     > div > img {
         max-width: 50vw;
         max-height: 70vh;
-        min-width: 30vw;
-        min-height: 30vh;
         width: auto;
         height: auto;
         border-top-left-radius: 10px;
@@ -49,8 +51,7 @@ const BackDrop = styled.div`
     }
     > div > div {
         min-width: 20vw;
-        width: auto;
-        height: auto;
+        height: 70%;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         /* padding: 30px; */
@@ -75,23 +76,47 @@ const TagsContainer = styled.div`
     width: 90%;
 `;
 const MetaTagContainer = styled.div`
-    position: absolute;
-    bottom: 10px;
+    /* position: absolute;
+    bottom: 10px; */
     padding-left: 10px;
     color: ${(props) => props.theme.colors.primary};
 `;
-const CommentForm = styled.form``;
+const CommentForm = styled(TextField)`
+    position: absolute;
+    bottom: 0px;
+    width: 95%;
+`;
+
 const Comments = styled.div`
-    min-height: 40%;
+    overflow-y: scroll;
+    height: 25vh;
+
     /* list-style:none; */
     margin: 5px 10px;
-    div {padding-top:3px;}
+    div {
+        padding-top: 3px;
+    }
 `;
+const Likes = styled.div`
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    svg {
+        cursor: pointer;
+    }
+    * {
+        padding: 3px;
+    }
+`;
+
 const Modal = ({ setSelectedImg, selectedImg }) => {
+    const [likeIcon, setLikeIcon] = useState(false);
     const { userData, setUserData } = useContext(UserContext);
     const [comment, setComment] = useState();
-    let [tempLikes, setTempLikes] = useState(selectedImg.likes)
-    let [tempCommentsArr, setTempCommentsArr] = useState(selectedImg.comments)
+    let [tempLikes, setTempLikes] = useState(selectedImg.likes);
+    let [tempCommentsArr, setTempCommentsArr] = useState(selectedImg.comments);
     const router = useRouter();
     const refreshData = () => {
         router.replace(router.asPath);
@@ -108,17 +133,25 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
         }
     };
     const handleLike = async (e) => {
-            const newCount = await imgLike(selectedImg);
-            setTempLikes(newCount)
+        if (!likeIcon) {
+            const newCount = await imgLike(selectedImg, 1);
+            setTempLikes(newCount);
+        } else {
+            const newCount = await imgLike(selectedImg, -1);
+            setTempLikes(newCount);
+        }
+        setLikeIcon(!likeIcon);
     };
     const handleSubmit = async (e) => {
-        
-        console.log(userData)
-        if(userData.user) {
-        const newComments = await addImgComment(userData.user, selectedImg, comment);
-        setTempCommentsArr(newComments);
-    }
-
+        console.log(userData);
+        if (userData.user) {
+            const newComments = await addImgComment(
+                userData.user,
+                selectedImg,
+                comment
+            );
+            setTempCommentsArr(newComments);
+        }
     };
     console.log(selectedImg);
     return (
@@ -166,6 +199,12 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         {/* </motion.p> */}
                     </Caption>
                     {/* <ImgMetaData /> */}
+                    <MetaTagContainer>
+                        <ImageMetaData
+                            exifInfo={selectedImg.exif}
+                            modal={true}
+                        />
+                    </MetaTagContainer>
                     <TagsContainer>
                         <Tags
                             tags={selectedImg?.tags}
@@ -173,8 +212,42 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         />
                     </TagsContainer>
                     <Comments>
+                        Comments:
                         {tempCommentsArr.map((item, i) => {
-                            console.log(item)
+                            console.log(item);
+                            return (
+                                <div key={i}>
+                                    <Link href={`/users/${item.user.username}`}>
+                                        {item.user.username}
+                                    </Link>
+                                    : {item.comment}
+                                </div>
+                            );
+                        })}
+                        {tempCommentsArr.map((item, i) => {
+                            console.log(item);
+                            return (
+                                <div key={i}>
+                                    <Link href={`/users/${item.user.username}`}>
+                                        {item.user.username}
+                                    </Link>
+                                    : {item.comment}
+                                </div>
+                            );
+                        })}
+                        {tempCommentsArr.map((item, i) => {
+                            console.log(item);
+                            return (
+                                <div key={i}>
+                                    <Link href={`/users/${item.user.username}`}>
+                                        {item.user.username}
+                                    </Link>
+                                    : {item.comment}
+                                </div>
+                            );
+                        })}
+                        {tempCommentsArr.map((item, i) => {
+                            console.log(item);
                             return (
                                 <div key={i}>
                                     <Link href={`/users/${item.user.username}`}>
@@ -186,20 +259,25 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         })}
                     </Comments>
                     {/* <CommentForm onSubmit={handleSubmit}> */}
-                    <div>
-                        <span>Total Likes: {tempLikes}</span>
-                        <button id="like" onClick={handleLike}>
-                            Like
-                        </button>
-                    </div>
-                    <TextField
+                    <Likes>
+                        <span> {tempLikes}</span>
+                        {likeIcon ? (
+                            <FavoriteIcon id="like" onClick={handleLike} />
+                        ) : (
+                            <FavoriteBorderIcon
+                                id="like"
+                                onClick={handleLike}
+                            />
+                        )}
+                    </Likes>
+
+                    <CommentForm
                         id="outlined-multiline-static"
                         multiline
                         rows={2}
                         label="Comment"
                         variant="outlined"
                         value={comment}
-                        style={{ width: "100%" }}
                         onChange={(e) => setComment(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key === "Enter") {
@@ -209,12 +287,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         }}
                     />
                     {/* </CommentForm> */}
-                    <MetaTagContainer>
-                        <ImageMetaData
-                            exifInfo={selectedImg.exif}
-                            modal={true}
-                        />
-                    </MetaTagContainer>
                 </Description>
             </motion.div>
         </BackDrop>
