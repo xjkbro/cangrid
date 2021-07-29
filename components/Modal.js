@@ -96,15 +96,18 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     const handleClick = (e) => {
         if (e.target.id == "backdrop") {
             setSelectedImg(null);
+            refreshData();
         }
     };
     const handleLike = (e) => {
         if (e.target.id == "like") {
             imgLike(selectedImg);
+            refreshData();
         }
     };
     const handleSubmit = (e) => {
         addImgComment(userData.user, selectedImg, comment);
+        refreshData();
     };
     console.log(selectedImg);
     return (

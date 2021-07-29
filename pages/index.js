@@ -15,6 +15,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
+// import getHomeQuery from "../lib/firestoreQuery";
 
 export default function Home({ images }) {
     const [selectedImg, setSelectedImg] = useState(null);
@@ -22,6 +23,10 @@ export default function Home({ images }) {
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
     console.log(userData);
+
+    // const imagess = getHomeQuery("images");
+    // console.log(imagess);
+
     if (userData?.user?.uid && userData?.user?.username == null) {
         router.push("/profile");
     }
