@@ -264,8 +264,13 @@ const UploadForm = ({ setSelectUpload }) => {
                             onChange={(e) => setSingleTag(e.target.value)}
                             onKeyPress={(e) => {
                                 if (e.key === "Enter") {
-                                    setTags([...tags, singleTag.toLowerCase()]);
-                                    setSingleTag("");
+                                    if (tags.length < 15) {
+                                        setTags([
+                                            ...tags,
+                                            singleTag.toLowerCase(),
+                                        ]);
+                                        setSingleTag("");
+                                    }
                                 }
                             }}
                         />
