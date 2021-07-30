@@ -34,7 +34,7 @@ const BackDrop = styled.div`
         display: flex;
         max-width: 90%;
         max-height: 90%;
-        min-width: 70%;
+        min-width: 50%;
         min-height: 70%;
         vertical-align: middle;
         box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
@@ -81,6 +81,11 @@ const MetaTagContainer = styled.div`
     padding-left: 10px;
     color: ${(props) => props.theme.colors.primary};
 `;
+const CommentPic = styled.img`
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+`;
 const CommentForm = styled(TextField)`
     position: absolute;
     bottom: 0px;
@@ -95,6 +100,13 @@ const Comments = styled.div`
     margin: 5px 10px;
     div {
         padding-top: 3px;
+    }
+`;
+const SingleComment = styled.div`
+    display: flex;
+    cursor: pointer;
+    * {
+        padding-right: 2px;
     }
 `;
 const Likes = styled.div`
@@ -112,10 +124,12 @@ const Likes = styled.div`
 `;
 
 const Modal = ({ setSelectedImg, selectedImg }) => {
-    const [likeIcon, setLikeIcon] = useState(false);
     const { userData, setUserData } = useContext(UserContext);
     const [comment, setComment] = useState();
-    let [tempLikes, setTempLikes] = useState(selectedImg.likes);
+    console.log(selectedImg.likes);
+    let userLiked = selectedImg.likes.indexOf(userData?.user?.uid);
+    const [likeIcon, setLikeIcon] = useState(userLiked == -1 ? false : true);
+    let [tempLikes, setTempLikes] = useState(selectedImg.likes.length);
     let [tempCommentsArr, setTempCommentsArr] = useState(selectedImg.comments);
     const router = useRouter();
     const refreshData = () => {
@@ -134,10 +148,17 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     };
     const handleLike = async (e) => {
         if (!likeIcon) {
-            const newCount = await imgLike(selectedImg, 1);
+            console.log("add");
+
+            const newCount = await imgLike(userData.user, selectedImg, "add");
             setTempLikes(newCount);
         } else {
-            const newCount = await imgLike(selectedImg, -1);
+            console.log("remove");
+            const newCount = await imgLike(
+                userData.user,
+                selectedImg,
+                "remove"
+            );
             setTempLikes(newCount);
         }
         setLikeIcon(!likeIcon);
@@ -216,45 +237,15 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         {tempCommentsArr.map((item, i) => {
                             console.log(item);
                             return (
-                                <div key={i}>
+                                <SingleComment key={i}>
+                                    <Link href={`/users/${item.user.username}`}>
+                                        <CommentPic src={item.user.photoURL} />
+                                    </Link>
                                     <Link href={`/users/${item.user.username}`}>
                                         {item.user.username}
                                     </Link>
                                     : {item.comment}
-                                </div>
-                            );
-                        })}
-                        {tempCommentsArr.map((item, i) => {
-                            console.log(item);
-                            return (
-                                <div key={i}>
-                                    <Link href={`/users/${item.user.username}`}>
-                                        {item.user.username}
-                                    </Link>
-                                    : {item.comment}
-                                </div>
-                            );
-                        })}
-                        {tempCommentsArr.map((item, i) => {
-                            console.log(item);
-                            return (
-                                <div key={i}>
-                                    <Link href={`/users/${item.user.username}`}>
-                                        {item.user.username}
-                                    </Link>
-                                    : {item.comment}
-                                </div>
-                            );
-                        })}
-                        {tempCommentsArr.map((item, i) => {
-                            console.log(item);
-                            return (
-                                <div key={i}>
-                                    <Link href={`/users/${item.user.username}`}>
-                                        {item.user.username}
-                                    </Link>
-                                    : {item.comment}
-                                </div>
+                                </SingleComment>
                             );
                         })}
                     </Comments>

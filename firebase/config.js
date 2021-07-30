@@ -94,6 +94,9 @@ export const updateUserDocument = async (user, username, description) => {
     return getUserDocument(user.uid);
 };
 export const addImgComment = async (user, image, comment) => {
+    if (!user) {
+        return;
+    }
     const { userData, id } = image;
     console.log(comment);
     //update images collection
@@ -116,25 +119,46 @@ export const addImgComment = async (user, image, comment) => {
     //update users/images collection
     return newComments;
 };
-export const imgLike = async (image, value) => {
+export const imgLike = async (user, image, action) => {
+    if (!user) {
+        return;
+    }
     const { userData, id } = image;
-    //update images collection
+    // update images collection
+    const userRef = projectFirestore.doc(`users/${user.uid}`);
     const imageRef = projectFirestore.doc(`images/${id}`);
     const snapshotImgCollection = await imageRef.get();
-    let likeCount = snapshotImgCollection.data().likes;
-    likeCount = likeCount + value;
+    // const imgCollection = await projectFirestore.collection("images").where("likes", "array-contains", userRef).get();
+
+    let likeCount = snapshotImgCollection.data().likes.length;
+    let imgArr = snapshotImgCollection.data().likes;
+
+    if (action == "add") imgArr.push(user.uid);
+    if (action == "remove") {
+        // for (let i = 0; i < likeCount; i++) {
+        //     if (imgArr[i] == user.uid) {
+        //         console.log(i);
+        //         imgArr = imgArr.splice(i, 1);
+        //     }
+        // }
+        let index = imgArr.indexOf(user.uid);
+        if (index > -1) {
+            imgArr.splice(index, 1);
+        }
+    }
     console.log(likeCount);
+    console.log(imgArr);
     if (snapshotImgCollection.exists) {
         try {
             await imageRef.update({
-                likes: likeCount,
+                likes: imgArr,
             });
         } catch (error) {
             console.error("Error adding comment to document", error);
         }
     }
     //update users/images collection
-    return likeCount;
+    return imgArr.length;
 };
 const getUserDocument = async (uid) => {
     if (!uid) return null;

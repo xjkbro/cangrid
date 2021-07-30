@@ -23,6 +23,7 @@ export default function Home({ images }) {
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
     console.log(userData);
+    console.log(images);
 
     // const imagess = getHomeQuery("images");
     // console.log(imagess);
