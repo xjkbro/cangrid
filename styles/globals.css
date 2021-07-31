@@ -2,6 +2,7 @@ html,
 body {
     padding: 0;
     margin: 0;
+    width: 100vw;
     font-family: "Nunito", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
         Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
         sans-serif;
@@ -33,7 +34,7 @@ body {
 }
 .App {
     max-width: 800px;
-    min-width: 800px;
+    /* min-width: 800px; */
 
     margin: 0 auto;
 }
@@ -302,5 +303,11 @@ body {
         border-bottom: 0px;
         /* padding-bottom: 15px; */
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    * {
+        font-size: 18px;
     }
 }

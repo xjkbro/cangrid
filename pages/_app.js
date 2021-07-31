@@ -20,7 +20,7 @@ const theme = {
 };
 
 const Line = styled.div`
-    width: 100%;
+    width: 100vw;
     height: 10px;
     background: linear-gradient(
         270deg,

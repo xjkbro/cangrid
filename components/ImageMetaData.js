@@ -7,34 +7,44 @@ import ShutterSpeedIcon from "@material-ui/icons/ShutterSpeed";
 const ExifContainer = styled.div`
     display: flex;
     align-items: center;
-    > span {
+    width: 70%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    > div {
         display: flex;
         padding-right: 10px;
         align-items: center;
     }
 `;
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+`;
 export const ImageMetaData = ({ exifInfo, modal }) => {
     const DisplayModal = () => (
-        <>
+        <Container>
             <ExifContainer>
-                <CameraIcon fontSize="large" />
-                <span>{exifInfo?.model || "Unidentified Camera"}</span>
-            </ExifContainer>
-            <ExifContainer>
-                <span>
+                <div>
+                    <CameraIcon fontSize="large" />
+                    <div>{exifInfo?.model || "Unidentified Camera"}</div>
+                    {/* </ExifContainer>
+            <ExifContainer> */}
+                </div>
+                <div>
                     <AperatureIcon fontSize="large" /> <i>f</i>/
                     {exifInfo?.aperature?.value || "N/A"}
-                </span>
-                <span>
+                </div>
+                <div>
                     <ShutterSpeedIcon fontSize="large" />
                     {exifInfo?.exposure?.numerator || "1"}/
                     {exifInfo?.exposure?.denominator || "N/A"}
-                </span>
-                <span>
+                </div>
+                <div>
                     <IsoIcon fontSize="large" /> {exifInfo?.iso || "N/A"}
-                </span>
+                </div>
             </ExifContainer>
-        </>
+        </Container>
     );
     const UploadModal = () => (
         <>

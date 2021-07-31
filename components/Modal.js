@@ -34,20 +34,21 @@ const BackDrop = styled.div`
         display: flex;
         max-width: 90%;
         max-height: 90%;
-        min-width: 50%;
-        min-height: 70%;
+        min-width: 85%;
+        min-height: 90%;
         vertical-align: middle;
         box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
         background-color: white;
         border-radius: 10px;
+        flex-direction: column;
     }
     > div > img {
-        max-width: 50vw;
+        max-width: 100%;
         max-height: 70vh;
         width: auto;
         height: auto;
         border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-top-right-radius: 10px;
     }
     > div > div {
         min-width: 20vw;
@@ -56,6 +57,46 @@ const BackDrop = styled.div`
         border-bottom-right-radius: 10px;
         /* padding: 30px; */
     }
+
+    @media (min-width: 768px) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > div {
+            display: flex;
+            max-width: 80%;
+            max-height: 90%;
+            min-width: 50%;
+            min-height: 70%;
+            vertical-align: middle;
+            box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
+            background-color: white;
+            border-radius: 10px;
+            flex-direction: row;
+        }
+        > div > img {
+            max-width: 50vw;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 0;
+        }
+        > div > div {
+            min-width: 20vw;
+            height: 70%;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            /* padding: 30px; */
+        }
+    }
 `;
 const ModalUpload = styled.div`
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -63,9 +104,15 @@ const ModalUpload = styled.div`
     padding: 10px;
 `;
 const Description = styled.div`
+    position: relative;
     width: 100%;
-    max-width: 500px;
+    max-width: 100%;
     min-width: 400px;
+    @media (min-width: 768px) {
+        width: 100%;
+        max-width: 500px;
+        min-width: 400px;
+    }
 `;
 const Caption = styled.div`
     padding: 15px;
@@ -91,7 +138,6 @@ const CommentForm = styled(TextField)`
     bottom: 0px;
     width: 95%;
 `;
-
 const Comments = styled.div`
     overflow-y: scroll;
     height: 25vh;
@@ -120,6 +166,19 @@ const Likes = styled.div`
     }
     * {
         padding: 3px;
+    }
+    @media (min-width: 768px) {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        align-items: center;
+        svg {
+            cursor: pointer;
+        }
+        * {
+            padding: 3px;
+        }
     }
 `;
 
@@ -233,7 +292,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         />
                     </TagsContainer>
                     <Comments>
-                        Comments:
                         {tempCommentsArr.map((item, i) => {
                             console.log(item);
                             return (
