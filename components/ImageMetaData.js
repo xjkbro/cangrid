@@ -10,6 +10,8 @@ const ExifContainer = styled.div`
     width: 70%;
     flex-direction: row;
     flex-wrap: wrap;
+    color: ${(props) => props.theme.colors.primary};
+
     > div {
         display: flex;
         padding-right: 10px;

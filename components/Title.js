@@ -17,6 +17,115 @@ import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
+import styled from "styled-components";
+
+const Container = styled.div`
+    h2,
+    p {
+        text-align: center;
+    }
+    h2 {
+        margin: 0px;
+        font-size: 1.6rem;
+    }
+`;
+const TitleBar = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    height: 50px;
+    a {
+        width: 180px;
+    }
+    @media (min-width: 768px) {
+        height: 89px;
+        a {
+            width: 300px;
+        }
+    }
+`;
+const Control = styled.div`
+    display: flex;
+    align-items: center;
+    .menulist {
+        z-index: 3;
+        width: 200px;
+        li {
+            min-height: 36px;
+            text-align: center;
+            padding: 10px 5px;
+        }
+    }
+`;
+const UploadButton = styled.label`
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: 1px solid ${(props) => props.theme.colors.primary};
+    border-radius: 50%;
+    margin: 10px auto;
+    line-height: 30px;
+    color: ${(props) => props.theme.colors.primary};
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+    input {
+        height: 0;
+        width: 0;
+        opacity: 0;
+    }
+    :hover {
+        background: ${(props) => props.theme.colors.primary};
+        color: white;
+    }
+    .cloud {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    @media (min-width: 768px) {
+        width: 36px;
+        height: 36px;
+        .cloud {
+            top: 5px;
+            right: 7px;
+        }
+        svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+`;
+const MenuButton = styled.button`
+    color: ${(props) => props.theme.colors.primary} !important;
+    background-color: white;
+    border: none;
+    padding: 6px 8px;
+    margin-left: 10px !important;
+    margin: 10px auto;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    :hover {
+        color: white !important;
+        background-color: ${(props) => props.theme.colors.primary} !important;
+    }
+    @media (min-width: 768px) {
+        svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+`;
 
 const Title = ({ userInfo, isError }) => {
     const [user, loading] = useAuthState(auth);
@@ -82,38 +191,22 @@ const Title = ({ userInfo, isError }) => {
         } else {
             // Logged in user dashboard/homescreen
             return (
-                <div className="control">
-                    {/* <Link href={`/users/${user.uid}`}> */}
-                    <label
-                        className="uploadButton uploadLabel"
-                        style={{
-                            display: "inline-block",
-                            width: "40px",
-                            height: "40px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        <input onClick={() => setSelectUpload(true)}></input>
-                        <span style={{ position: "absolute", top: "50px" }}>
+                <Control className="control">
+                    <UploadButton className="uploadButton uploadLabel">
+                        <input onClick={() => setSelectUpload(true)} />
+                        <span className="cloud">
                             <CloudUploadIcon />
                         </span>
-                    </label>
-
-                    <Button
+                    </UploadButton>
+                    <MenuButton
                         ref={anchorRef}
                         aria-controls={openMenu ? "menu-list-grow" : undefined}
                         aria-haspopup="true"
                         onClick={handleToggle}
-                        // style={{ color: "#89b0ae" }}
-                        className="menuButton"
                     >
-                        <MenuIcon fontSize="Large" />
-                    </Button>
-                    {/* <MenuList>
-                        <MenuItem>Profile</MenuItem>
-                        <MenuItem>My account</MenuItem>
-                        <MenuItem>Logout</MenuItem>
-                    </MenuList> */}
+                        <MenuIcon />
+                    </MenuButton>
+
                     <Popper
                         open={openMenu}
                         anchorEl={anchorRef.current}
@@ -164,7 +257,7 @@ const Title = ({ userInfo, isError }) => {
                             </Grow>
                         )}
                     </Popper>
-                </div>
+                </Control>
             );
         }
     };
@@ -193,27 +286,11 @@ const Title = ({ userInfo, isError }) => {
                     </>
                 );
             case "/":
-            // if (user != null)
-            //     return (
-            //         <>
-            //             <h2>The Gallery</h2>
-            //         </>
-            //     );
-            // else
-            //     return (
-            //         <>
-            //             <h2>The Gallery</h2>
-            //             <p>
-            //                 Welcome to the Gallery. Please sign in to
-            //                 continue and upload your art.
-            //             </p>
-            //         </>
-            //     );
             default:
         }
     };
     return (
-        <div className="title">
+        <Container>
             <Head>
                 {userInfo ? (
                     <title>{userInfo.username} | Cangrid</title>
@@ -224,11 +301,14 @@ const Title = ({ userInfo, isError }) => {
                 )}
             </Head>
             {selectUpload && <UploadModal setSelectUpload={setSelectUpload} />}
-            <div className="title-bar">
+            <TitleBar>
                 <Link href={"/"}>
-                    <a>
+                    <a
+                    // style={{ width: "40vw" }}
+                    >
                         <Image
                             // style={{ cursor: "pointer" }}
+                            // layout="intrinsic"
                             width={300}
                             height={89}
                             src={Logo}
@@ -236,9 +316,9 @@ const Title = ({ userInfo, isError }) => {
                     </a>
                 </Link>
                 {showLogin()}
-            </div>
+            </TitleBar>
             {TitleDisplay()}
-        </div>
+        </Container>
     );
 };
 

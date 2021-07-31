@@ -14,8 +14,7 @@ const Container = styled.div`
     /* align-items: center; */
     /* justify-content: center; */
     position: relative;
-    min-width: 500px;
-    max-width: 500px;
+    max-width: 100%;
     min-height: auto;
     > * {
     }
@@ -49,7 +48,7 @@ const Container = styled.div`
     }
 `;
 const Form = styled.div`
-    margin: 0px auto;
+    margin: 0px 0px;
     text-align: center;
     width: 100%;
 `;

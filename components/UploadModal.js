@@ -13,11 +13,7 @@ const UploadModal = ({ setSelectUpload }) => {
             onClick={handleClick}
         >
             <motion.div initial={{ x: "100vw" }} animate={{ x: 0 }}>
-                <motion.div
-                    style={{
-                        width: "100%",
-                    }}
-                >
+                <motion.div>
                     <UploadForm setSelectUpload={setSelectUpload} />
                 </motion.div>
             </motion.div>
