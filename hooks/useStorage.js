@@ -46,7 +46,7 @@ const useStorage = (file, tags, caption, exifInfo) => {
                     exif: exifInfo,
                     userData: userData.user,
                     comments: [],
-                    likes: 0,
+                    likes: [],
                 };
                 // let insert = {
                 //     url,

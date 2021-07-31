@@ -221,7 +221,7 @@ const Title = ({ userInfo, isError }) => {
                                 {...TransitionProps}
                                 style={{
                                     transformOrigin:
-                                        placement === "bottom"
+                                        placement === "bottom-end"
                                             ? "center top"
                                             : "center bottom",
                                 }}

@@ -74,9 +74,6 @@ body {
     color: white !important;
     background-color: var(--primary) !important;
 }
-.menulist {
-    z-index: 3;
-}
 
 .MuiList-root a {
     text-decoration: none;

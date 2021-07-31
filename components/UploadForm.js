@@ -8,16 +8,21 @@ import styled from "styled-components";
 import EXIF from "exif-js";
 import { ImageMetaData } from "./ImageMetaData";
 
+const Form = styled.div`
+    margin: 0px 0px;
+    text-align: center;
+    width: 100%;
+    @media (min-width: 600px) {
+        width: 500px;
+    }
+`;
 const Container = styled.div`
     display: flex;
     flex-flow: column wrap;
-    /* align-items: center; */
-    /* justify-content: center; */
     position: relative;
     max-width: 100%;
     min-height: auto;
-    > * {
-    }
+
     > .MuiFormControl-root {
         width: 100%;
         /* height: 200px; */
@@ -46,12 +51,11 @@ const Container = styled.div`
         right: 15px;
         top: 20px;
     }
+    @media (min-width: 600px) {
+        max-width: 490px;
+    }
 `;
-const Form = styled.div`
-    margin: 0px 0px;
-    text-align: center;
-    width: 100%;
-`;
+
 const ExifContainer = styled.div`
     display: flex;
     align-items: center;
@@ -228,7 +232,16 @@ const UploadForm = ({ setSelectUpload }) => {
                                 <span>+</span>
                             </UploadLabel>
                             <UploadOutput>
-                                {file && <span>{file.name}</span>}
+                                {file && (
+                                    <span>
+                                        {file.name.substring(0, 25) +
+                                            "..." +
+                                            file.name.substring(
+                                                file.name.length - 4,
+                                                file.name.length
+                                            )}
+                                    </span>
+                                )}
                                 {error && <div className="error">{error}</div>}
                             </UploadOutput>
                         </UploadButton>
