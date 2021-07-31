@@ -50,11 +50,11 @@ const Control = styled.div`
     align-items: center;
     .menulist {
         z-index: 3;
-        width: 200px;
+        width: 150px;
         li {
             min-height: 36px;
-            text-align: center;
-            padding: 10px 5px;
+            text-align: left;
+            padding: 5px 10px;
         }
     }
 `;
@@ -214,6 +214,7 @@ const Title = ({ userInfo, isError }) => {
                         transition
                         disablePortal
                         className="menulist"
+                        placement="bottom-end"
                     >
                         {({ TransitionProps, placement }) => (
                             <Grow
