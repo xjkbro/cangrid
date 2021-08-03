@@ -17,6 +17,16 @@ const ExifContainer = styled.div`
         padding-right: 10px;
         align-items: center;
     }
+    > div > svg {
+        width: 24px;
+        height: 24px;
+    }
+    @media (min-width: 768px) {
+        > div > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
 `;
 const Container = styled.div`
     display: flex;

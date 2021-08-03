@@ -189,10 +189,10 @@ body {
     }
     /* image grid styles */
     .img-grid {
-        margin: 35px auto;
+        margin: 25px auto;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 15px;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 5px;
     }
 
     .backdrop > div {

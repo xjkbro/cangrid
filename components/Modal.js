@@ -33,9 +33,9 @@ const BackDrop = styled.div`
     > div {
         display: flex;
         max-width: 90%;
-        max-height: 90%;
+        /* max-height: 90%; */
         min-width: 85%;
-        min-height: 90%;
+        /* min-height: 90%; */
         vertical-align: middle;
         box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
         background-color: white;
@@ -44,7 +44,7 @@ const BackDrop = styled.div`
     }
     > div > img {
         max-width: 100%;
-        max-height: 70vh;
+        /* max-height: 70vh; */
         width: auto;
         height: auto;
         border-top-left-radius: 10px;
@@ -59,6 +59,13 @@ const BackDrop = styled.div`
     }
 
     @media (min-width: 768px) {
+        > div {
+            max-width: 70%;
+            min-width: 60%;
+        }
+    }
+
+    @media (min-width: 1280px) {
         position: fixed;
         top: 0;
         left: 0;
@@ -70,10 +77,10 @@ const BackDrop = styled.div`
         justify-content: center;
         > div {
             display: flex;
-            max-width: 80%;
-            max-height: 90%;
+            /* max-width: 80%; */
+            /* max-height: 90%; */
             min-width: 50%;
-            min-height: 70%;
+            /* min-height: 70%; */
             vertical-align: middle;
             box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
             background-color: white;
@@ -81,8 +88,11 @@ const BackDrop = styled.div`
             flex-direction: row;
         }
         > div > img {
+            display: block;
             max-width: 50vw;
-            max-height: 70vh;
+            /* min-width: 20vw; */
+            max-height: 50vh;
+            /* min-height: 40vh; */
             width: auto;
             height: auto;
             border-top-left-radius: 10px;
@@ -97,6 +107,8 @@ const BackDrop = styled.div`
             /* padding: 30px; */
         }
     }
+    @media (min-width: 1376px) {
+    }
 `;
 const ModalUpload = styled.div`
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -108,10 +120,16 @@ const Description = styled.div`
     width: 100%;
     max-width: 100%;
     min-width: 400px;
-    @media (min-width: 768px) {
+    * {
+        font-size: 14px;
+    }
+    @media (min-width: 1280px) {
         width: 100%;
         max-width: 500px;
         min-width: 400px;
+        * {
+            font-size: 18px;
+        }
     }
 `;
 const Caption = styled.div`
@@ -121,12 +139,36 @@ const Caption = styled.div`
 const TagsContainer = styled.div`
     padding: 10px;
     width: 90%;
+    * {
+        font-size: 12px;
+    }
+    @media (min-width: 768px) {
+        * {
+            font-size: 18px;
+        }
+    }
 `;
 const MetaTagContainer = styled.div`
     /* position: absolute;
     bottom: 10px; */
+    /* font-size: 14px; */
     padding-left: 10px;
     color: ${(props) => props.theme.colors.primary};
+    * {
+        font-size: 14px;
+    }
+    @media (min-width: 768px) {
+        * {
+            font-size: 18px;
+        }
+    }
+`;
+const InfoContainer = styled.div`
+    overflow-y: scroll;
+    height: 43vh;
+    @media (min-width: 768px) {
+        /* height: 60vh; */
+    }
 `;
 const CommentPic = styled.img`
     width: 20px;
@@ -134,13 +176,15 @@ const CommentPic = styled.img`
     border-radius: 50%;
 `;
 const CommentForm = styled(TextField)`
-    position: absolute;
-    bottom: 0px;
+    /* position: absolute;
+    bottom: 0px;*/
+    margin: 10px auto;
+    left: 10px;
     width: 95%;
 `;
 const Comments = styled.div`
-    overflow-y: scroll;
-    height: 25vh;
+    overflow-y: hidden;
+    /* height: 25vh; */
 
     /* list-style:none; */
     margin: 5px 10px;
@@ -185,6 +229,7 @@ const Likes = styled.div`
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const { userData, setUserData } = useContext(UserContext);
     const [comment, setComment] = useState();
+    const [toggleComments, setToggleComments] = useState(true);
     console.log(selectedImg.likes);
     // let userLiked = selectedImg.likes.indexOf(userData?.user?.uid);
     let userLiked = selectedImg.likes.indexOf(userData?.user?.uid);
@@ -268,76 +313,184 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                 {selectedImg?.userData?.username}
                             </ProfileName>
                         </a>
+                        <Likes>
+                            <span> {tempLikes}</span>
+                            {likeIcon ? (
+                                <FavoriteIcon id="like" onClick={handleLike} />
+                            ) : (
+                                <FavoriteBorderIcon
+                                    id="like"
+                                    onClick={handleLike}
+                                />
+                            )}
+                        </Likes>
                     </ModalUpload>
-                    <Caption>
-                        {/* <motion.p> */}
-                        {selectedImg?.caption !== "" ? (
-                            selectedImg?.caption
-                        ) : (
-                            <p>
-                                <i>No Caption</i>
-                            </p>
-                        )}
-                        {/* </motion.p> */}
-                    </Caption>
-                    {/* <ImgMetaData /> */}
-                    <MetaTagContainer>
-                        <ImageMetaData
-                            exifInfo={selectedImg.exif}
-                            modal={true}
-                        />
-                    </MetaTagContainer>
-                    <TagsContainer>
-                        <Tags
-                            tags={selectedImg?.tags}
-                            setSelectedImg={setSelectedImg}
-                        />
-                    </TagsContainer>
-                    <Comments>
-                        {tempCommentsArr.map((item, i) => {
-                            console.log(item);
-                            return (
-                                <SingleComment key={i}>
-                                    <Link href={`/users/${item.user.username}`}>
-                                        <CommentPic src={item.user.photoURL} />
-                                    </Link>
-                                    <Link href={`/users/${item.user.username}`}>
-                                        {item.user.username}
-                                    </Link>
-                                    : {item.comment}
-                                </SingleComment>
-                            );
-                        })}
-                    </Comments>
-                    {/* <CommentForm onSubmit={handleSubmit}> */}
-                    <Likes>
-                        <span> {tempLikes}</span>
-                        {likeIcon ? (
-                            <FavoriteIcon id="like" onClick={handleLike} />
-                        ) : (
-                            <FavoriteBorderIcon
-                                id="like"
-                                onClick={handleLike}
+                    <InfoContainer>
+                        <Caption>
+                            {/* <motion.p> */}
+                            {selectedImg?.caption !== "" ? (
+                                selectedImg?.caption
+                            ) : (
+                                <p>
+                                    <i>No Caption</i>
+                                </p>
+                            )}
+                            {/* </motion.p> */}
+                        </Caption>
+                        {/* <ImgMetaData /> */}
+                        <MetaTagContainer>
+                            <ImageMetaData
+                                exifInfo={selectedImg.exif}
+                                modal={true}
                             />
+                        </MetaTagContainer>
+                        <TagsContainer>
+                            <Tags
+                                tags={selectedImg?.tags}
+                                setSelectedImg={setSelectedImg}
+                            />
+                        </TagsContainer>
+                        <CommentForm
+                            id="outlined-multiline-static"
+                            multiline
+                            rows={2}
+                            label="Comment"
+                            variant="outlined"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSubmit();
+                                    setComment("");
+                                }
+                            }}
+                        />
+                        {toggleComments ? (
+                            <Comments>
+                                <a
+                                    style={{ left: "10px" }}
+                                    onClick={() =>
+                                        setToggleComments(!toggleComments)
+                                    }
+                                >
+                                    Show All Comments
+                                </a>
+                            </Comments>
+                        ) : (
+                            <Comments>
+                                <a
+                                    onClick={() =>
+                                        setToggleComments(!toggleComments)
+                                    }
+                                >
+                                    Hide Comments
+                                </a>
+                                {tempCommentsArr.map((item, i) => {
+                                    console.log(item);
+                                    return (
+                                        <SingleComment key={i}>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                <CommentPic
+                                                    src={item.user.photoURL}
+                                                />
+                                            </Link>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                {item.user.username}
+                                            </Link>
+                                            : {item.comment}
+                                        </SingleComment>
+                                    );
+                                })}
+                                {tempCommentsArr.map((item, i) => {
+                                    console.log(item);
+                                    return (
+                                        <SingleComment key={i}>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                <CommentPic
+                                                    src={item.user.photoURL}
+                                                />
+                                            </Link>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                {item.user.username}
+                                            </Link>
+                                            : {item.comment}
+                                        </SingleComment>
+                                    );
+                                })}
+                                {tempCommentsArr.map((item, i) => {
+                                    console.log(item);
+                                    return (
+                                        <SingleComment key={i}>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                <CommentPic
+                                                    src={item.user.photoURL}
+                                                />
+                                            </Link>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                {item.user.username}
+                                            </Link>
+                                            : {item.comment}
+                                        </SingleComment>
+                                    );
+                                })}
+                                {tempCommentsArr.map((item, i) => {
+                                    console.log(item);
+                                    return (
+                                        <SingleComment key={i}>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                <CommentPic
+                                                    src={item.user.photoURL}
+                                                />
+                                            </Link>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                {item.user.username}
+                                            </Link>
+                                            : {item.comment}
+                                        </SingleComment>
+                                    );
+                                })}
+                                {tempCommentsArr.map((item, i) => {
+                                    console.log(item);
+                                    return (
+                                        <SingleComment key={i}>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                <CommentPic
+                                                    src={item.user.photoURL}
+                                                />
+                                            </Link>
+                                            <Link
+                                                href={`/users/${item.user.username}`}
+                                            >
+                                                {item.user.username}
+                                            </Link>
+                                            : {item.comment}
+                                        </SingleComment>
+                                    );
+                                })}
+                            </Comments>
                         )}
-                    </Likes>
+                        {/* <CommentForm onSubmit={handleSubmit}> */}
 
-                    <CommentForm
-                        id="outlined-multiline-static"
-                        multiline
-                        rows={2}
-                        label="Comment"
-                        variant="outlined"
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                handleSubmit();
-                                setComment("");
-                            }
-                        }}
-                    />
-                    {/* </CommentForm> */}
+                        {/* </CommentForm> */}
+                    </InfoContainer>
                 </Description>
             </motion.div>
         </BackDrop>
