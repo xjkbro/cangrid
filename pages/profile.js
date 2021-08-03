@@ -35,6 +35,37 @@ const ProfileBackDrop = styled.div`
         height: 500px;
     }
 `;
+const UsernameBackdrop = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px #333;
+    /* padding: 10vw; */
+    padding: 0 50px;
+    background-color: #ddd;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    height: 500px;
+    > p {
+        padding: 0 30px;
+    }
+    > form > span > input {
+        width: 100%;
+    }
+    > form > span {
+        display: flex;
+        justify-content: center;
+    }
+    @media (min-width: 768px) {
+        grid-gap: 10px;
+        grid-template-columns: 1fr;
+        height: 500px;
+    }
+`;
 const ProfileImage = styled.div`
     background: url(${(props) => props.user?.photoURL}) no-repeat center center;
     background-size: cover;
@@ -184,13 +215,13 @@ function Profile() {
             <Title bgColor={bgColor} setNightMode={setNightMode} />
             <ProfileContainer>
                 {user?.username == null ? (
-                    <ProfileBackDrop>
+                    <UsernameBackdrop>
                         <h1 style={{ textAlign: "center" }}>
                             Please finish your profile
                         </h1>
 
                         <CreateUsername />
-                    </ProfileBackDrop>
+                    </UsernameBackdrop>
                 ) : (
                     <ProfileBackDrop style={{ width: "75vw" }}>
                         {/* <h1>Profile</h1> */}
