@@ -194,9 +194,16 @@ const Comments = styled.div`
 `;
 const SingleComment = styled.div`
     display: flex;
-    cursor: pointer;
+    a,
+    img {
+        cursor: pointer;
+    }
     * {
         padding-right: 2px;
+    }
+    span {
+        /* inline-size: 150px; */
+        overflow-wrap: break-word;
     }
 `;
 const Likes = styled.div`
@@ -353,7 +360,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         <CommentForm
                             id="outlined-multiline-static"
                             multiline
-                            rows={2}
+                            rows={1}
                             label="Comment"
                             variant="outlined"
                             value={comment}
@@ -368,7 +375,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         {toggleComments ? (
                             <Comments>
                                 <a
-                                    style={{ left: "10px" }}
+                                    style={{ left: "10px", cursor: "pointer" }}
                                     onClick={() =>
                                         setToggleComments(!toggleComments)
                                     }
@@ -379,6 +386,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                         ) : (
                             <Comments>
                                 <a
+                                    style={{ left: "10px", cursor: "pointer" }}
                                     onClick={() =>
                                         setToggleComments(!toggleComments)
                                     }
@@ -389,19 +397,21 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                     console.log(item);
                                     return (
                                         <SingleComment key={i}>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                <CommentPic
-                                                    src={item.user.photoURL}
-                                                />
-                                            </Link>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                {item.user.username}
-                                            </Link>
-                                            : {item.comment}
+                                            <span>
+                                                <Link
+                                                    href={`/users/${item.user.username}`}
+                                                >
+                                                    <CommentPic
+                                                        src={item.user.photoURL}
+                                                    />
+                                                </Link>
+                                                <Link
+                                                    href={`/users/${item.user.username}`}
+                                                >
+                                                    {item.user.username}
+                                                </Link>
+                                                : {item.comment}
+                                            </span>
                                         </SingleComment>
                                     );
                                 })}

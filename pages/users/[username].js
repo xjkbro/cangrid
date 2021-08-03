@@ -20,9 +20,23 @@ function SingleUser({ userInfo, images }) {
 
     console.log(userInfo);
     console.log(user);
+    const [bgColor, setBGColor] = useState("#fff");
+    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+    console.log(nightMode);
+    useEffect(() => {
+        if (nightMode == true) setBGColor("#253335");
+        else setBGColor("#fff");
+    }, [nightMode]);
+    useEffect(() => {
+        setNightMode(userData?.user?.nightMode);
+    }, [userData]);
     return (
         <div className="App">
-            <Title userInfo={userInfo} />
+            <Title
+                userInfo={userInfo}
+                bgColor={bgColor}
+                setNightMode={setNightMode}
+            />
             {/* {userInfo?.id == user?.uid ? <UploadForm /> : <></>} */}
             <ImageGrid images={images} setSelectedImg={setSelectedImg} />
             {selectedImg && (
@@ -31,6 +45,12 @@ function SingleUser({ userInfo, images }) {
                     setSelectedImg={setSelectedImg}
                 />
             )}
+            <style jsx global>
+                {`
+                html {
+                    background-color: ${bgColor};
+            `}
+            </style>
         </div>
     );
 }

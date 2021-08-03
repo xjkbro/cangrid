@@ -15,9 +15,21 @@ import { UserContext } from "../../providers/UserContext";
 export default function SingleUser({ images }) {
     const router = useRouter();
     const [selectedImg, setSelectedImg] = useState(null);
+    const { userData, setUserData } = useContext(UserContext);
+
+    const [bgColor, setBGColor] = useState("#fff");
+    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+    console.log(nightMode);
+    useEffect(() => {
+        if (nightMode == true) setBGColor("#253335");
+        else setBGColor("#fff");
+    }, [nightMode]);
+    useEffect(() => {
+        setNightMode(userData?.user?.nightMode);
+    }, [userData]);
     return (
         <div className="App">
-            <Title />
+            <Title bgColor={bgColor} setNightMode={setNightMode} />
             <ImageGrid images={images} setSelectedImg={setSelectedImg} />
             {selectedImg && (
                 <Modal
@@ -25,6 +37,12 @@ export default function SingleUser({ images }) {
                     setSelectedImg={setSelectedImg}
                 />
             )}
+            <style jsx global>
+                {`
+                html {
+                    background-color: ${bgColor};
+            `}
+            </style>
         </div>
     );
 }

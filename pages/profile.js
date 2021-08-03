@@ -7,6 +7,7 @@ import CreateUsername from "../components/CreateUsername";
 import Link from "next/link";
 import styled from "styled-components";
 import { TextField } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 
 const ProfileContainer = styled.div`
     display: flex;
@@ -20,17 +21,18 @@ const ProfileBackDrop = styled.div`
     justify-content: center; */
     border: 1px solid #ddd;
     border-radius: 10px;
-    box-shadow: 0px 10px 10px #bbb;
+    box-shadow: 5px 5px 10px #333;
     /* padding: 10vw; */
     padding: 20px;
     background-color: #ddd;
     display: grid;
     grid-template-columns: 1fr;
-    grid-gap: 0px;
+    grid-gap: 10px;
 
     @media (min-width: 768px) {
-        grid-gap: 10px;
+        grid-gap: 40px;
         grid-template-columns: 1fr 1fr;
+        height: 500px;
     }
 `;
 const ProfileImage = styled.div`
@@ -51,6 +53,7 @@ const UsernameForm = styled.form`
     margin-top: 10px;
     width: 100%;
     > span > input {
+        position: relative;
         font-family: inherit;
         width: 90%;
         border: 0;
@@ -112,11 +115,29 @@ const UsernameForm = styled.form`
     }
 `;
 const ProfileDescription = styled(TextField)`
+    position: relative;
+
     /* position: absolute;
     bottom: 0px;*/
     margin: 10px auto;
     left: 10px;
     width: 95%;
+`;
+const SaveContainer = styled.div`
+    height: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+const SaveButton = styled(Button)`
+    position: relative;
+    background-color: ${(props) => props.theme.colors.primary} !important;
+    .MuiButton-label {
+        color: white;
+    }
+    @media (min-width: 768px) {
+        /* left: 0; */
+    }
 `;
 
 function Profile() {
@@ -128,13 +149,20 @@ function Profile() {
     const [usernameLength, setUsernameLength] = useState(20);
     const [error, setError] = useState(false);
     const [toggleUsernameChange, setToggleUsernameChange] = useState(false);
-
     const [user, setUser] = useState(null);
+
+    const [bgColor, setBGColor] = useState("#fff");
+    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
     useEffect(() => {
         setUser(userData?.user);
         setUsername(userData?.user?.username);
         setDescription(userData?.user?.description);
+        setNightMode(userData?.user?.nightMode);
     }, [userData]);
+    useEffect(() => {
+        if (nightMode == true) setBGColor("#253335");
+        else setBGColor("#fff");
+    }, [nightMode]);
 
     const changeUserFields = async (event) => {
         event.preventDefault();
@@ -153,7 +181,7 @@ function Profile() {
 
     return (
         <div className="App">
-            <Title />
+            <Title bgColor={bgColor} setNightMode={setNightMode} />
             <ProfileContainer>
                 {user?.username == null ? (
                     <ProfileBackDrop>
@@ -181,11 +209,11 @@ function Profile() {
                                 Account's profile image and log back in.
                             </div>
                         </div>
-                        <div>
+                        <div style={{ height: "100%" }}>
                             <div
                                 style={{
                                     position: "relative",
-                                    height: "350px",
+                                    // height: "350px",
                                     width: "100%",
                                 }}
                             >
@@ -299,22 +327,27 @@ function Profile() {
                                 >
                                     Character Limit: {descriptionLimit}
                                 </div>
-                                <button
-                                    style={{
-                                        position: "absolute",
-                                        left: "40%",
-                                        bottom: "0px",
-                                    }}
-                                    type="button"
+                            </div>
+                            <SaveContainer>
+                                <SaveButton
+                                    variant="contained"
+                                    color="#fff"
+                                    component="span"
                                     onClick={changeUserFields}
                                 >
                                     Save
-                                </button>
-                            </div>
+                                </SaveButton>
+                            </SaveContainer>
                         </div>
                     </ProfileBackDrop>
                 )}
             </ProfileContainer>
+            <style jsx global>
+                {`
+                html {
+                    background-color: ${bgColor};
+            `}
+            </style>
         </div>
     );
 }

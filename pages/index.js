@@ -15,8 +15,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 // import getHomeQuery from "../lib/firestoreQuery";
 
+const Container = styled.div``;
 export default function Home({ images }) {
     const [selectedImg, setSelectedImg] = useState(null);
     // const [user, loading] = useAuthState(auth);
@@ -25,6 +27,17 @@ export default function Home({ images }) {
     console.log(userData);
     console.log(images);
 
+    const [bgColor, setBGColor] = useState("#fff");
+    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+    console.log(nightMode);
+    useEffect(() => {
+        if (nightMode == true) setBGColor("#253335");
+        else setBGColor("#fff");
+    }, [nightMode]);
+    useEffect(() => {
+        setNightMode(userData?.user?.nightMode);
+    }, [userData]);
+
     // const imagess = getHomeQuery("images");
     // console.log(imagess);
 
@@ -32,8 +45,8 @@ export default function Home({ images }) {
         router.push("/profile");
     }
     return (
-        <div className="App">
-            <Title />
+        <Container className="App">
+            <Title bgColor={bgColor} setNightMode={setNightMode} />
             {/* <UploadForm /> */}
             <ImageGrid images={images} setSelectedImg={setSelectedImg} />
             {selectedImg && (
@@ -42,7 +55,13 @@ export default function Home({ images }) {
                     setSelectedImg={setSelectedImg}
                 />
             )}
-        </div>
+            <style jsx global>
+                {`
+            html {
+                background-color: ${bgColor};
+        `}
+            </style>
+        </Container>
     );
 }
 export async function getServerSideProps(context) {

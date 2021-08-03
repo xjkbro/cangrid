@@ -2,7 +2,12 @@ import Link from "next/link";
 import Head from "next/head";
 import Button from "@material-ui/core/Button";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, provider, projectFirestore } from "../firebase/config";
+import {
+    auth,
+    provider,
+    projectFirestore,
+    setNightModeSetting,
+} from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -104,7 +109,7 @@ const UploadButton = styled.label`
 `;
 const MenuButton = styled.button`
     color: ${(props) => props.theme.colors.primary} !important;
-    background-color: white;
+
     border: none;
     padding: 6px 8px;
     margin-left: 10px !important;
@@ -126,8 +131,11 @@ const MenuButton = styled.button`
         }
     }
 `;
+const TitleDescription = styled.div`
+    color: ${(props) => props.theme.colors.primary};
+`;
 
-const Title = ({ userInfo, isError }) => {
+const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
@@ -203,6 +211,7 @@ const Title = ({ userInfo, isError }) => {
                         aria-controls={openMenu ? "menu-list-grow" : undefined}
                         aria-haspopup="true"
                         onClick={handleToggle}
+                        style={{ backgroundColor: bgColor }}
                     >
                         <MenuIcon />
                     </MenuButton>
@@ -215,6 +224,7 @@ const Title = ({ userInfo, isError }) => {
                         disablePortal
                         className="menulist"
                         placement="bottom-end"
+                        style={{ backgroundColor: bgColor }}
                     >
                         {({ TransitionProps, placement }) => (
                             <Grow
@@ -248,6 +258,22 @@ const Title = ({ userInfo, isError }) => {
                                                 </Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
+                                                <div
+                                                    onClick={async () =>
+                                                        setNightMode(
+                                                            await setNightModeSetting(
+                                                                user
+                                                            )
+                                                        )
+                                                    }
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    Night Mode
+                                                </div>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
                                                 <Link href={"/signout"}>
                                                     Logout
                                                 </Link>
@@ -269,22 +295,23 @@ const Title = ({ userInfo, isError }) => {
         switch (router.pathname) {
             case "/tags/[tag]":
                 return (
-                    <>
+                    <TitleDescription>
                         <h2>Tag: {router.query.tag}</h2>
-                    </>
+                    </TitleDescription>
                 );
             case "/users/[username]":
                 return (
-                    <>
+                    <TitleDescription>
                         <h2>{userInfo.username}'s Grid</h2>
                         <p>{userInfo.description}</p>
-                    </>
+                    </TitleDescription>
                 );
             case "/users/404":
                 return (
-                    <>
+                    <TitleDescription>
                         <h2>Something Went Wrong</h2>
-                    </>
+                        <p>404 ERROR - USER NOT FOUND</p>
+                    </TitleDescription>
                 );
             case "/":
             default:

@@ -61,6 +61,7 @@ export const generateUserDocument = async (user, username) => {
                 photoURL: newPhotoURL,
                 username,
                 description: "",
+                nightMode: false,
             });
         } catch (error) {
             console.error("Error creating user document", error);
@@ -192,4 +193,32 @@ export const getUsernameDoc = async (username) => {
         console.error("Error fetching user", error);
     }
     return found;
+};
+export const getNightModeSetting = async (user) => {
+    if (!user) {
+        return;
+    }
+    const userRef = projectFirestore.doc(`users/${user.uid}`);
+    const snapshot = await userRef.get();
+    const night = snapshot.data().nightMode;
+    return night;
+};
+export const setNightModeSetting = async (user) => {
+    if (!user) {
+        return;
+    }
+    const userRef = projectFirestore.doc(`users/${user.uid}`);
+    const snapshot = await userRef.get();
+    const night = snapshot.data().nightMode;
+    console.log(night);
+    if (snapshot.exists) {
+        try {
+            await userRef.update({
+                nightMode: !night,
+            });
+        } catch (error) {
+            console.error("Error updating user document", error);
+        }
+    }
+    return !night;
 };

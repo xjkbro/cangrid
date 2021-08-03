@@ -16,6 +16,7 @@ const theme = {
         secondary: "#555b6e",
         overlay: "#ffd6ba",
         error: "#ff4a4a",
+        dark: "#253335",
     },
 };
 
@@ -33,22 +34,7 @@ function MyApp({ Component, pageProps }) {
     const [user, loading] = useAuthState(auth);
     const [userData, setUserData] = useState({ user: null });
 
-    // useEffect(() => {
-    //     if (user) {
-    //         console.log(user);
-    //         projectFirestore.collection("users").doc(user.uid).set(
-    //             {
-    //                 id: user.uid,
-    //                 name: user.displayName,
-    //                 email: user.email,
-    //                 photoURL: user.photoURL,
-    //             },
-    //             { merge: true }
-    //         );
-    //     }
-    // }, [user]);
     useEffect(async () => {
-        console.log("hello");
         auth.onAuthStateChanged(async (userAuth) => {
             const user = await generateUserDocument(userAuth);
             setUserData({ user });
