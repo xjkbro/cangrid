@@ -165,7 +165,7 @@ const MetaTagContainer = styled.div`
 `;
 const InfoContainer = styled.div`
     overflow-y: scroll;
-    height: 43vh;
+    height: 42vh;
     @media (min-width: 768px) {
         /* height: 60vh; */
     }
@@ -373,7 +373,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                         setToggleComments(!toggleComments)
                                     }
                                 >
-                                    Show All Comments
+                                    Show All Comments ({tempCommentsArr.length})
                                 </a>
                             </Comments>
                         ) : (
@@ -385,86 +385,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                 >
                                     Hide Comments
                                 </a>
-                                {tempCommentsArr.map((item, i) => {
-                                    console.log(item);
-                                    return (
-                                        <SingleComment key={i}>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                <CommentPic
-                                                    src={item.user.photoURL}
-                                                />
-                                            </Link>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                {item.user.username}
-                                            </Link>
-                                            : {item.comment}
-                                        </SingleComment>
-                                    );
-                                })}
-                                {tempCommentsArr.map((item, i) => {
-                                    console.log(item);
-                                    return (
-                                        <SingleComment key={i}>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                <CommentPic
-                                                    src={item.user.photoURL}
-                                                />
-                                            </Link>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                {item.user.username}
-                                            </Link>
-                                            : {item.comment}
-                                        </SingleComment>
-                                    );
-                                })}
-                                {tempCommentsArr.map((item, i) => {
-                                    console.log(item);
-                                    return (
-                                        <SingleComment key={i}>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                <CommentPic
-                                                    src={item.user.photoURL}
-                                                />
-                                            </Link>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                {item.user.username}
-                                            </Link>
-                                            : {item.comment}
-                                        </SingleComment>
-                                    );
-                                })}
-                                {tempCommentsArr.map((item, i) => {
-                                    console.log(item);
-                                    return (
-                                        <SingleComment key={i}>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                <CommentPic
-                                                    src={item.user.photoURL}
-                                                />
-                                            </Link>
-                                            <Link
-                                                href={`/users/${item.user.username}`}
-                                            >
-                                                {item.user.username}
-                                            </Link>
-                                            : {item.comment}
-                                        </SingleComment>
-                                    );
-                                })}
                                 {tempCommentsArr.map((item, i) => {
                                     console.log(item);
                                     return (

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import CreateUsername from "../components/CreateUsername";
 import Link from "next/link";
 import styled from "styled-components";
+import { TextField } from "@material-ui/core";
 
 const ProfileContainer = styled.div`
     display: flex;
@@ -24,16 +25,25 @@ const ProfileBackDrop = styled.div`
     padding: 20px;
     background-color: #ddd;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
+    grid-template-columns: 1fr;
+    grid-gap: 0px;
+
+    @media (min-width: 768px) {
+        grid-gap: 10px;
+        grid-template-columns: 1fr 1fr;
+    }
 `;
 const ProfileImage = styled.div`
     background: url(${(props) => props.user?.photoURL}) no-repeat center center;
     background-size: cover;
     border-radius: 50%;
-    height: 200px;
-    width: 200px;
+    height: 50vw;
+    width: 50vw;
     margin: 10px auto;
+    @media (min-width: 768px) {
+        height: 200px;
+        width: 200px;
+    }
 `;
 const UsernameForm = styled.form`
     position: relative;
@@ -42,7 +52,7 @@ const UsernameForm = styled.form`
     width: 100%;
     > span > input {
         font-family: inherit;
-        width: 300px;
+        width: 90%;
         border: 0;
         border-bottom: 2px solid #9b9b9b;
         outline: 0;
@@ -86,7 +96,29 @@ const UsernameForm = styled.form`
         font-size: 1rem;
         color: #9b9b9b;
     }
+    @media (min-width: 768px) {
+        > span > input {
+            font-family: inherit;
+            width: 300px;
+            border: 0;
+            border-bottom: 2px solid #9b9b9b;
+            outline: 0;
+            font-size: 1.3rem;
+            color: ${(props) => props.theme.colors.secondary};
+            padding: 7px 0;
+            background: transparent;
+            transition: border-color 0.2s;
+        }
+    }
 `;
+const ProfileDescription = styled(TextField)`
+    /* position: absolute;
+    bottom: 0px;*/
+    margin: 10px auto;
+    left: 10px;
+    width: 95%;
+`;
+
 function Profile() {
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
@@ -150,7 +182,13 @@ function Profile() {
                             </div>
                         </div>
                         <div>
-                            <div style={{ width: "75%" }}>
+                            <div
+                                style={{
+                                    position: "relative",
+                                    height: "350px",
+                                    width: "100%",
+                                }}
+                            >
                                 <h4>Name: {user?.displayName}</h4>
                                 <h4>
                                     Username: {user?.username}{" "}
@@ -229,17 +267,15 @@ function Profile() {
                                 {/* <h3>ID: {user?.uid}</h3> */}
                                 {/* <Link href={`/users/${user?.uid}`}>
                                 <h3>View Your Gallery</h3>
-                            </Link> */}
+                                </Link> */}
                                 <h4>Profile Description: </h4>
-                                <textarea
-                                    type="text"
-                                    name="description"
-                                    style={{
-                                        fontSize: "14px",
-                                        width: "100%",
-                                        height: "100px",
-                                        resize: "none",
-                                    }}
+
+                                <ProfileDescription
+                                    id="outlined-multiline-static"
+                                    multiline
+                                    rows={2}
+                                    label="Description"
+                                    variant="outlined"
                                     value={description}
                                     onChange={(e) => {
                                         if (e.target.value.length <= 150) {
@@ -255,11 +291,26 @@ function Profile() {
                                         }
                                     }}
                                 />
-                                <div>Character Limit: {descriptionLimit}</div>
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        right: "20px",
+                                    }}
+                                >
+                                    Character Limit: {descriptionLimit}
+                                </div>
+                                <button
+                                    style={{
+                                        position: "absolute",
+                                        left: "40%",
+                                        bottom: "0px",
+                                    }}
+                                    type="button"
+                                    onClick={changeUserFields}
+                                >
+                                    Save
+                                </button>
                             </div>
-                            <button type="button" onClick={changeUserFields}>
-                                Save
-                            </button>
                         </div>
                     </ProfileBackDrop>
                 )}
