@@ -78,11 +78,11 @@ function CreateUsername() {
         if (error) {
             console.log("TRY ANOTHER");
         } else {
-            generateUserDocument(user, username);
+            await generateUserDocument(user, username);
             console.log(userData);
-
             // auth.signOut();
-            router.push(`/`);
+            // router.push(`/users/${username}`);
+            router.reload();
         }
     };
 

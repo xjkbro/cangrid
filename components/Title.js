@@ -61,6 +61,9 @@ const Control = styled.div`
             text-align: left;
             padding: 5px 10px;
         }
+        .MuiPaper-root {
+            color: inherit !important;
+        }
     }
 `;
 const UploadButton = styled.label`
@@ -130,6 +133,12 @@ const MenuButton = styled.button`
             height: 1em;
         }
     }
+`;
+const ProfilePic = styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 5px !important;
 `;
 const TitleDescription = styled.div`
     color: ${(props) => props.theme.colors.primary};
@@ -245,6 +254,23 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
                                             id="menu-list-grow"
                                             onKeyDown={handleListKeyDown}
                                         >
+                                            <MenuItem
+                                                onClick={handleClose}
+                                                style={{
+                                                    borderBottom:
+                                                        "1px solid rgba(0,0,0,0.1)",
+                                                    cursor: "default",
+                                                }}
+                                            >
+                                                <ProfilePic
+                                                    src={
+                                                        userData?.user?.photoURL
+                                                    }
+                                                    alt=""
+                                                />{" "}
+                                                {userData?.user?.username}
+                                            </MenuItem>
+
                                             <MenuItem onClick={handleClose}>
                                                 <Link
                                                     href={`/users/${userData?.user?.username}`}
@@ -257,7 +283,10 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
                                                     My Account
                                                 </Link>
                                             </MenuItem>
-                                            <MenuItem onClick={handleClose}>
+                                            <MenuItem
+                                                onClick={handleClose}
+                                                style={{ color: "inherit" }}
+                                            >
                                                 <div
                                                     onClick={async () =>
                                                         setNightMode(
