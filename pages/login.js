@@ -9,6 +9,7 @@ import {
 } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
+import Layout from "../components/Layout";
 
 function Login() {
     const [user, loading] = useAuthState(auth);
@@ -31,15 +32,17 @@ function Login() {
     }, [user]);
 
     return (
-        <Container>
-            <LoginContainer>
-                <Logo>GalleryIO</Logo>
-                <p></p>
-                <Button onClick={signIn} variant="outlined">
-                    Sign In with Google
-                </Button>
-            </LoginContainer>
-        </Container>
+        <Layout>
+            <Container>
+                <LoginContainer>
+                    <Logo>GalleryIO</Logo>
+                    <p></p>
+                    <Button onClick={signIn} variant="outlined">
+                        Sign In with Google
+                    </Button>
+                </LoginContainer>
+            </Container>
+        </Layout>
     );
 }
 export default Login;

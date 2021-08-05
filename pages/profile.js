@@ -8,6 +8,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import { TextField } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import Layout from "../components/Layout";
 
 const ProfileContainer = styled.div`
     display: flex;
@@ -211,175 +212,182 @@ function Profile() {
     };
 
     return (
-        <div className="App">
-            <Title bgColor={bgColor} setNightMode={setNightMode} />
-            <ProfileContainer>
-                {user?.username == null ? (
-                    <UsernameBackdrop>
-                        <h1 style={{ textAlign: "center" }}>
-                            Please finish your profile
-                        </h1>
+        <Layout>
+            <div className="App">
+                <Title bgColor={bgColor} setNightMode={setNightMode} />
+                <ProfileContainer>
+                    {user?.username == null ? (
+                        <UsernameBackdrop>
+                            <h1 style={{ textAlign: "center" }}>
+                                Please finish your profile
+                            </h1>
 
-                        <CreateUsername />
-                    </UsernameBackdrop>
-                ) : (
-                    <ProfileBackDrop style={{ width: "75vw" }}>
-                        {/* <h1>Profile</h1> */}
-                        <div>
-                            <ProfileImage
-                                user={user}
-                                // style={{
-                                //     background: `url(${
-                                //         user?.photoURL ||
-                                //         "https://i.stack.imgur.com/l60Hf.png"
-                                //     })  no-repeat center center`,
-                                // }}
-                            />
-                            <div style={{ textAlign: "center" }}>
-                                To change profile image, change your Google
-                                Account's profile image and log back in.
-                            </div>
-                        </div>
-                        <div style={{ height: "100%" }}>
-                            <div
-                                style={{
-                                    position: "relative",
-                                    // height: "350px",
-                                    width: "100%",
-                                }}
-                            >
-                                <h4>Name: {user?.displayName}</h4>
-                                <h4>
-                                    Username: {user?.username}{" "}
-                                    <div
-                                        style={{
-                                            cursor: "pointer",
-                                            fontSize: "12px",
-                                            marginLeft: "10px",
-                                        }}
-                                        onClick={() =>
-                                            setToggleUsernameChange(
-                                                !toggleUsernameChange
-                                            )
-                                        }
-                                    >
-                                        Change Username
-                                    </div>
-                                </h4>
-                                {toggleUsernameChange ? (
-                                    <UsernameForm onSubmit={changeUserFields}>
-                                        <span>
-                                            <input
-                                                type="text"
-                                                name="username"
-                                                style={{
-                                                    padding: "5px",
-                                                    marginLeft: "10px",
-                                                }}
-                                                value={username}
-                                                // onChange={(e) => {
-                                                //     setUsername(e.target.value);
-                                                //     UsernameCheck(e.target.value);
-                                                // }}
-                                                onChange={(e) => {
-                                                    if (
-                                                        e.target.value.length <
-                                                        usernameLength
-                                                    ) {
-                                                        let val =
-                                                            username?.length -
-                                                            e.target.value
-                                                                .length;
-                                                        setUsername(
-                                                            e.target.value
-                                                        );
-                                                        UsernameCheck(
-                                                            e.target.value
-                                                        );
-                                                    } else {
-                                                        setUsername(username);
-                                                        UsernameCheck(
-                                                            e.target.value
-                                                        );
-                                                    }
-                                                }}
-                                            />
-                                            <label for="username">
-                                                Username
-                                            </label>
-                                        </span>
-                                        <span>
-                                            {username != ""
-                                                ? error
-                                                    ? `❌${username} is not available!`
-                                                    : `✔️ ${username} is available! :)`
-                                                : ""}
-                                        </span>
-                                        {/* <input type="submit" value="Submit" /> */}
-                                    </UsernameForm>
-                                ) : (
-                                    <></>
-                                )}
-
-                                <h4>Email: {user?.email}</h4>
-                                {console.log(user?.uid)}
-                                {/* <h3>ID: {user?.uid}</h3> */}
-                                {/* <Link href={`/users/${user?.uid}`}>
-                                <h3>View Your Gallery</h3>
-                                </Link> */}
-                                <h4>Profile Description: </h4>
-
-                                <ProfileDescription
-                                    id="outlined-multiline-static"
-                                    multiline
-                                    rows={2}
-                                    label="Description"
-                                    variant="outlined"
-                                    value={description}
-                                    onChange={(e) => {
-                                        if (e.target.value.length <= 150) {
-                                            let val =
-                                                description?.length -
-                                                e.target.value.length;
-                                            setDescription(e.target.value);
-                                            setDescriptionLimit(
-                                                descriptionLimit + val
-                                            );
-                                        } else {
-                                            setDescription(description);
-                                        }
-                                    }}
+                            <CreateUsername />
+                        </UsernameBackdrop>
+                    ) : (
+                        <ProfileBackDrop style={{ width: "75vw" }}>
+                            {/* <h1>Profile</h1> */}
+                            <div>
+                                <ProfileImage
+                                    user={user}
+                                    // style={{
+                                    //     background: `url(${
+                                    //         user?.photoURL ||
+                                    //         "https://i.stack.imgur.com/l60Hf.png"
+                                    //     })  no-repeat center center`,
+                                    // }}
                                 />
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        right: "20px",
-                                    }}
-                                >
-                                    Character Limit: {descriptionLimit}
+                                <div style={{ textAlign: "center" }}>
+                                    To change profile image, change your Google
+                                    Account's profile image and log back in.
                                 </div>
                             </div>
-                            <SaveContainer>
-                                <SaveButton
-                                    variant="contained"
-                                    color="#fff"
-                                    component="span"
-                                    onClick={changeUserFields}
+                            <div style={{ height: "100%" }}>
+                                <div
+                                    style={{
+                                        position: "relative",
+                                        // height: "350px",
+                                        width: "100%",
+                                    }}
                                 >
-                                    Save
-                                </SaveButton>
-                            </SaveContainer>
-                        </div>
-                    </ProfileBackDrop>
-                )}
-            </ProfileContainer>
-            <style jsx global>
-                {`
+                                    <h4>Name: {user?.displayName}</h4>
+                                    <h4>
+                                        Username: {user?.username}{" "}
+                                        <div
+                                            style={{
+                                                cursor: "pointer",
+                                                fontSize: "12px",
+                                                marginLeft: "10px",
+                                            }}
+                                            onClick={() =>
+                                                setToggleUsernameChange(
+                                                    !toggleUsernameChange
+                                                )
+                                            }
+                                        >
+                                            Change Username
+                                        </div>
+                                    </h4>
+                                    {toggleUsernameChange ? (
+                                        <UsernameForm
+                                            onSubmit={changeUserFields}
+                                        >
+                                            <span>
+                                                <input
+                                                    type="text"
+                                                    name="username"
+                                                    style={{
+                                                        padding: "5px",
+                                                        marginLeft: "10px",
+                                                    }}
+                                                    value={username}
+                                                    // onChange={(e) => {
+                                                    //     setUsername(e.target.value);
+                                                    //     UsernameCheck(e.target.value);
+                                                    // }}
+                                                    onChange={(e) => {
+                                                        if (
+                                                            e.target.value
+                                                                .length <
+                                                            usernameLength
+                                                        ) {
+                                                            let val =
+                                                                username?.length -
+                                                                e.target.value
+                                                                    .length;
+                                                            setUsername(
+                                                                e.target.value
+                                                            );
+                                                            UsernameCheck(
+                                                                e.target.value
+                                                            );
+                                                        } else {
+                                                            setUsername(
+                                                                username
+                                                            );
+                                                            UsernameCheck(
+                                                                e.target.value
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                                <label for="username">
+                                                    Username
+                                                </label>
+                                            </span>
+                                            <span>
+                                                {username != ""
+                                                    ? error
+                                                        ? `❌${username} is not available!`
+                                                        : `✔️ ${username} is available! :)`
+                                                    : ""}
+                                            </span>
+                                            {/* <input type="submit" value="Submit" /> */}
+                                        </UsernameForm>
+                                    ) : (
+                                        <></>
+                                    )}
+
+                                    <h4>Email: {user?.email}</h4>
+                                    {console.log(user?.uid)}
+                                    {/* <h3>ID: {user?.uid}</h3> */}
+                                    {/* <Link href={`/users/${user?.uid}`}>
+                                <h3>View Your Gallery</h3>
+                                </Link> */}
+                                    <h4>Profile Description: </h4>
+
+                                    <ProfileDescription
+                                        id="outlined-multiline-static"
+                                        multiline
+                                        rows={2}
+                                        label="Description"
+                                        variant="outlined"
+                                        value={description}
+                                        onChange={(e) => {
+                                            if (e.target.value.length <= 150) {
+                                                let val =
+                                                    description?.length -
+                                                    e.target.value.length;
+                                                setDescription(e.target.value);
+                                                setDescriptionLimit(
+                                                    descriptionLimit + val
+                                                );
+                                            } else {
+                                                setDescription(description);
+                                            }
+                                        }}
+                                    />
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            right: "20px",
+                                        }}
+                                    >
+                                        Character Limit: {descriptionLimit}
+                                    </div>
+                                </div>
+                                <SaveContainer>
+                                    <SaveButton
+                                        variant="contained"
+                                        color="#fff"
+                                        component="span"
+                                        onClick={changeUserFields}
+                                    >
+                                        Save
+                                    </SaveButton>
+                                </SaveContainer>
+                            </div>
+                        </ProfileBackDrop>
+                    )}
+                </ProfileContainer>
+                <style jsx global>
+                    {`
                 html {
                     background-color: ${bgColor};
             `}
-            </style>
-        </div>
+                </style>
+            </div>
+        </Layout>
     );
 }
 

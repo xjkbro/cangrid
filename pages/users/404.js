@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import Layout from "../../components/Layout";
 import Title from "../../components/Title";
 import { UserContext } from "../../providers/UserContext";
 const FourOhFour = ({ isError }) => {
@@ -15,19 +16,21 @@ const FourOhFour = ({ isError }) => {
         setNightMode(userData?.user?.nightMode);
     }, [userData]);
     return (
-        <div className="App">
-            <Title
-                isError={isError}
-                bgColor={bgColor}
-                setNightMode={setNightMode}
-            />
-            <style jsx global>
-                {`
+        <Layout>
+            <div className="App">
+                <Title
+                    isError={isError}
+                    bgColor={bgColor}
+                    setNightMode={setNightMode}
+                />
+                <style jsx global>
+                    {`
                 html {
                     background-color: ${bgColor};
             `}
-            </style>
-        </div>
+                </style>
+            </div>
+        </Layout>
     );
 };
 export default FourOhFour;

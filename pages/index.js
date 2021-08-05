@@ -16,6 +16,8 @@ import firebase from "firebase";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import Layout from "../components/Layout";
+
 // import getHomeQuery from "../lib/firestoreQuery";
 
 const Container = styled.div``;
@@ -45,23 +47,25 @@ export default function Home({ images }) {
         router.push("/profile");
     }
     return (
-        <Container className="App">
-            <Title bgColor={bgColor} setNightMode={setNightMode} />
-            {/* <UploadForm /> */}
-            <ImageGrid images={images} setSelectedImg={setSelectedImg} />
-            {selectedImg && (
-                <Modal
-                    selectedImg={selectedImg}
-                    setSelectedImg={setSelectedImg}
-                />
-            )}
-            <style jsx global>
-                {`
+        <Layout>
+            <Container className="App">
+                <Title bgColor={bgColor} setNightMode={setNightMode} />
+                {/* <UploadForm /> */}
+                <ImageGrid images={images} setSelectedImg={setSelectedImg} />
+                {selectedImg && (
+                    <Modal
+                        selectedImg={selectedImg}
+                        setSelectedImg={setSelectedImg}
+                    />
+                )}
+                <style jsx global>
+                    {`
             html {
                 background-color: ${bgColor};
         `}
-            </style>
-        </Container>
+                </style>
+            </Container>
+        </Layout>
     );
 }
 export async function getServerSideProps(context) {

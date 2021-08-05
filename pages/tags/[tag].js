@@ -11,6 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import { useRouter } from "next/router";
 import { UserContext } from "../../providers/UserContext";
+import Layout from "../../components/Layout";
 
 export default function SingleUser({ images }) {
     const router = useRouter();
@@ -28,22 +29,24 @@ export default function SingleUser({ images }) {
         setNightMode(userData?.user?.nightMode);
     }, [userData]);
     return (
-        <div className="App">
-            <Title bgColor={bgColor} setNightMode={setNightMode} />
-            <ImageGrid images={images} setSelectedImg={setSelectedImg} />
-            {selectedImg && (
-                <Modal
-                    selectedImg={selectedImg}
-                    setSelectedImg={setSelectedImg}
-                />
-            )}
-            <style jsx global>
-                {`
+        <Layout>
+            <div className="App">
+                <Title bgColor={bgColor} setNightMode={setNightMode} />
+                <ImageGrid images={images} setSelectedImg={setSelectedImg} />
+                {selectedImg && (
+                    <Modal
+                        selectedImg={selectedImg}
+                        setSelectedImg={setSelectedImg}
+                    />
+                )}
+                <style jsx global>
+                    {`
                 html {
                     background-color: ${bgColor};
             `}
-            </style>
-        </div>
+                </style>
+            </div>
+        </Layout>
     );
 }
 export async function getServerSideProps(context) {

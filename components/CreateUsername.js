@@ -81,8 +81,7 @@ function CreateUsername() {
             generateUserDocument(user, username);
             console.log(userData);
 
-            auth.signOut();
-
+            // auth.signOut();
             router.push(`/`);
         }
     };

@@ -11,6 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import { useRouter } from "next/router";
 import { UserContext } from "../../providers/UserContext";
+import Layout from "../../components/Layout";
 
 function SingleUser({ userInfo, images }) {
     console.log(images);
@@ -31,27 +32,29 @@ function SingleUser({ userInfo, images }) {
         setNightMode(userData?.user?.nightMode);
     }, [userData]);
     return (
-        <div className="App">
-            <Title
-                userInfo={userInfo}
-                bgColor={bgColor}
-                setNightMode={setNightMode}
-            />
-            {/* {userInfo?.id == user?.uid ? <UploadForm /> : <></>} */}
-            <ImageGrid images={images} setSelectedImg={setSelectedImg} />
-            {selectedImg && (
-                <Modal
-                    selectedImg={selectedImg}
-                    setSelectedImg={setSelectedImg}
+        <Layout>
+            <div className="App">
+                <Title
+                    userInfo={userInfo}
+                    bgColor={bgColor}
+                    setNightMode={setNightMode}
                 />
-            )}
-            <style jsx global>
-                {`
+                {/* {userInfo?.id == user?.uid ? <UploadForm /> : <></>} */}
+                <ImageGrid images={images} setSelectedImg={setSelectedImg} />
+                {selectedImg && (
+                    <Modal
+                        selectedImg={selectedImg}
+                        setSelectedImg={setSelectedImg}
+                    />
+                )}
+                <style jsx global>
+                    {`
                 html {
                     background-color: ${bgColor};
             `}
-            </style>
-        </div>
+                </style>
+            </div>
+        </Layout>
     );
 }
 export async function getServerSideProps(context) {
