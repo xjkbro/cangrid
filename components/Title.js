@@ -320,7 +320,6 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
 
     const TitleDisplay = () => {
         //User is on a user gallery
-        console.log(user);
         switch (router.pathname) {
             case "/tags/[tag]":
                 return (
@@ -360,16 +359,8 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
             {selectUpload && <UploadModal setSelectUpload={setSelectUpload} />}
             <TitleBar>
                 <Link href={"/"}>
-                    <a
-                    // style={{ width: "40vw" }}
-                    >
-                        <Image
-                            // style={{ cursor: "pointer" }}
-                            // layout="intrinsic"
-                            width={300}
-                            height={89}
-                            src={Logo}
-                        />
+                    <a>
+                        <Image width={300} height={89} src={Logo} />
                     </a>
                 </Link>
                 {showLogin()}

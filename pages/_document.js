@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
 export default class MyDocument extends Document {
@@ -27,18 +27,4 @@ export default class MyDocument extends Document {
             sheet.seal();
         }
     }
-    // render() {
-    //     let darkMode = "#fff";
-    //     if (true) darkMode = "#253335";
-
-    //     return (
-    //         <Html style={{ backgroundColor: darkMode }}>
-    //             <Head />
-    //             <body>
-    //                 <Main />
-    //                 <NextScript />
-    //             </body>
-    //         </Html>
-    //     );
-    // }
 }

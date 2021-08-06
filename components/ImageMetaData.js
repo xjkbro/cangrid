@@ -40,8 +40,6 @@ export const ImageMetaData = ({ exifInfo, modal }) => {
                 <div>
                     <CameraIcon fontSize="large" />
                     <div>{exifInfo?.model || "Unidentified Camera"}</div>
-                    {/* </ExifContainer>
-            <ExifContainer> */}
                 </div>
                 <div>
                     <AperatureIcon fontSize="large" /> <i>f</i>/

@@ -99,14 +99,11 @@ export const addImgComment = async (user, image, comment) => {
         return;
     }
     const { userData, id } = image;
-    console.log(comment);
     //update images collection
     const imageRef = projectFirestore.doc(`images/${id}`);
     const snapshotImgCollection = await imageRef.get();
     let newComments = snapshotImgCollection.data().comments;
-    console.log(newComments);
     newComments.push({ user, comment });
-    console.log(newComments);
 
     if (snapshotImgCollection.exists) {
         try {
@@ -129,26 +126,16 @@ export const imgLike = async (user, image, action) => {
     const userRef = projectFirestore.doc(`users/${user.uid}`);
     const imageRef = projectFirestore.doc(`images/${id}`);
     const snapshotImgCollection = await imageRef.get();
-    // const imgCollection = await projectFirestore.collection("images").where("likes", "array-contains", userRef).get();
-
     let likeCount = snapshotImgCollection.data().likes.length;
     let imgArr = snapshotImgCollection.data().likes;
 
     if (action == "add") imgArr.push(user.uid);
     if (action == "remove") {
-        // for (let i = 0; i < likeCount; i++) {
-        //     if (imgArr[i] == user.uid) {
-        //         console.log(i);
-        //         imgArr = imgArr.splice(i, 1);
-        //     }
-        // }
         let index = imgArr.indexOf(user.uid);
         if (index > -1) {
             imgArr.splice(index, 1);
         }
     }
-    console.log(likeCount);
-    console.log(imgArr);
     if (snapshotImgCollection.exists) {
         try {
             await imageRef.update({
@@ -184,7 +171,6 @@ export const getUsernameDoc = async (username) => {
             .then((snap) => {
                 snap.forEach((doc) => {
                     if (doc.get("username") == username) {
-                        console.log(doc.get("username"));
                         found = true;
                     }
                 });
@@ -210,7 +196,6 @@ export const setNightModeSetting = async (user) => {
     const userRef = projectFirestore.doc(`users/${user.uid}`);
     const snapshot = await userRef.get();
     const night = snapshot.data().nightMode;
-    console.log(night);
     if (snapshot.exists) {
         try {
             await userRef.update({

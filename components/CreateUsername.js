@@ -1,16 +1,8 @@
 import { useEffect, useState, useContext } from "react";
-import { Button } from "@material-ui/core";
 import styled from "styled-components";
-import {
-    auth,
-    provider,
-    projectFirestore,
-    generateUserDocument,
-    getUsernameDoc,
-} from "../firebase/config";
+import { auth, generateUserDocument, getUsernameDoc } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-import firebase from "firebase";
 import { UserContext } from "../providers/UserContext";
 
 const UsernameForm = styled.form`
@@ -37,7 +29,6 @@ const UsernameForm = styled.form`
         padding-bottom: 6px;
         font-weight: 700;
         border-width: 3px;
-        /* border-image: linear-gradient(to right, #11998e, #38ef7d); */
         border-image: ${(props) => props.theme.colors.secondary};
         border-image-slice: 1;
     }
@@ -79,13 +70,9 @@ function CreateUsername() {
             console.log("TRY ANOTHER");
         } else {
             await generateUserDocument(user, username);
-            console.log(userData);
-            // auth.signOut();
-            // router.push(`/users/${username}`);
             router.reload();
         }
     };
-
     const UsernameCheck = async (e) => {
         let err = await getUsernameDoc(e);
         setError(await getUsernameDoc(e));
@@ -105,10 +92,6 @@ function CreateUsername() {
                             name="username"
                             style={{ padding: "5px", marginLeft: "10px" }}
                             value={username}
-                            // onChange={(e) => {
-                            //     setUsername(e.target.value);
-                            //     UsernameCheck(e.target.value);
-                            // }}
                             onChange={(e) => {
                                 if (e.target.value.length < usernameLength) {
                                     let val =
@@ -122,9 +105,6 @@ function CreateUsername() {
                                 }
                             }}
                         />
-                        {/* <button type="button" onClick={handleSubmit}>
-                        Submit
-                    </button> */}
                         <label for="username">Username</label>
                     </span>
                     <span>
@@ -134,7 +114,6 @@ function CreateUsername() {
                                 : `✔️ ${username} is available! :)`
                             : ""}
                     </span>
-                    {/* <input type="submit" value="Submit" /> */}
                 </UsernameForm>
             </>
         );
@@ -145,5 +124,4 @@ const Container = styled.div`
     display: grid;
     place-items: center;
     height: 100vh;
-    /* background-color: #495057; */
 `;

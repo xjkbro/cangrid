@@ -9,7 +9,6 @@ const ImageGrid = ({ images, setSelectedImg }) => {
             <Stagger in className="img-grid" duration={300} delay={50}>
                 {images &&
                     images?.map((doc) => {
-                        // if (doc.user == user?.email) {
                         return (
                             <FadeTransform
                                 key={doc.id}

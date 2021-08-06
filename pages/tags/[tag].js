@@ -1,26 +1,18 @@
 import { useState, useEffect, useContext } from "react";
 import Title from "../../components/Title";
-import UploadForm from "../../components/UploadForm";
 import ImageGrid from "../../components/ImageGrid";
-import UniversalGrid from "../../components/UniversalGrid";
 import Modal from "../../components/Modal";
 
 import { auth, projectFirestore } from "../../firebase/config";
-
-import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "firebase";
-import { useRouter } from "next/router";
 import { UserContext } from "../../providers/UserContext";
 import Layout from "../../components/Layout";
 
 export default function SingleUser({ images }) {
-    const router = useRouter();
     const [selectedImg, setSelectedImg] = useState(null);
     const { userData, setUserData } = useContext(UserContext);
 
     const [bgColor, setBGColor] = useState("#fff");
     const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
-    console.log(nightMode);
     useEffect(() => {
         if (nightMode == true) setBGColor("#253335");
         else setBGColor("#fff");

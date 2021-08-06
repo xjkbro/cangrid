@@ -25,7 +25,6 @@ const Container = styled.div`
 
     > .MuiFormControl-root {
         width: 100%;
-        /* height: 200px; */
         margin: 5px 0;
     }
     .MuiInputBase-root .MuiFilledInput-root {
@@ -34,9 +33,6 @@ const Container = styled.div`
     }
     .MuiInputBase-root .MuiOutlinedInput-root {
         width: 100%;
-    }
-    .MuiFilledInput-multiline {
-        /* padding: 50px 14px 14px; */
     }
     .MuiInputBase-inputMultiline {
         height: 175px;
@@ -66,14 +62,11 @@ const UploadLabel = styled.label`
     height: 30px;
     border: 1px solid var(--primary);
     border-radius: 50%;
-    /* margin: 10px auto; */
     line-height: 30px;
     color: var(--primary);
     font-weight: bold;
     font-size: 24px;
     border-bottom: 1px solid gray;
-    /* padding-bottom: 15px; */
-    /* width: 100%; */
     input {
         height: 0;
         width: 0;
@@ -92,7 +85,6 @@ const UploadButton = styled.div`
     left: 0;
 `;
 const UploadOutput = styled.div`
-    /* display: absolute; */
     padding-left: 10px;
 `;
 const Tag = styled.span`
@@ -125,9 +117,6 @@ const UploadForm = ({ setSelectUpload }) => {
         let selected = e.target.files[0];
         if (selected && typeCheck.includes(selected.type)) {
             EXIF.getData(selected, () => {
-                // let exifData = EXIF.getAllTags(selected);
-                // let lensModel = EXIF.getTag(selected, "LensModel");  Unfortunately no lens model on my pictures :c
-                console.log(EXIF.getAllTags(selected));
                 let imgMake = EXIF.getTag(selected, "Make");
                 let imgModel = EXIF.getTag(selected, "Model");
                 let imgISO = EXIF.getTag(selected, "ISOSpeedRatings");
@@ -188,12 +177,9 @@ const UploadForm = ({ setSelectUpload }) => {
                         ...exifData,
                         dateCaptured: imgDate,
                     };
-                console.log(exifData);
-                console.log(imgISO);
 
                 if (exifData) {
                     setExifInfo(exifData);
-                    // console.log(EXIF.getTag(selected, "Orientation"));
                 } else {
                     console.log(
                         "No EXIF data found in image '" + file.name + "'."
@@ -214,13 +200,10 @@ const UploadForm = ({ setSelectUpload }) => {
         } else {
             setForm(true);
         }
-        console.log(caption);
-        console.log(file);
     };
 
     const showUploadForm = () => {
         if (user == null) {
-            // return <p>Please Login to have the option to upload.</p>;
             return <></>;
         } else {
             return (
@@ -292,7 +275,6 @@ const UploadForm = ({ setSelectUpload }) => {
                                 variant="contained"
                                 component="span"
                                 className="submitButton"
-                                // color="primary"
                                 onClick={submitForm}
                             >
                                 Upload

@@ -33,9 +33,7 @@ const BackDrop = styled.div`
     > div {
         display: flex;
         max-width: 90%;
-        /* max-height: 90%; */
         min-width: 85%;
-        /* min-height: 90%; */
         vertical-align: middle;
         box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
         background-color: white;
@@ -44,7 +42,6 @@ const BackDrop = styled.div`
     }
     > div > img {
         max-width: 100%;
-        /* max-height: 70vh; */
         width: auto;
         height: auto;
         border-top-left-radius: 10px;
@@ -55,7 +52,6 @@ const BackDrop = styled.div`
         height: 70%;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
-        /* padding: 30px; */
     }
 
     @media (min-width: 768px) {
@@ -77,10 +73,7 @@ const BackDrop = styled.div`
         justify-content: center;
         > div {
             display: flex;
-            /* max-width: 80%; */
-            /* max-height: 90%; */
             min-width: 50%;
-            /* min-height: 70%; */
             vertical-align: middle;
             box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
             background-color: white;
@@ -90,9 +83,7 @@ const BackDrop = styled.div`
         > div > img {
             display: block;
             max-width: 50vw;
-            /* min-width: 20vw; */
             max-height: 50vh;
-            /* min-height: 40vh; */
             width: auto;
             height: auto;
             border-top-left-radius: 10px;
@@ -104,7 +95,6 @@ const BackDrop = styled.div`
             height: 70%;
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
-            /* padding: 30px; */
         }
     }
     @media (min-width: 1376px) {
@@ -112,7 +102,6 @@ const BackDrop = styled.div`
 `;
 const ModalUpload = styled.div`
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    /* width: 100%; */
     padding: 10px;
 `;
 const Description = styled.div`
@@ -149,9 +138,6 @@ const TagsContainer = styled.div`
     }
 `;
 const MetaTagContainer = styled.div`
-    /* position: absolute;
-    bottom: 10px; */
-    /* font-size: 14px; */
     padding-left: 10px;
     color: ${(props) => props.theme.colors.primary};
     * {
@@ -167,7 +153,6 @@ const InfoContainer = styled.div`
     overflow-y: scroll;
     height: 42vh;
     @media (min-width: 768px) {
-        /* height: 60vh; */
     }
 `;
 const CommentPic = styled.img`
@@ -176,17 +161,12 @@ const CommentPic = styled.img`
     border-radius: 50%;
 `;
 const CommentForm = styled(TextField)`
-    /* position: absolute;
-    bottom: 0px;*/
     margin: 10px auto;
     left: 10px;
     width: 95%;
 `;
 const Comments = styled.div`
     overflow-y: hidden;
-    /* height: 25vh; */
-
-    /* list-style:none; */
     margin: 5px 10px;
     div {
         padding-top: 3px;
@@ -202,7 +182,6 @@ const SingleComment = styled.div`
         padding-right: 2px;
     }
     span {
-        /* inline-size: 150px; */
         overflow-wrap: break-word;
     }
 `;
@@ -238,7 +217,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     const [comment, setComment] = useState();
     const [toggleComments, setToggleComments] = useState(true);
     console.log(selectedImg.likes);
-    // let userLiked = selectedImg.likes.indexOf(userData?.user?.uid);
     let userLiked = selectedImg.likes.indexOf(userData?.user?.uid);
 
     const [likeIcon, setLikeIcon] = useState(userLiked == -1 ? false : true);
@@ -261,12 +239,9 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     };
     const handleLike = async (e) => {
         if (!likeIcon) {
-            console.log("add");
-
             const newCount = await imgLike(userData.user, selectedImg, "add");
             setTempLikes(newCount);
         } else {
-            console.log("remove");
             const newCount = await imgLike(
                 userData.user,
                 selectedImg,
@@ -277,7 +252,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
         setLikeIcon(!likeIcon);
     };
     const handleSubmit = async (e) => {
-        console.log(userData);
         if (userData.user) {
             const newComments = await addImgComment(
                 userData.user,
@@ -287,7 +261,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
             setTempCommentsArr(newComments);
         }
     };
-    console.log(selectedImg);
     return (
         <BackDrop
             id="backdrop"
@@ -334,7 +307,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                     </ModalUpload>
                     <InfoContainer>
                         <Caption>
-                            {/* <motion.p> */}
                             {selectedImg?.caption !== "" ? (
                                 selectedImg?.caption
                             ) : (
@@ -342,9 +314,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                     <i>No Caption</i>
                                 </p>
                             )}
-                            {/* </motion.p> */}
                         </Caption>
-                        {/* <ImgMetaData /> */}
                         <MetaTagContainer>
                             <ImageMetaData
                                 exifInfo={selectedImg.exif}
@@ -394,7 +364,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                     Hide Comments
                                 </a>
                                 {tempCommentsArr.map((item, i) => {
-                                    console.log(item);
                                     return (
                                         <SingleComment key={i}>
                                             <span>
@@ -417,9 +386,6 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                 })}
                             </Comments>
                         )}
-                        {/* <CommentForm onSubmit={handleSubmit}> */}
-
-                        {/* </CommentForm> */}
                     </InfoContainer>
                 </Description>
             </motion.div>

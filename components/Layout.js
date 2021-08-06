@@ -13,7 +13,7 @@ export default function Layout({ children }) {
                 />
                 {/* <title>Cangrid</title> */}
                 {/* <title>DevFlow</title> */}
-                <meta charset="UTF-8" />
+                <meta charSet="UTF-8" />
                 <meta
                     name="description"
                     content="A ReactJS (soon to be upgraded to NextJS) and Firebase project that will allow users to upload their photos to a universal gallery and share with others (the main page) and have a private gallery for their own uploads and everyone view it by a dynamic subdomain. Uploads are only processed by logging in and authenticating via Google."

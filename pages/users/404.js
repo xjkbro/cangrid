@@ -7,7 +7,6 @@ const FourOhFour = ({ isError }) => {
 
     const [bgColor, setBGColor] = useState("#fff");
     const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
-    console.log(nightMode);
     useEffect(() => {
         if (nightMode == true) setBGColor("#253335");
         else setBGColor("#fff");

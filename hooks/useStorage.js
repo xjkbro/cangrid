@@ -19,7 +19,6 @@ const useStorage = (file, tags, caption, exifInfo) => {
         // References
         // Reference to file
         const storageRef = projectStorage.ref(file.name);
-        console.log(storageRef);
         const collectionRef = projectFirestore.collection("images");
         const userImageCollectionRef = projectFirestore
             .doc(`users/${user.uid}`)
@@ -36,7 +35,6 @@ const useStorage = (file, tags, caption, exifInfo) => {
             },
             async () => {
                 const url = await storageRef.getDownloadURL();
-                console.log(storageRef.storage);
                 const createdAt = timestamp();
                 let insert = {
                     url,
@@ -48,19 +46,8 @@ const useStorage = (file, tags, caption, exifInfo) => {
                     comments: [],
                     likes: [],
                 };
-                // let insert = {
-                //     url,
-                //     createdAt,
-                //     caption,
-                //     tags,
-                //     exif: exifInfo,
-                //     user: userRef,
-                // };
-                console.log(insert);
                 const imgRef = await collectionRef.add(insert);
                 userImageCollectionRef.add({ imageRef: imgRef });
-
-                // userImageCollectionRef.add(insert);
                 setUrl(url);
             }
         );

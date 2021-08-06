@@ -4,7 +4,6 @@ import { UserContext } from "../providers/UserContext";
 import { auth, updateUserDocument, getUsernameDoc } from "../firebase/config";
 import { useRouter } from "next/router";
 import CreateUsername from "../components/CreateUsername";
-import Link from "next/link";
 import styled from "styled-components";
 import { TextField } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -16,14 +15,9 @@ const ProfileContainer = styled.div`
     justify-content: center;
 `;
 const ProfileBackDrop = styled.div`
-    /* display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center; */
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 5px 5px 10px #333;
-    /* padding: 10vw; */
     padding: 20px;
     background-color: #ddd;
     display: grid;
@@ -44,7 +38,6 @@ const UsernameBackdrop = styled.div`
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 5px 5px 10px #333;
-    /* padding: 10vw; */
     padding: 0 50px;
     background-color: #ddd;
     display: grid;
@@ -104,7 +97,6 @@ const UsernameForm = styled.form`
         padding-bottom: 6px;
         font-weight: 700;
         border-width: 3px;
-        /* border-image: linear-gradient(to right, #11998e, #38ef7d); */
         border-image: ${(props) => props.theme.colors.secondary};
         border-image-slice: 1;
     }
@@ -148,9 +140,6 @@ const UsernameForm = styled.form`
 `;
 const ProfileDescription = styled(TextField)`
     position: relative;
-
-    /* position: absolute;
-    bottom: 0px;*/
     margin: 10px auto;
     left: 10px;
     width: 95%;
@@ -168,7 +157,6 @@ const SaveButton = styled(Button)`
         color: white;
     }
     @media (min-width: 768px) {
-        /* left: 0; */
     }
 `;
 
@@ -200,9 +188,7 @@ function Profile() {
         event.preventDefault();
         if (!error) {
             updateUserDocument(user, username, description);
-            console.log(userData);
             const tempUser = { ...userData.user, username, description };
-            console.log(tempUser);
             setUserData({ user: tempUser });
         }
     };
@@ -226,17 +212,8 @@ function Profile() {
                         </UsernameBackdrop>
                     ) : (
                         <ProfileBackDrop style={{ width: "75vw" }}>
-                            {/* <h1>Profile</h1> */}
                             <div>
-                                <ProfileImage
-                                    user={user}
-                                    // style={{
-                                    //     background: `url(${
-                                    //         user?.photoURL ||
-                                    //         "https://i.stack.imgur.com/l60Hf.png"
-                                    //     })  no-repeat center center`,
-                                    // }}
-                                />
+                                <ProfileImage user={user} />
                                 <div style={{ textAlign: "center" }}>
                                     To change profile image, change your Google
                                     Account's profile image and log back in.
@@ -246,7 +223,6 @@ function Profile() {
                                 <div
                                     style={{
                                         position: "relative",
-                                        // height: "350px",
                                         width: "100%",
                                     }}
                                 >
@@ -281,10 +257,6 @@ function Profile() {
                                                         marginLeft: "10px",
                                                     }}
                                                     value={username}
-                                                    // onChange={(e) => {
-                                                    //     setUsername(e.target.value);
-                                                    //     UsernameCheck(e.target.value);
-                                                    // }}
                                                     onChange={(e) => {
                                                         if (
                                                             e.target.value
@@ -322,18 +294,12 @@ function Profile() {
                                                         : `✔️ ${username} is available! :)`
                                                     : ""}
                                             </span>
-                                            {/* <input type="submit" value="Submit" /> */}
                                         </UsernameForm>
                                     ) : (
                                         <></>
                                     )}
 
                                     <h4>Email: {user?.email}</h4>
-                                    {console.log(user?.uid)}
-                                    {/* <h3>ID: {user?.uid}</h3> */}
-                                    {/* <Link href={`/users/${user?.uid}`}>
-                                <h3>View Your Gallery</h3>
-                                </Link> */}
                                     <h4>Profile Description: </h4>
 
                                     <ProfileDescription
