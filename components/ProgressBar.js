@@ -16,7 +16,6 @@ const ProgressBar = ({
     setSelectUpload,
 }) => {
     const { progress, url } = useStorage(file, tags, caption, exifInfo);
-    // console.log(progress);
     const router = useRouter();
     const refreshData = () => {
         router.replace(router.asPath);

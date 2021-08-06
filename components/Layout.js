@@ -4,6 +4,19 @@ import { useRouter } from "next/router";
 export default function Layout({ children }) {
     const router = useRouter();
 
+    // console.log(router);
+    const createTitle = () => {
+        switch (router.pathname) {
+            case "/tags/[tag]":
+                return `Tag: ${router.query.tag} | Cangrid`;
+            case "/users/[username]":
+                return `${router.query.username} | Cangrid`;
+            case "/users/404":
+                return `404 | Cangrid`;
+            default:
+                return "Cangrid";
+        }
+    };
     return (
         <>
             <Head>
@@ -11,8 +24,7 @@ export default function Layout({ children }) {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                {/* <title>Cangrid</title> */}
-                {/* <title>DevFlow</title> */}
+                <title>{createTitle()}</title>
                 <meta charSet="UTF-8" />
                 <meta
                     name="description"

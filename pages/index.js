@@ -8,19 +8,21 @@ import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import Layout from "../components/Layout";
+import Footer from "../components/Footer";
 
 const Container = styled.div``;
 export default function Home({ images }) {
     const [selectedImg, setSelectedImg] = useState(null);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
-
     const [bgColor, setBGColor] = useState("#fff");
     const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+
     useEffect(() => {
         if (nightMode == true) setBGColor("#253335");
         else setBGColor("#fff");
     }, [nightMode]);
+
     useEffect(() => {
         setNightMode(userData?.user?.nightMode);
     }, [userData]);
@@ -28,6 +30,16 @@ export default function Home({ images }) {
     if (userData?.user?.uid && userData?.user?.username == null) {
         router.push("/profile");
     }
+
+    // function shuffleImages(arr) {
+    //     for (let i = arr.length - 1; i > 0; i--) {
+    //         const j = Math.floor(Math.random() * (i + 1));
+    //         [arr[i], arr[j]] = [arr[j], arr[i]];
+    //     }
+    // }
+    // shuffleImages(images);
+    // images.slice(0, 11);
+
     return (
         <Layout>
             <Container className="App">
@@ -46,6 +58,7 @@ export default function Home({ images }) {
         `}
                 </style>
             </Container>
+            <Footer />
         </Layout>
     );
 }

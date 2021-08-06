@@ -23,12 +23,35 @@ const theme = {
 const Line = styled.div`
     width: 100vw;
     height: 10px;
-    background: linear-gradient(
-        270deg,
+    animation: animateBg 7s linear infinite;
+    /* background-image: linear-gradient(
+        225deg,
+        #b0ae89 25.28%,
+        #89b0ae 59.7%,
+        #ad89b0 97.75%,
         #b0ae89 25.28%,
         #89b0ae 59.7%,
         #ad89b0 97.75%
+    ); */
+    background-image: linear-gradient(
+        205deg,
+        #b0ae89,
+        #89b0ae,
+        #ad89b0,
+        #b0ae89,
+        #89b0ae,
+        #ad89b0,
+        #b0ae89
     );
+    background-size: 1000% 1000%;
+    @keyframes animateBg {
+        0% {
+            background-position: 0% 0%;
+        }
+        100% {
+            background-position: 100% 100%;
+        }
+    }
 `;
 function MyApp({ Component, pageProps }) {
     const [user, loading] = useAuthState(auth);

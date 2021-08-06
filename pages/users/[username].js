@@ -8,6 +8,7 @@ import { auth, projectFirestore } from "../../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { UserContext } from "../../providers/UserContext";
 import Layout from "../../components/Layout";
+import Footer from "../../components/Footer";
 
 function SingleUser({ userInfo, images }) {
     const [selectedImg, setSelectedImg] = useState(null);
@@ -45,6 +46,7 @@ function SingleUser({ userInfo, images }) {
             `}
                 </style>
             </div>
+            <Footer />
         </Layout>
     );
 }

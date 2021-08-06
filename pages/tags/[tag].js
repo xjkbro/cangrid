@@ -6,6 +6,7 @@ import Modal from "../../components/Modal";
 import { auth, projectFirestore } from "../../firebase/config";
 import { UserContext } from "../../providers/UserContext";
 import Layout from "../../components/Layout";
+import Footer from "../../components/Footer";
 
 export default function SingleUser({ images }) {
     const [selectedImg, setSelectedImg] = useState(null);
@@ -38,6 +39,7 @@ export default function SingleUser({ images }) {
             `}
                 </style>
             </div>
+            <Footer />
         </Layout>
     );
 }

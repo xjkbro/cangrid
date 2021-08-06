@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import Footer from "../../components/Footer";
 import Layout from "../../components/Layout";
 import Title from "../../components/Title";
 import { UserContext } from "../../providers/UserContext";
@@ -29,6 +30,7 @@ const FourOhFour = ({ isError }) => {
             `}
                 </style>
             </div>
+            <Footer />
         </Layout>
     );
 };

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Head from "next/head";
 import Button from "@material-ui/core/Button";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
@@ -347,15 +346,6 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
     };
     return (
         <Container>
-            <Head>
-                {userInfo ? (
-                    <title>{userInfo.username} | Cangrid</title>
-                ) : (
-                    <>
-                        <title>Cangrid</title>
-                    </>
-                )}
-            </Head>
             {selectUpload && <UploadModal setSelectUpload={setSelectUpload} />}
             <TitleBar>
                 <Link href={"/"}>

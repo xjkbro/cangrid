@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { TextField } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Layout from "../components/Layout";
+import Footer from "../components/Footer";
 
 const ProfileContainer = styled.div`
     display: flex;
@@ -353,6 +354,7 @@ function Profile() {
             `}
                 </style>
             </div>
+            <Footer />
         </Layout>
     );
 }
