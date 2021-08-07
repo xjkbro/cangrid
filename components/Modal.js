@@ -30,6 +30,7 @@ const BackDrop = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
     > div {
         display: flex;
         max-width: 90%;
