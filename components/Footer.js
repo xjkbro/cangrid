@@ -6,8 +6,15 @@ const List = styled.ul`
     padding-left: 0;
     margin: 0 auto;
     text-align: center;
-    position: fixed;
-    bottom: 10px;
+    position: absolute;
+    padding-bottom: 10px;
+
+    @media (min-width: 600px) {
+        font-size: 14px;     
+        position: fixed;
+        bottom: 10px;
+        padding-bottom: 0;
+    }
 `;
 const ListItem = styled.li`
     display: inline;
