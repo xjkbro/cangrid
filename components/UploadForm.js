@@ -7,6 +7,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
 import EXIF from "exif-js";
 import { ImageMetaData } from "./ImageMetaData";
+import imageCompression from "browser-image-compression";
 
 const Form = styled.div`
     margin: 0px 0px;
@@ -193,7 +194,28 @@ const UploadForm = ({ setSelectUpload }) => {
             setError("Please Select an image file. (png/jpeg/jpg)");
         }
     };
-    const submitForm = (e) => {
+    const handleImageUpload = async () => {
+        console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+        };
+        try {
+            const compressedFile = await imageCompression(file, options);
+
+            console.log(
+                `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+            ); // smaller than maxSizeMB
+            setFile(compressedFile);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const submitForm = async (e) => {
+        await handleImageUpload();
+
         e.preventDefault();
         if (!file) {
             setError("Please Select an image file. (png/jpeg/jpg)");
@@ -217,12 +239,14 @@ const UploadForm = ({ setSelectUpload }) => {
                             <UploadOutput>
                                 {file && (
                                     <span>
-                                        {file.name.substring(0, 25) +
-                                            "..." +
-                                            file.name.substring(
-                                                file.name.length - 4,
-                                                file.name.length
-                                            )}
+                                        {file.name.length > 25
+                                            ? file.name.substring(0, 25) +
+                                              "..." +
+                                              file.name.substring(
+                                                  file.name.length - 4,
+                                                  file.name.length
+                                              )
+                                            : file.name}
                                     </span>
                                 )}
                                 {error && <div className="error">{error}</div>}

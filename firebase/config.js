@@ -3,16 +3,6 @@ import firebaseApp from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 
-// var firebaseConfig = {
-//     apiKey: "AIzaSyCUTGc5N1XnTVk1Fq526yUPwwlGjDEcQUU",
-//     authDomain: "galleryio-next.firebaseapp.com",
-//     projectId: "galleryio-next",
-//     storageBucket: "galleryio-next.appspot.com",
-//     messagingSenderId: "679962663284",
-//     appId: "1:679962663284:web:67f64077a52b8617def421",
-//     measurementId: "G-MCKN4NWZ7T",
-// };
-
 var firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN,
