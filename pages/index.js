@@ -15,17 +15,26 @@ export default function Home({ images }) {
     const [selectedImg, setSelectedImg] = useState(null);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
-    const [bgColor, setBGColor] = useState("#fff");
-    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+    const [bgColor, setBGColor] = useState();
+    const [nightMode, setNightMode] = useState();
+
+    // console.log(localStorage.getItem("nightMode"));
 
     useEffect(() => {
-        if (nightMode == true) setBGColor("#253335");
-        else setBGColor("#fff");
-    }, [nightMode]);
+        if (nightMode == "true") {
+            console.log("jaksjdl");
+            setBGColor("#253335");
+        }
+        if (nightMode == "false") {
+            console.log("kskskssk");
+            setBGColor("#fff");
+        }
+    }, [nightMode, setNightMode]);
 
     useEffect(() => {
-        setNightMode(userData?.user?.nightMode);
-    }, [userData]);
+        // console.log(localStorage.getItem("nightMode"));
+        setNightMode(localStorage.getItem("nightMode"));
+    }, []);
 
     if (userData?.user?.uid && userData?.user?.username == null) {
         router.push("/profile");

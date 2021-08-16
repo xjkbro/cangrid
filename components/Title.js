@@ -287,13 +287,38 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
                                                 style={{ color: "inherit" }}
                                             >
                                                 <div
-                                                    onClick={async () =>
-                                                        setNightMode(
-                                                            await setNightModeSetting(
-                                                                user
-                                                            )
-                                                        )
-                                                    }
+                                                    onClick={() => {
+                                                        let tempNight =
+                                                            localStorage.getItem(
+                                                                "nightMode"
+                                                            );
+                                                        if (
+                                                            tempNight == "true"
+                                                        ) {
+                                                            localStorage.setItem(
+                                                                "nightMode",
+                                                                false
+                                                            );
+                                                            setNightMode(
+                                                                localStorage.getItem(
+                                                                    "nightMode"
+                                                                )
+                                                            );
+                                                        }
+                                                        if (
+                                                            tempNight == "false"
+                                                        ) {
+                                                            localStorage.setItem(
+                                                                "nightMode",
+                                                                true
+                                                            );
+                                                            setNightMode(
+                                                                localStorage.getItem(
+                                                                    "nightMode"
+                                                                )
+                                                            );
+                                                        }
+                                                    }}
                                                     style={{
                                                         cursor: "pointer",
                                                     }}

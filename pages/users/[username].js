@@ -85,8 +85,8 @@ export async function getServerSideProps(context) {
         .map((doc) => {
             return doc.imageRef.get().then((img) => {
                 const {
-                    url,
                     exif,
+                    url,
                     userData,
                     createdAt,
                     tags,
