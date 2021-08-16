@@ -18,36 +18,24 @@ export default function Home({ images }) {
     const [bgColor, setBGColor] = useState();
     const [nightMode, setNightMode] = useState();
 
-    // console.log(localStorage.getItem("nightMode"));
-
     useEffect(() => {
         if (nightMode == "true") {
-            console.log("jaksjdl");
             setBGColor("#253335");
         }
         if (nightMode == "false") {
-            console.log("kskskssk");
             setBGColor("#fff");
         }
     }, [nightMode, setNightMode]);
 
     useEffect(() => {
-        // console.log(localStorage.getItem("nightMode"));
+        // On Component Mount, set Night Mode from localStorage
         setNightMode(localStorage.getItem("nightMode"));
     }, []);
 
     if (userData?.user?.uid && userData?.user?.username == null) {
+        // When user is new, push user to profile route.
         router.push("/profile");
     }
-
-    // function shuffleImages(arr) {
-    //     for (let i = arr.length - 1; i > 0; i--) {
-    //         const j = Math.floor(Math.random() * (i + 1));
-    //         [arr[i], arr[j]] = [arr[j], arr[i]];
-    //     }
-    // }
-    // shuffleImages(images);
-    // images.slice(0, 11);
 
     return (
         <Layout>
