@@ -29,6 +29,9 @@ export default function Home({ images }) {
 
     useEffect(() => {
         // On Component Mount, set Night Mode from localStorage
+        if (localStorage.getItem("nightMode") == null)
+            localStorage.setItem("nightMode", false);
+
         setNightMode(localStorage.getItem("nightMode"));
     }, []);
 
