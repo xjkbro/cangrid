@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const List = styled.ul`
     width: 100%;
@@ -19,46 +19,57 @@ const List = styled.ul`
 const ListItem = styled.li`
     display: inline;
     font-size: 12px;
-    color: white;
     margin: auto;
     text-align: center;
     padding: 0 12px;
+    color: black;
     a {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(0, 0, 0, 0.7);
         text-decoration: none;
     }
     a:hover {
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(0, 0, 0, 0.8);
         text-decoration: none;
     }
+
+    ${props => props.night && css`
+        color: white;
+        a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+        a:hover {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+    `}
+
     @media (min-width: 600px) {
         font-size: 14px;
     }
 `;
 
-const Footer = () => {
+const Footer = ({nightMode}) => {
+    let night = nightMode == 'true' ? true : false;
     return (
         <List>
-            <ListItem>
-                <Link href="/">About</Link>
+            <ListItem night={night}>
+                <Link href="/etc/about">About</Link>
             </ListItem>
-            <ListItem>
-                <Link href="/">Privacy</Link>
+            <ListItem night={night}>
+                <Link href="/etc/privacy">Privacy</Link>
             </ListItem>
-            <ListItem>
-                <Link href="/">Terms</Link>
+            <ListItem night={night}>
+                <Link href="/etc/terms">Terms</Link>
             </ListItem>
-            <ListItem>
-                <Link href="/">Copyright</Link>
+            <ListItem night={night}>
+                <Link href="/etc/copyright">Copyright</Link>
             </ListItem>
-            <ListItem>
-                <Link href="/">Policy and Safety</Link>
+            <ListItem night={night}>
+                <Link href="/etc/policy-safety">Policy and Safety</Link>
             </ListItem>
-            <ListItem>
-                <Link href="/">Contact</Link>
-            </ListItem>
-            <ListItem>
-                <Link href="/">Privacy</Link>
+            <ListItem night={night}>
+                <Link href="/etc/contact">Contact</Link>
             </ListItem>
         </List>
     );

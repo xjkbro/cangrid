@@ -1,17 +1,14 @@
 import { useState, useEffect, useContext } from "react";
-import Title from "../components/Title";
-import ImageGrid from "../components/ImageGrid";
-import Modal from "../components/Modal";
+import Title from "../../components/Title";
 
-import { auth, projectFirestore } from "../firebase/config";
-import { UserContext } from "../providers/UserContext";
+import { UserContext } from "../../providers/UserContext";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import Layout from "../components/Layout";
-import Footer from "../components/Footer";
+import Layout from "../../components/Layout";
+import Footer from "../../components/Footer";
 
 const Container = styled.div``;
-export default function Home({ images }) {
+export default function Etc() {
     const [selectedImg, setSelectedImg] = useState(null);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
@@ -43,17 +40,18 @@ export default function Home({ images }) {
         router.push("/profile");
     }
 
+    let FindPage = router.asPath;
+    let arr = FindPage.split('/');
+    let pageTitle = arr[2].charAt(0).toUpperCase() + arr[2].slice(1);
+    console.log(pageTitle)
+
     return (
         <Layout>
             <Container className="App">
                 <Title bgColor={bgColor} setNightMode={setNightMode} />
-                <ImageGrid images={images} setSelectedImg={setSelectedImg} />
-                {selectedImg && (
-                    <Modal
-                        selectedImg={selectedImg}
-                        setSelectedImg={setSelectedImg}
-                    />
-                )}
+                <h1>{pageTitle}</h1>
+
+
                 <style jsx global>
                     {`
             html {
@@ -64,34 +62,4 @@ export default function Home({ images }) {
             <Footer nightMode={nightMode} />
         </Layout>
     );
-}
-export async function getServerSideProps(context) {
-    let imgRes = await projectFirestore
-        .collection("images")
-        .orderBy("createdAt", "desc")
-        .get();
-    const images = imgRes.docs
-        .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }))
-        .map((img) => {
-            return {
-                id: img.id,
-                caption: img.caption,
-                url: img.url,
-                exif: img.exif,
-                tags: img.tags,
-                userData: img.userData,
-                createdAt: img.createdAt.toDate().toString(),
-                comments: img.comments,
-                likes: img.likes,
-            };
-        });
-
-    return {
-        props: {
-            images,
-        },
-    };
 }

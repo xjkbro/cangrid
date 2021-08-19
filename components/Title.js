@@ -375,7 +375,8 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
             <TitleBar>
                 <Link href={"/"}>
                     <a>
-                        <Image width={300} height={89} src={Logo} />
+                        <Image src={Logo} alt="Logo"/>
+                        {/* <Image width={300} height={89} src={"/images/cangrid.png"} alt="Logo"/> */}
                     </a>
                 </Link>
                 {showLogin()}

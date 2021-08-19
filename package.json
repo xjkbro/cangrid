@@ -18,7 +18,7 @@
     "exif-js": "^2.3.0",
     "firebase": "^8.6.8",
     "framer-motion": "^4.1.17",
-    "next": "latest",
+    "next": "^11.1.0",
     "prop-types": "^15.7.2",
     "react": "latest",
     "react-animation-components": "^3.0.0",
