@@ -1,13 +1,27 @@
 import { useState, useEffect, useContext } from "react";
 import Title from "../../components/Title";
-
 import { UserContext } from "../../providers/UserContext";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Layout from "../../components/Layout";
 import Footer from "../../components/Footer";
 
 const Container = styled.div``;
+const Heading = styled.h1`
+    ${(props) =>
+        props.night &&
+        css`
+            color: white;
+            a {
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+            }
+            a:hover {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+            }
+        `}
+`;
 export default function Etc() {
     const [selectedImg, setSelectedImg] = useState(null);
     const router = useRouter();
@@ -23,7 +37,7 @@ export default function Etc() {
         }
         if (nightMode == "false") {
             setBGColor("#fff");
-            setTextColor("#253335")
+            setTextColor("#253335");
         }
     }, [nightMode, setNightMode]);
 
@@ -40,17 +54,17 @@ export default function Etc() {
         router.push("/profile");
     }
 
+    let night = nightMode == "true" ? true : false;
     let FindPage = router.asPath;
-    let arr = FindPage.split('/');
+    let arr = FindPage.split("/");
     let pageTitle = arr[2].charAt(0).toUpperCase() + arr[2].slice(1);
-    console.log(pageTitle)
+    console.log(pageTitle);
 
     return (
         <Layout>
             <Container className="App">
                 <Title bgColor={bgColor} setNightMode={setNightMode} />
-                <h1>{pageTitle}</h1>
-
+                <Heading night={night}>{pageTitle}</Heading>
 
                 <style jsx global>
                     {`

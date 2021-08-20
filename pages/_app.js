@@ -24,15 +24,6 @@ const Line = styled.div`
     width: 100vw;
     height: 10px;
     animation: animateBg 7s linear infinite;
-    /* background-image: linear-gradient(
-        225deg,
-        #b0ae89 25.28%,
-        #89b0ae 59.7%,
-        #ad89b0 97.75%,
-        #b0ae89 25.28%,
-        #89b0ae 59.7%,
-        #ad89b0 97.75%
-    ); */
     background-image: linear-gradient(
         205deg,
         #b0ae89,
