@@ -22,7 +22,21 @@ const Heading = styled.h1`
             }
         `}
 `;
-const Body = styled.p``;
+const Body = styled.p`
+    ${(props) =>
+        props.night &&
+        css`
+            color: white;
+            a {
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+            }
+            a:hover {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+            }
+        `}
+`;
 export default function Etc() {
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
@@ -66,7 +80,7 @@ export default function Etc() {
             <Container className="App">
                 <Title bgColor={bgColor} setNightMode={setNightMode} />
                 <Heading night={night}>{pageTitle}</Heading>
-                <Body>{bodyContent}</Body>
+                <Body night={night}>{bodyContent}</Body>
                 <style jsx global>
                     {`
                         html {
