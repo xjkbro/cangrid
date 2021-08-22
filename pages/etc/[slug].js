@@ -22,8 +22,8 @@ const Heading = styled.h1`
             }
         `}
 `;
+const Body = styled.p``;
 export default function Etc() {
-    const [selectedImg, setSelectedImg] = useState(null);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
     const [bgColor, setBGColor] = useState();
@@ -58,19 +58,20 @@ export default function Etc() {
     let FindPage = router.asPath;
     let arr = FindPage.split("/");
     let pageTitle = arr[2].charAt(0).toUpperCase() + arr[2].slice(1);
-    console.log(pageTitle);
+
+    const bodyContent = `This is the ${pageTitle} page. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque convallis pretium velit. Sed sit amet viverra sapien. Proin porta dui at est pellentesque vehicula. Sed suscipit lobortis magna at interdum. Nam congue condimentum magna vitae placerat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed interdum arcu non laoreet varius. Donec magna tortor, varius eu laoreet nec, convallis pellentesque turpis. Cras vel efficitur lacus. Fusce non ligula commodo, feugiat ipsum quis, condimentum metus. Integer metus enim, lacinia at dapibus ut, tempus vitae ante.`;
 
     return (
         <Layout>
             <Container className="App">
                 <Title bgColor={bgColor} setNightMode={setNightMode} />
                 <Heading night={night}>{pageTitle}</Heading>
-
+                <Body>{bodyContent}</Body>
                 <style jsx global>
                     {`
-            html {
-                background-color: ${bgColor};
-        `}
+                        html {
+                            background-color: ${bgColor};
+                    `}
                 </style>
             </Container>
             <Footer nightMode={nightMode} />
