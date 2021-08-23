@@ -1,8 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import Title from "../components/Title";
 import { UserContext } from "../providers/UserContext";
-import { auth, updateUserDocument, getUsernameDoc } from "../firebase/config";
-import { useRouter } from "next/router";
+import { updateUserDocument, getUsernameDoc } from "../firebase/config";
 import CreateUsername from "../components/CreateUsername";
 import styled from "styled-components";
 import { TextField } from "@material-ui/core";
@@ -162,7 +161,6 @@ const SaveButton = styled(Button)`
 `;
 
 function Profile() {
-    const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
     const [username, setUsername] = useState("");
     const [description, setDescription] = useState("");
@@ -171,15 +169,16 @@ function Profile() {
     const [error, setError] = useState(false);
     const [toggleUsernameChange, setToggleUsernameChange] = useState(false);
     const [user, setUser] = useState(null);
-
     const [bgColor, setBGColor] = useState("#fff");
     const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+
     useEffect(() => {
         setUser(userData?.user);
         setUsername(userData?.user?.username);
         setDescription(userData?.user?.description);
         setNightMode(userData?.user?.nightMode);
     }, [userData]);
+
     useEffect(() => {
         if (nightMode == true) setBGColor("#253335");
         else setBGColor("#fff");

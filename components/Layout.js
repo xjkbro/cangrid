@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
     const router = useRouter();
-
-    // console.log(router);
     const createTitle = () => {
         switch (router.pathname) {
             case "/tags/[tag]":

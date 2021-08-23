@@ -11,6 +11,6 @@ function SignOut() {
         setUserData(null);
         router.push("/");
     }, []);
-    return <div></div>;
+    return <></>;
 }
 export default SignOut;

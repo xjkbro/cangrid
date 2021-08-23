@@ -23,7 +23,7 @@ const useStorage = (file, tags, caption, exifInfo) => {
         const userImageCollectionRef = projectFirestore
             .doc(`users/${user.uid}`)
             .collection("images");
-        const userRef = projectFirestore.doc(`users/${user.uid}`);
+        projectFirestore.doc(`users/${user.uid}`);
         storageRef.put(file).on(
             "state_changed",
             (snap) => {

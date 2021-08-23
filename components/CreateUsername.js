@@ -59,22 +59,18 @@ const UsernameForm = styled.form`
 function CreateUsername() {
     const [username, setUsername] = useState("");
     const [usernameLength, setUsernameLength] = useState(20);
-    const { userData, setUserData } = useContext(UserContext);
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const [error, setError] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (error) {
-            console.log("TRY ANOTHER");
-        } else {
+        if (!error) {
             await generateUserDocument(user, username);
             router.reload();
         }
     };
     const UsernameCheck = async (e) => {
-        let err = await getUsernameDoc(e);
         setError(await getUsernameDoc(e));
     };
 

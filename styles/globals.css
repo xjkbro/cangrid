@@ -23,53 +23,6 @@ body {
     margin: 0 auto;
 }
 
-/* .profileButton {
-    margin: 0 5px !important;
-    color: white !important;
-    background-color: var(--primary) !important;
-}
-.loginButton {
-    color: white !important;
-    background-color: var(--secondary) !important;
-    height: 100%;
-}
-.logoutButton {
-    color: white !important;
-    background-color: var(--secondary) !important;
-} */
-/* upload form styles */
-/* form { */
-/* margin: 30px auto;
-    text-align: center;
-    width: 100%; */
-/* } */
-/* .fileContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-.fileContainer > .MuiFormControl-root {
-    width: 100%;
-    height: 200px;
-}
-.fileContainer .MuiInputBase-root {
-    width: 100%;
-    height: 100%;
-}
-.fileContainer .MuiFilledInput-multiline {
-    padding: 50px 14px 14px;
-}
-.fileContainer > .uploadButton {
-    position: absolute;
-    left: 15px;
-    top: 10px;
-}
-.fileContainer > span {
-    position: absolute;
-    right: 15px;
-    top: 20px;
-} */
 .submitButton {
     color: white !important;
     background-color: var(--primary) !important;

@@ -3,7 +3,7 @@ import Title from "../components/Title";
 import ImageGrid from "../components/ImageGrid";
 import Modal from "../components/Modal";
 
-import { auth, projectFirestore } from "../firebase/config";
+import { projectFirestore } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -26,7 +26,7 @@ export default function Home({ images }) {
         }
         if (nightMode == "false") {
             setBGColor("#fff");
-            setTextColor("#253335")
+            setTextColor("#253335");
         }
     }, [nightMode, setNightMode]);
 

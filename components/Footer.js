@@ -10,7 +10,7 @@ const List = styled.ul`
     padding-bottom: 10px;
 
     @media (min-width: 600px) {
-        font-size: 14px;     
+        font-size: 14px;
         position: fixed;
         bottom: 10px;
         padding-bottom: 0;
@@ -32,25 +32,27 @@ const ListItem = styled.li`
         text-decoration: none;
     }
 
-    ${props => props.night && css`
-        color: white;
-        a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-        }
-        a:hover {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-        }
-    `}
+    ${(props) =>
+        props.night &&
+        css`
+            color: white;
+            a {
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+            }
+            a:hover {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+            }
+        `}
 
     @media (min-width: 600px) {
         font-size: 14px;
     }
 `;
 
-const Footer = ({nightMode}) => {
-    let night = nightMode == 'true' ? true : false;
+const Footer = ({ nightMode }) => {
+    let night = nightMode == "true" ? true : false;
     return (
         <List>
             <ListItem night={night}>

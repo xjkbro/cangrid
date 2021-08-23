@@ -53,10 +53,6 @@ const Container = styled.div`
     }
 `;
 
-const ExifContainer = styled.div`
-    display: flex;
-    align-items: center;
-`;
 const UploadLabel = styled.label`
     display: block;
     width: 30px;
@@ -103,7 +99,6 @@ const Tags = styled.div`
 `;
 const UploadForm = ({ setSelectUpload }) => {
     const [user, loading] = useAuthState(auth);
-
     const [caption, setCaption] = useState("");
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
@@ -111,7 +106,6 @@ const UploadForm = ({ setSelectUpload }) => {
     const [form, setForm] = useState(null);
     const [tags, setTags] = useState([]);
     const [singleTag, setSingleTag] = useState("");
-
     const [exifInfo, setExifInfo] = useState(null);
 
     const changeHandler = (e) => {
@@ -181,10 +175,6 @@ const UploadForm = ({ setSelectUpload }) => {
 
                 if (exifData) {
                     setExifInfo(exifData);
-                } else {
-                    console.log(
-                        "No EXIF data found in image '" + file.name + "'."
-                    );
                 }
             });
             setFile(selected);
@@ -195,7 +185,6 @@ const UploadForm = ({ setSelectUpload }) => {
         }
     };
     const handleImageUpload = async () => {
-        console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
         const options = {
             maxSizeMB: 1,
             maxWidthOrHeight: 1920,
@@ -203,10 +192,6 @@ const UploadForm = ({ setSelectUpload }) => {
         };
         try {
             const compressedFile = await imageCompression(file, options);
-
-            console.log(
-                `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
-            ); // smaller than maxSizeMB
             setFile(compressedFile);
         } catch (error) {
             console.log(error);

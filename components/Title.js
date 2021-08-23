@@ -1,12 +1,7 @@
 import Link from "next/link";
 import Button from "@material-ui/core/Button";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-    auth,
-    provider,
-    projectFirestore,
-    setNightModeSetting,
-} from "../firebase/config";
+import { auth, provider } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -180,7 +175,6 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
     const signIn = () => {
         auth.signInWithRedirect(provider)
             .then((res) => {
-                console.log(res);
                 if (res.additionalUserInfo.isNewUser) router.push("/profile");
                 else {
                     router.push(`/`);
@@ -375,8 +369,7 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
             <TitleBar>
                 <Link href={"/"}>
                     <a>
-                        <Image src={Logo} alt="Logo"/>
-                        {/* <Image width={300} height={89} src={"/images/cangrid.png"} alt="Logo"/> */}
+                        <Image src={Logo} alt="Logo" />
                     </a>
                 </Link>
                 {showLogin()}

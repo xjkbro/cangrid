@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import UploadForm from "./UploadForm";
+
 const BackDrop = styled.div`
     position: fixed;
     top: 0;

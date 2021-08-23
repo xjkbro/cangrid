@@ -69,6 +69,7 @@ export const updateUserDocument = async (user, username, description) => {
     const snapshot = await userRef.get();
     if (snapshot.exists) {
         const { photoURL } = user;
+        // Receives Large Google Profile Picture (900px x 900px)
         let newPhotoURL = photoURL.substring(0, photoURL.length - 4);
         newPhotoURL += "900-c";
         if (description == undefined) description = "";
@@ -155,7 +156,7 @@ export const getUsernameDoc = async (username) => {
     if (!username) return null;
     let found = false;
     try {
-        const userDocument = await projectFirestore
+        await projectFirestore
             .collection(`users`)
             .get()
             .then((snap) => {

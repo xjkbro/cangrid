@@ -2,25 +2,22 @@ import { useState, useEffect, useContext } from "react";
 import Title from "../../components/Title";
 import ImageGrid from "../../components/ImageGrid";
 import Modal from "../../components/Modal";
-
-import { auth, projectFirestore } from "../../firebase/config";
-
-import { useAuthState } from "react-firebase-hooks/auth";
+import { projectFirestore } from "../../firebase/config";
 import { UserContext } from "../../providers/UserContext";
 import Layout from "../../components/Layout";
 import Footer from "../../components/Footer";
 
 function SingleUser({ userInfo, images }) {
     const [selectedImg, setSelectedImg] = useState(null);
-    const [user, loading] = useAuthState(auth);
     const { userData, setUserData } = useContext(UserContext);
-
     const [bgColor, setBGColor] = useState("#fff");
     const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+
     useEffect(() => {
         if (nightMode == true) setBGColor("#253335");
         else setBGColor("#fff");
     }, [nightMode]);
+
     useEffect(() => {
         setNightMode(userData?.user?.nightMode);
     }, [userData]);
@@ -53,7 +50,7 @@ function SingleUser({ userInfo, images }) {
 export async function getServerSideProps(context) {
     let collectionRef = projectFirestore.collection("users");
     let userRef = null;
-    var query = await collectionRef
+    await collectionRef
         .where("username", "==", context.query.username)
         .limit(1)
         .get()

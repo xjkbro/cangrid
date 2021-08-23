@@ -217,13 +217,12 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     const { userData, setUserData } = useContext(UserContext);
     const [comment, setComment] = useState();
     const [toggleComments, setToggleComments] = useState(true);
-    console.log(selectedImg.likes);
     let userLiked = selectedImg.likes.indexOf(userData?.user?.uid);
-
     const [likeIcon, setLikeIcon] = useState(userLiked == -1 ? false : true);
     let [tempLikes, setTempLikes] = useState(selectedImg.likes.length);
     let [tempCommentsArr, setTempCommentsArr] = useState(selectedImg.comments);
     const router = useRouter();
+
     const refreshData = () => {
         router.replace(router.asPath);
     };

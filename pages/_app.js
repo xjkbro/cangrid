@@ -1,12 +1,7 @@
 import "../styles/globals.css";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-    auth,
-    projectFirestore,
-    generateUserDocument,
-} from "../firebase/config";
-import firebase from "firebase";
+import { auth, generateUserDocument } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { ThemeProvider } from "styled-components";
 import styled from "styled-components";
@@ -45,7 +40,6 @@ const Line = styled.div`
     }
 `;
 function MyApp({ Component, pageProps }) {
-    const [user, loading] = useAuthState(auth);
     const [userData, setUserData] = useState({ user: null });
 
     useEffect(async () => {
