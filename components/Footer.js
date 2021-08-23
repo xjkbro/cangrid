@@ -2,18 +2,13 @@ import Link from "next/link";
 import styled, { css } from "styled-components";
 
 const List = styled.ul`
-    width: 100%;
     padding-left: 0;
-    margin: 0 auto;
-    text-align: center;
-    position: absolute;
-    padding-bottom: 10px;
-
+    display: flex;
+    justify-content: center;
+    width: 500px;
+    margin: 3rem auto 1.5rem auto;
     @media (min-width: 600px) {
         font-size: 14px;
-        position: fixed;
-        bottom: 10px;
-        padding-bottom: 0;
     }
 `;
 const ListItem = styled.li`

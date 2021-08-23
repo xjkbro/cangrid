@@ -7,20 +7,13 @@ import { UserContext } from "../../providers/UserContext";
 import Layout from "../../components/Layout";
 import Footer from "../../components/Footer";
 
-export default function SingleUser({ images }) {
+export default function SingleUser({
+    images,
+    bgColor,
+    nightMode,
+    setNightMode,
+}) {
     const [selectedImg, setSelectedImg] = useState(null);
-    const { userData, setUserData } = useContext(UserContext);
-    const [bgColor, setBGColor] = useState("#fff");
-    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
-
-    useEffect(() => {
-        if (nightMode == true) setBGColor("#253335");
-        else setBGColor("#fff");
-    }, [nightMode]);
-
-    useEffect(() => {
-        setNightMode(userData?.user?.nightMode);
-    }, [userData]);
     return (
         <Layout>
             <div className="App">
@@ -39,7 +32,7 @@ export default function SingleUser({ images }) {
             `}
                 </style>
             </div>
-            <Footer />
+            <Footer nightMode={nightMode} />
         </Layout>
     );
 }

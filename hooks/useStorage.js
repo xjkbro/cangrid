@@ -45,6 +45,7 @@ const useStorage = (file, tags, caption, exifInfo) => {
                     userData: userData.user,
                     comments: [],
                     likes: [],
+                    likeCount: 0,
                 };
                 const imgRef = await collectionRef.add(insert);
                 userImageCollectionRef.add({ imageRef: imgRef });

@@ -131,6 +131,7 @@ export const imgLike = async (user, image, action) => {
         try {
             await imageRef.update({
                 likes: imgArr,
+                likeCount: imgArr.length,
             });
         } catch (error) {
             console.error("Error adding comment to document", error);

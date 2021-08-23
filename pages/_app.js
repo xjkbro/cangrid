@@ -41,6 +41,9 @@ const Line = styled.div`
 `;
 function MyApp({ Component, pageProps }) {
     const [userData, setUserData] = useState({ user: null });
+    const [bgColor, setBGColor] = useState();
+    const [textColor, setTextColor] = useState("#253335");
+    const [nightMode, setNightMode] = useState();
 
     useEffect(async () => {
         auth.onAuthStateChanged(async (userAuth) => {
@@ -48,11 +51,35 @@ function MyApp({ Component, pageProps }) {
             setUserData({ user });
         });
     }, []);
+    useEffect(() => {
+        if (nightMode == "true") {
+            setBGColor("#253335");
+            setTextColor("#fff");
+        }
+        if (nightMode == "false") {
+            setBGColor("#fff");
+            setTextColor("#253335");
+        }
+    }, [nightMode, setNightMode]);
+
+    useEffect(() => {
+        // On Component Mount, set Night Mode from localStorage
+        if (localStorage.getItem("nightMode") == null)
+            localStorage.setItem("nightMode", false);
+
+        setNightMode(localStorage.getItem("nightMode"));
+    }, []);
+
     return (
         <UserContext.Provider value={{ userData, setUserData }}>
             <ThemeProvider theme={theme}>
                 <Line />
-                <Component {...pageProps} />
+                <Component
+                    {...pageProps}
+                    bgColor={bgColor}
+                    nightMode={nightMode}
+                    setNightMode={setNightMode}
+                />
             </ThemeProvider>
         </UserContext.Provider>
     );
