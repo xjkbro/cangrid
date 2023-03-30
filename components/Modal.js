@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ImageMetaData } from "./ImageMetaData";
 import TextField from "@material-ui/core/TextField";
 import { Tags } from "./Tags";
@@ -35,6 +36,7 @@ const BackDrop = styled.div`
         display: flex;
         max-width: 90%;
         min-width: 85%;
+        // height: 80vh;
         vertical-align: middle;
         box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.5);
         background-color: white;
@@ -152,7 +154,7 @@ const MetaTagContainer = styled.div`
 `;
 const InfoContainer = styled.div`
     overflow-y: scroll;
-    height: 42vh;
+    height: 30vh;
     @media (min-width: 768px) {
     }
 `;
@@ -270,7 +272,13 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
             animate={{ opacity: 1 }}
         >
             <motion.div initial={{ x: "100vw" }} animate={{ x: 0 }}>
-                <motion.img src={selectedImg.url} alt="enlarged pic" />
+                <Image
+                    width={600}
+                    height={600}
+                    src={selectedImg.url}
+                    objectFit="contain"
+                    alt="enlarged pic"
+                />
                 <Description
                     style={{
                         width: "100%",

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FadeTransform, Stagger } from "react-animation-components";
 import { TransitionGroup } from "react-transition-group";
+import Image from "next/image";
 
 const ImageGrid = ({ images, setSelectedImg }) => {
     return (
@@ -20,15 +21,22 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                                     exitTransform: "translateY(100px)",
                                 }}
                             >
-                                <div
+                                {/* <div
                                     className="img-wrap"
                                     onClick={() => setSelectedImg(doc)}
-                                >
-                                    <motion.img
-                                        src={doc.url}
-                                        alt="uploaded pic"
-                                    />
-                                </div>
+                                > */}
+                                {/* <motion.div> */}
+                                <Image
+                                    src={doc.url}
+                                    width={300}
+                                    height={300}
+                                    objectFit="cover"
+                                    style={{ cursor: "pointer" }}
+                                    alt="uploaded pic"
+                                    onClick={() => setSelectedImg(doc)}
+                                />
+                                {/* </motion.div> */}
+                                {/* </div> */}
                             </FadeTransform>
                         );
                     })}
