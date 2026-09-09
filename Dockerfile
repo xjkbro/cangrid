@@ -77,14 +77,16 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # The standalone trace does NOT include the `prisma` CLI (it's never
 # `require()`d by the running server, only invoked as a separate process at
-# container startup to apply migrations) — copy it explicitly so
-# `prisma migrate deploy` works below without needing network access to
-# `npx`-fetch it at runtime.
+# container startup to apply migrations). The CLI's own dependency tree
+# (@prisma/config, effect, and further transitive deps beneath those) is
+# deep enough that hand-picking individual packages is a losing game — copy
+# the builder's complete, correctly-resolved node_modules instead. It lands
+# on top of (merges with) the standalone trace's own pruned node_modules
+# already placed at this path, so the running server keeps using its lean
+# traced set; this just adds what the CLI additionally needs.
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/dotenv ./node_modules/dotenv
+COPY --from=builder /app/node_modules ./node_modules
 
 USER nextjs
 
