@@ -276,7 +276,7 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                     width={600}
                     height={600}
                     src={selectedImg.url}
-                    objectFit="contain"
+                    style={{ objectFit: "contain" }}
                     alt="enlarged pic"
                 />
                 <Description

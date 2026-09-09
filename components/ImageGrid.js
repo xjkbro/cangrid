@@ -30,8 +30,7 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                                     src={doc.url}
                                     width={300}
                                     height={300}
-                                    objectFit="cover"
-                                    style={{ cursor: "pointer" }}
+                                    style={{ cursor: "pointer", objectFit: "cover" }}
                                     alt="uploaded pic"
                                     onClick={() => setSelectedImg(doc)}
                                 />

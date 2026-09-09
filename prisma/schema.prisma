@@ -1,0 +1,137 @@
+// Prisma schema for cangrid, targeting self-hosted MariaDB.
+// Replaces the Firestore data model (users/images/likes/comments) with
+// proper relational tables. See GitHub issue #1 for full context.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  displayName   String?
+  description   String?   @db.Text
+  nightMode     Boolean   @default(false)
+  image         String?   @db.Text
+  emailVerified DateTime?
+  // Hashed password; nullable so OAuth-only users (e.g. once Google sign-in
+  // is re-enabled, see ticket #3) can exist without a password.
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  images   Image[]
+  likes    Like[]
+  comments Comment[]
+}
+
+// Standard Auth.js / NextAuth Prisma adapter shape (used by ticket #3).
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  // Storage key/URL in MinIO (see ticket #2).
+  url       String   @db.Text
+  caption   String?  @db.Text
+  userId    String
+  createdAt DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags     Tag[]
+  likes    Like[]
+  comments Comment[]
+  exif     Exif?
+}
+
+// Normalized tag model (implicit many-to-many with Image) so tag browsing
+// (pages/tags/[tag].js) can use an indexed join instead of a string-array scan.
+model Tag {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  images Image[]
+}
+
+// One-to-one, optional: not every image has EXIF data.
+model Exif {
+  id             String    @id @default(cuid())
+  imageId        String    @unique
+  make           String?
+  model          String?
+  iso            Int?
+  focalLength    String?
+  aperture       String?
+  exposure       String?
+  flash          String?
+  cameraFunction String?
+  dateCaptured   DateTime?
+
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+}
+
+// Join table replacing Firestore's array-of-uids + manually-synced likeCount.
+// Like counts should be derived via _count/aggregate queries, not stored here.
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  imageId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, imageId])
+}
+
+// Replaces the raw comments array field on the old Firestore image doc.
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  imageId   String
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+}

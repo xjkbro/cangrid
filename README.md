@@ -24,6 +24,17 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
+## Database (Prisma + MariaDB)
+
+This project uses [Prisma](https://www.prisma.io/) against a self-hosted MariaDB instance. There is no local/throwaway database — copy `.env.example` to `.env` and fill in `DATABASE_URL` with real credentials for the MariaDB instance you're using (dev or prod).
+
+```bash
+npx prisma migrate dev   # create/apply migrations against the schema in prisma/schema.prisma
+npx prisma studio        # browse the database
+```
+
+Run `npx prisma generate` after pulling schema changes to regenerate the client at `lib/generated/prisma`, and import it via `lib/prisma.js`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

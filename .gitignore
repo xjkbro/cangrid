@@ -34,3 +34,8 @@ npm-debug.log*
 
 # vercel
 .vercel
+
+/lib/generated/prisma
+
+
+.claude
