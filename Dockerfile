@@ -83,6 +83,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/dotenv ./node_modules/dotenv
 
 USER nextjs
@@ -96,4 +97,4 @@ EXPOSE 3000
 # Apply any pending migrations against the production MariaDB, then start
 # the standalone server. Always `migrate deploy` here, never `migrate dev`
 # (which can prompt interactively and isn't safe against prod data).
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy && node server.js"]
