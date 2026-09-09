@@ -6,17 +6,51 @@
     --secondary: #555b6e;
     --overlay: #ffd6ba;
     --error: #ff4a4a;
+
+    /* Design tokens — see the login/auth pages for the source palette.
+       These drive light/dark theming across the app via html[data-theme]. */
+    --bg: #f7fbf9;
+    --surface: #ffffff;
+    --text: #1e2b2a;
+    --text-muted: #5b6b72;
+    --border: #d7e4e2;
+    --accent: #4a7c79;
+    --accent-strong: #3d6764;
+    --gradient-mint: #cdffd8;
+    --gradient-sky: #94b9ff;
 }
+
+html[data-theme="dark"] {
+    --bg: #16211f;
+    --surface: #1f2e2b;
+    --text: #eaf3ef;
+    --text-muted: #9fb3af;
+    --border: #2c3f3b;
+    --accent: #7fd9c4;
+    --accent-strong: #a4e8d6;
+}
+
 html,
 body {
     padding: 0;
     margin: 0;
     width: 100vw;
-    font-family: "Nunito", "Noto Serif", -apple-system, BlinkMacSystemFont,
-        Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, Segoe UI,
+        Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
         Helvetica Neue, sans-serif;
+    background-color: var(--bg);
     color: var(--secondary);
     overflow-x: hidden;
+    transition: background-color 200ms ease;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: "Noto Serif", serif;
+    font-weight: 700;
+    margin: 0;
 }
 
 .App {

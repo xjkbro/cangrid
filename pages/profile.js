@@ -1,359 +1,299 @@
 import { useContext, useState, useEffect } from "react";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]";
+import { TextField } from "@material-ui/core";
+import styled from "styled-components";
 import Title from "../components/Title";
 import { UserContext } from "../providers/UserContext";
-import { updateUserDocument, getUsernameDoc } from "../firebase/config";
 import CreateUsername from "../components/CreateUsername";
-import styled from "styled-components";
-import { TextField } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import AvatarUpload from "../components/AvatarUpload";
 import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 
-const ProfileContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-const ProfileBackDrop = styled.div`
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 5px 5px 10px #333;
-    padding: 20px;
-    background-color: #ddd;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
+// Real server-verifiable session check (replaces the old client-only
+// redirect pattern) — see GitHub issue #3.
+export async function getServerSideProps(context) {
+    const session = await getServerSession(
+        context.req,
+        context.res,
+        authOptions
+    );
 
-    @media (min-width: 768px) {
-        grid-gap: 40px;
-        grid-template-columns: 1fr 1fr;
-        height: 500px;
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/login",
+                permanent: false,
+            },
+        };
     }
-`;
-const UsernameBackdrop = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 5px 5px 10px #333;
-    padding: 0 50px;
-    background-color: #ddd;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-    height: 500px;
-    > p {
-        padding: 0 30px;
-    }
-    > form > span > input {
-        width: 100%;
-    }
-    > form > span {
-        display: flex;
-        justify-content: center;
-    }
-    @media (min-width: 768px) {
-        grid-gap: 10px;
-        grid-template-columns: 1fr;
-        height: 500px;
-    }
-`;
-const ProfileImage = styled.div`
-    background: url(${(props) => props.user?.photoURL}) no-repeat center center;
-    background-size: cover;
-    border-radius: 50%;
-    height: 50vw;
-    width: 50vw;
-    margin: 10px auto;
-    @media (min-width: 768px) {
-        height: 200px;
-        width: 200px;
-    }
-`;
-const UsernameForm = styled.form`
-    position: relative;
-    padding: 15px 0 0;
-    margin-top: 10px;
-    width: 100%;
-    > span > input {
-        position: relative;
-        font-family: inherit;
-        width: 90%;
-        border: 0;
-        border-bottom: 2px solid #9b9b9b;
-        outline: 0;
-        font-size: 1.3rem;
-        color: ${(props) => props.theme.colors.secondary};
-        padding: 7px 0;
-        background: transparent;
-        transition: border-color 0.2s;
-    }
-    > span > input::placeholder {
-        color: transparent;
-    }
-    > span > input:focus {
-        padding-bottom: 6px;
-        font-weight: 700;
-        border-width: 3px;
-        border-image: ${(props) => props.theme.colors.secondary};
-        border-image-slice: 1;
-    }
-    > span > input:focus ~ label {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-        color: #11998e;
-        font-weight: 700;
-    }
-    > span > label > button {
-        background-color: #061922;
-        padding: 10px;
-    }
-    > span > label {
-        position: absolute;
-        top: 0;
 
-        left: 10px;
-        display: block;
-        transition: 0.2s;
-        font-size: 1rem;
-        color: #9b9b9b;
-    }
-    @media (min-width: 768px) {
-        > span > input {
-            font-family: inherit;
-            width: 300px;
-            border: 0;
-            border-bottom: 2px solid #9b9b9b;
-            outline: 0;
-            font-size: 1.3rem;
-            color: ${(props) => props.theme.colors.secondary};
-            padding: 7px 0;
-            background: transparent;
-            transition: border-color 0.2s;
-        }
-    }
+    return { props: {} };
+}
+
+const Page = styled.div`
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 8px 0 64px;
 `;
-const ProfileDescription = styled(TextField)`
-    position: relative;
-    margin: 10px auto;
-    left: 10px;
-    width: 95%;
-`;
-const SaveContainer = styled.div`
-    height: 110px;
+
+const Header = styled.div`
     display: flex;
-    justify-content: center;
     align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
 `;
-const SaveButton = styled(Button)`
-    position: relative;
-    background-color: ${(props) => props.theme.colors.primary} !important;
-    .MuiButton-label {
-        color: white;
-    }
-    @media (min-width: 768px) {
+
+const Identity = styled.div`
+    h1 {
+        font-size: 1.6rem;
+        color: var(--text);
     }
 `;
 
-function Profile() {
+const Handle = styled.p`
+    font-family: "Nunito", sans-serif;
+    color: var(--text-muted);
+    margin: 4px 0 0;
+`;
+
+const Section = styled.div`
+    margin-bottom: 32px;
+`;
+
+const Label = styled.h2`
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 4px;
+`;
+
+const SectionHint = styled.p`
+    font-family: "Nunito", sans-serif;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0 0 16px;
+`;
+
+const FieldRow = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 360px;
+`;
+
+const StyledTextField = styled(TextField)`
+    font-family: "Nunito", sans-serif;
+
+    .MuiInputLabel-root {
+        font-family: "Nunito", sans-serif;
+        color: var(--text-muted);
+    }
+    .MuiInputLabel-root.Mui-focused {
+        color: var(--accent-strong);
+    }
+    .MuiInput-underline:before {
+        border-bottom-color: var(--border);
+    }
+    .MuiInput-underline:after {
+        border-bottom-color: var(--accent-strong);
+    }
+    .MuiInputBase-input {
+        font-family: "Nunito", sans-serif;
+        color: var(--text);
+    }
+`;
+
+const Availability = styled.p`
+    font-family: "Nunito", sans-serif;
+    font-size: 0.8rem;
+    margin: -8px 0 0;
+    color: ${(props) => (props.taken ? "var(--error)" : "var(--accent-strong)")};
+`;
+
+const SaveButton = styled.button`
+    align-self: flex-start;
+    font-family: "Nunito", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f7fbf9;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--accent-strong);
+    }
+`;
+
+const Saved = styled.span`
+    font-family: "Nunito", sans-serif;
+    font-size: 0.8rem;
+    color: var(--accent-strong);
+    margin-left: 12px;
+`;
+
+const NightModeRow = styled.label`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    cursor: pointer;
+
+    input {
+        accent-color: var(--accent-strong);
+        width: 16px;
+        height: 16px;
+    }
+`;
+
+function Profile({ nightMode: siteNightMode, setNightMode }) {
     const { userData, setUserData } = useContext(UserContext);
+    const user = userData?.user;
     const [username, setUsername] = useState("");
     const [description, setDescription] = useState("");
-    const [descriptionLimit, setDescriptionLimit] = useState(150);
-    const [usernameLength, setUsernameLength] = useState(20);
     const [error, setError] = useState(false);
-    const [toggleUsernameChange, setToggleUsernameChange] = useState(false);
-    const [user, setUser] = useState(null);
-    const [bgColor, setBGColor] = useState("#fff");
-    const [nightMode, setNightMode] = useState(userData?.user?.nightMode);
+    const [saved, setSaved] = useState(false);
+    const [night, setNight] = useState(false);
 
     useEffect(() => {
-        setUser(userData?.user);
-        setUsername(userData?.user?.username);
-        setDescription(userData?.user?.description);
-        setNightMode(userData?.user?.nightMode);
-    }, [userData]);
+        setUsername(user?.username || "");
+        setDescription(user?.description || "");
+    }, [user]);
 
     useEffect(() => {
-        if (nightMode == true) setBGColor("#253335");
-        else setBGColor("#fff");
-    }, [nightMode]);
+        // Reflects the live site-wide theme (driven by localStorage, see
+        // _app.js) rather than `user.nightMode`, which can lag behind if
+        // the session hasn't refreshed since the last toggle.
+        setNight(siteNightMode === "true");
+    }, [siteNightMode]);
 
-    const changeUserFields = async (event) => {
-        event.preventDefault();
-        if (!error) {
-            updateUserDocument(user, username, description);
-            const tempUser = { ...userData.user, username, description };
-            setUserData({ user: tempUser });
+    const usernameCheck = async (value) => {
+        if (!value || value === user?.username) {
+            setError(false);
+            return;
+        }
+        const res = await fetch(
+            `/api/users/username-check?username=${encodeURIComponent(value)}`
+        );
+        const { taken } = await res.json();
+        setError(taken);
+    };
+
+    const save = async (e) => {
+        e.preventDefault();
+        if (error) return;
+        const res = await fetch("/api/users/me", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, description }),
+        });
+        if (res.ok) {
+            setUserData({ user: { ...user, username, description } });
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2500);
         }
     };
-    const UsernameCheck = async (e) => {
-        let err = await getUsernameDoc(e);
-        setError(await getUsernameDoc(e));
+
+    const toggleNightMode = async (e) => {
+        const next = e.target.checked;
+        setNight(next);
+        localStorage.setItem("nightMode", next);
+        setNightMode(String(next));
+        setUserData({ user: { ...user, nightMode: next } });
+        fetch("/api/users/me", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nightMode: next }),
+        }).catch(() => {});
     };
+
+    if (!user) return null;
+
+    if (user.username == null) {
+        return (
+            <Layout>
+                <div className="App">
+                    <Title setNightMode={setNightMode} />
+                    <Page>
+                        <Section>
+                            <Label>Finish setting up your account</Label>
+                            <SectionHint>Pick a username to start uploading.</SectionHint>
+                            <CreateUsername />
+                        </Section>
+                    </Page>
+                </div>
+                <Footer />
+            </Layout>
+        );
+    }
 
     return (
         <Layout>
             <div className="App">
-                <Title bgColor={bgColor} setNightMode={setNightMode} />
-                <ProfileContainer>
-                    {user?.username == null ? (
-                        <UsernameBackdrop>
-                            <h1 style={{ textAlign: "center" }}>
-                                Please finish your profile
-                            </h1>
+                <Title setNightMode={setNightMode} />
+                <Page>
+                    <Header>
+                        <AvatarUpload username={user.username} image={user.photoURL} />
+                        <Identity>
+                            <h1>{user.displayName || user.username}</h1>
+                            <Handle>@{user.username} · {user.email}</Handle>
+                        </Identity>
+                    </Header>
 
-                            <CreateUsername />
-                        </UsernameBackdrop>
-                    ) : (
-                        <ProfileBackDrop style={{ width: "75vw" }}>
-                            <div>
-                                <ProfileImage user={user} />
-                                <div style={{ textAlign: "center" }}>
-                                    To change profile image, change your Google
-                                    Account's profile image and log back in.
-                                </div>
-                            </div>
-                            <div style={{ height: "100%" }}>
-                                <div
-                                    style={{
-                                        position: "relative",
-                                        width: "100%",
+                    <Section>
+                        <Label>Your details</Label>
+                        <SectionHint>
+                            This is what other people see on your grid.
+                        </SectionHint>
+                        <form onSubmit={save}>
+                            <FieldRow>
+                                <StyledTextField
+                                    label="Username"
+                                    value={username}
+                                    onChange={(e) => {
+                                        setUsername(e.target.value);
+                                        usernameCheck(e.target.value);
                                     }}
-                                >
-                                    <h4>Name: {user?.displayName}</h4>
-                                    <h4>
-                                        Username: {user?.username}{" "}
-                                        <div
-                                            style={{
-                                                cursor: "pointer",
-                                                fontSize: "12px",
-                                                marginLeft: "10px",
-                                            }}
-                                            onClick={() =>
-                                                setToggleUsernameChange(
-                                                    !toggleUsernameChange
-                                                )
-                                            }
-                                        >
-                                            Change Username
-                                        </div>
-                                    </h4>
-                                    {toggleUsernameChange ? (
-                                        <UsernameForm
-                                            onSubmit={changeUserFields}
-                                        >
-                                            <span>
-                                                <input
-                                                    type="text"
-                                                    name="username"
-                                                    style={{
-                                                        padding: "5px",
-                                                        marginLeft: "10px",
-                                                    }}
-                                                    value={username}
-                                                    onChange={(e) => {
-                                                        if (
-                                                            e.target.value
-                                                                .length <
-                                                            usernameLength
-                                                        ) {
-                                                            let val =
-                                                                username?.length -
-                                                                e.target.value
-                                                                    .length;
-                                                            setUsername(
-                                                                e.target.value
-                                                            );
-                                                            UsernameCheck(
-                                                                e.target.value
-                                                            );
-                                                        } else {
-                                                            setUsername(
-                                                                username
-                                                            );
-                                                            UsernameCheck(
-                                                                e.target.value
-                                                            );
-                                                        }
-                                                    }}
-                                                />
-                                                <label for="username">
-                                                    Username
-                                                </label>
-                                            </span>
-                                            <span>
-                                                {username != ""
-                                                    ? error
-                                                        ? `❌${username} is not available!`
-                                                        : `✔️ ${username} is available! :)`
-                                                    : ""}
-                                            </span>
-                                        </UsernameForm>
-                                    ) : (
-                                        <></>
-                                    )}
-
-                                    <h4>Email: {user?.email}</h4>
-                                    <h4>Profile Description: </h4>
-
-                                    <ProfileDescription
-                                        id="outlined-multiline-static"
-                                        multiline
-                                        rows={2}
-                                        label="Description"
-                                        variant="outlined"
-                                        value={description}
-                                        onChange={(e) => {
-                                            if (e.target.value.length <= 150) {
-                                                let val =
-                                                    description?.length -
-                                                    e.target.value.length;
-                                                setDescription(e.target.value);
-                                                setDescriptionLimit(
-                                                    descriptionLimit + val
-                                                );
-                                            } else {
-                                                setDescription(description);
-                                            }
-                                        }}
-                                    />
-                                    <div
-                                        style={{
-                                            position: "absolute",
-                                            right: "20px",
-                                        }}
-                                    >
-                                        Character Limit: {descriptionLimit}
-                                    </div>
+                                />
+                                {error && (
+                                    <Availability taken>
+                                        {username} is already taken.
+                                    </Availability>
+                                )}
+                                <StyledTextField
+                                    label="Description"
+                                    multiline
+                                    rows={3}
+                                    inputProps={{ maxLength: 150 }}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+                                <div>
+                                    <SaveButton type="submit">Save changes</SaveButton>
+                                    {saved && <Saved>Saved.</Saved>}
                                 </div>
-                                <SaveContainer>
-                                    <SaveButton
-                                        variant="contained"
-                                        color="#fff"
-                                        component="span"
-                                        onClick={changeUserFields}
-                                    >
-                                        Save
-                                    </SaveButton>
-                                </SaveContainer>
-                            </div>
-                        </ProfileBackDrop>
-                    )}
-                </ProfileContainer>
-                <style jsx global>
-                    {`
-                html {
-                    background-color: ${bgColor};
-            `}
-                </style>
+                            </FieldRow>
+                        </form>
+                    </Section>
+
+                    <Section>
+                        <Label>Appearance</Label>
+                        <NightModeRow>
+                            <input
+                                type="checkbox"
+                                checked={night}
+                                onChange={toggleNightMode}
+                            />
+                            Night mode
+                        </NightModeRow>
+                    </Section>
+                </Page>
             </div>
-            <Footer />
+            <Footer nightMode={String(night)} />
         </Layout>
     );
 }

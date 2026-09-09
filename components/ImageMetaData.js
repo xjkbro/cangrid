@@ -10,7 +10,8 @@ const ExifContainer = styled.div`
     width: 70%;
     flex-direction: row;
     flex-wrap: wrap;
-    color: ${(props) => props.theme.colors.primary};
+    color: var(--accent-strong);
+    font-family: "Nunito", sans-serif;
 
     > div {
         display: flex;
@@ -43,12 +44,11 @@ export const ImageMetaData = ({ exifInfo, modal }) => {
                 </div>
                 <div>
                     <AperatureIcon fontSize="large" /> <i>f</i>/
-                    {exifInfo?.aperature?.value || "N/A"}
+                    {exifInfo?.aperture || "N/A"}
                 </div>
                 <div>
                     <ShutterSpeedIcon fontSize="large" />
-                    {exifInfo?.exposure?.numerator || "1"}/
-                    {exifInfo?.exposure?.denominator || "N/A"}
+                    {exifInfo?.exposure || "N/A"}
                 </div>
                 <div>
                     <IsoIcon fontSize="large" /> {exifInfo?.iso || "N/A"}
@@ -64,12 +64,11 @@ export const ImageMetaData = ({ exifInfo, modal }) => {
             </ExifContainer>
             <ExifContainer>
                 <AperatureIcon fontSize="large" /> <i>f</i>/
-                {exifInfo?.aperature?.value || "N/A"}
+                {exifInfo?.aperture || "N/A"}
             </ExifContainer>
             <ExifContainer>
                 <ShutterSpeedIcon fontSize="large" />
-                {exifInfo?.exposure?.numerator || "1"}/
-                {exifInfo?.exposure?.denominator || "N/A"}
+                {exifInfo?.exposure || "N/A"}
             </ExifContainer>
             <ExifContainer>
                 <IsoIcon fontSize="large" /> {exifInfo?.iso || "N/A"}

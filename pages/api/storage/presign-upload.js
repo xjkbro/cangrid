@@ -1,5 +1,7 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 import { getMinioClient, MINIO_BUCKET, buildPublicUrl } from "../../../lib/minioClient";
 import { buildObjectKey } from "../../../lib/storageKey";
 
@@ -12,23 +14,26 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { filename, contentType, userId } = req.body || {};
+    // Ticket #5: userId now comes from the verified server-side session
+    // (#3), not a client-supplied value.
+    const session = await getServerSession(req, res, authOptions);
+    if (!session?.user?.id) {
+        return res.status(401).json({ error: "Not signed in" });
+    }
+    const userId = session.user.id;
 
-    if (!filename || !contentType || !userId) {
+    const { filename, contentType } = req.body || {};
+
+    if (!filename || !contentType) {
         return res
             .status(400)
-            .json({ error: "filename, contentType, and userId are required" });
+            .json({ error: "filename and contentType are required" });
     }
 
     if (!ALLOWED_CONTENT_TYPES.includes(contentType)) {
         return res.status(400).json({ error: "Unsupported content type" });
     }
 
-    // NOTE: userId is trusted from the request body, matching the trust
-    // model already in use throughout this codebase today (no
-    // firebase-admin / server-verified session exists yet). Once #3
-    // (Auth.js) lands, replace this with the userId from the verified
-    // server-side session instead of a client-supplied value.
     try {
         const key = buildObjectKey(userId, filename);
         const client = getMinioClient();

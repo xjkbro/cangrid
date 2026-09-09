@@ -1,7 +1,5 @@
 import Link from "next/link";
 import Button from "@material-ui/core/Button";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, provider } from "../firebase/config";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -139,9 +137,9 @@ const TitleDescription = styled.div`
 `;
 
 const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
-    const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const { userData, setUserData } = useContext(UserContext);
+    const user = userData?.user;
     const [selectUpload, setSelectUpload] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
     const anchorRef = useRef(null);
@@ -172,15 +170,8 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
         prevOpen.current = openMenu;
     }, [openMenu]);
 
-    const signIn = () => {
-        auth.signInWithRedirect(provider)
-            .then((res) => {
-                if (res.additionalUserInfo.isNewUser) router.push("/profile");
-                else {
-                    router.push(`/`);
-                }
-            })
-            .catch(alert);
+    const goToLogin = () => {
+        router.push("/login");
     };
 
     const showLogin = () => {
@@ -192,7 +183,7 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
                         variant="contained"
                         component="span"
                         className="loginButton"
-                        onClick={signIn}
+                        onClick={goToLogin}
                     >
                         Login
                     </Button>
@@ -286,31 +277,43 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
                                                             localStorage.getItem(
                                                                 "nightMode"
                                                             );
+                                                        const next =
+                                                            tempNight !==
+                                                            "true";
                                                         if (
-                                                            tempNight == "true"
+                                                            tempNight ==
+                                                                "true" ||
+                                                            tempNight ==
+                                                                "false"
                                                         ) {
                                                             localStorage.setItem(
                                                                 "nightMode",
-                                                                false
+                                                                next
                                                             );
                                                             setNightMode(
                                                                 localStorage.getItem(
                                                                     "nightMode"
                                                                 )
                                                             );
-                                                        }
-                                                        if (
-                                                            tempNight == "false"
-                                                        ) {
-                                                            localStorage.setItem(
-                                                                "nightMode",
-                                                                true
-                                                            );
-                                                            setNightMode(
-                                                                localStorage.getItem(
-                                                                    "nightMode"
-                                                                )
-                                                            );
+                                                            // Best-effort sync to the server (#5) — the
+                                                            // localStorage value stays the source of
+                                                            // truth for immediate UI response.
+                                                            fetch(
+                                                                "/api/users/me",
+                                                                {
+                                                                    method: "PATCH",
+                                                                    headers: {
+                                                                        "Content-Type":
+                                                                            "application/json",
+                                                                    },
+                                                                    body: JSON.stringify(
+                                                                        {
+                                                                            nightMode:
+                                                                                next,
+                                                                        }
+                                                                    ),
+                                                                }
+                                                            ).catch(() => {});
                                                         }
                                                     }}
                                                     style={{
@@ -368,9 +371,11 @@ const Title = ({ userInfo, isError, bgColor, setNightMode }) => {
             {selectUpload && <UploadModal setSelectUpload={setSelectUpload} />}
             <TitleBar>
                 <Link href={"/"}>
-                    <a>
-                        <Image src={Logo} alt="Logo" />
-                    </a>
+                    <Image
+                        src={Logo}
+                        alt="Logo"
+                        style={{ width: "100%", height: "auto" }}
+                    />
                 </Link>
                 {showLogin()}
             </TitleBar>

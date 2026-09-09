@@ -1,15 +1,9 @@
-import { useEffect, useContext } from "react";
-import { auth } from "../firebase/config";
-import { useRouter } from "next/router";
-import { UserContext } from "../providers/UserContext";
+import { useEffect } from "react";
+import { signOut } from "next-auth/react";
 
 function SignOut() {
-    const router = useRouter();
-    const { setUserData } = useContext(UserContext);
     useEffect(() => {
-        auth.signOut();
-        setUserData(null);
-        router.push("/");
+        signOut({ callbackUrl: "/" });
     }, []);
     return <></>;
 }

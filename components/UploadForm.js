@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ProgressBar from "./ProgressBar";
-import { auth } from "../firebase/config";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { UserContext } from "../providers/UserContext";
 import styled from "styled-components";
 import EXIF from "exif-js";
 import { ImageMetaData } from "./ImageMetaData";
@@ -98,7 +97,8 @@ const Tags = styled.div`
     justify-content: left;
 `;
 const UploadForm = ({ setSelectUpload }) => {
-    const [user, loading] = useAuthState(auth);
+    const { userData } = useContext(UserContext);
+    const user = userData?.user;
     const [caption, setCaption] = useState("");
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
@@ -125,6 +125,10 @@ const UploadForm = ({ setSelectUpload }) => {
                 );
                 let imgDate = EXIF.getTag(selected, "DateTime");
 
+                // Flat scalar fields matching the Prisma `Exif` model (#1) —
+                // the old nested {value, numerator, denominator} shape can't
+                // round-trip through the DB, so it's flattened at capture
+                // time instead of at the API boundary.
                 let exifData = {};
                 if (imgMake) exifData = { ...exifData, make: imgMake };
                 if (imgModel) exifData = { ...exifData, model: imgModel };
@@ -132,40 +136,28 @@ const UploadForm = ({ setSelectUpload }) => {
                 if (imgFocalLength)
                     exifData = {
                         ...exifData,
-                        focalLength: {
-                            value:
-                                imgFocalLength.numerator /
-                                imgFocalLength.denominator,
-                            numerator: imgFocalLength.numerator,
-                            denominator: imgFocalLength.denominator,
-                        },
+                        focalLength: String(
+                            imgFocalLength.numerator /
+                                imgFocalLength.denominator
+                        ),
                     };
                 if (imgAperature)
                     exifData = {
                         ...exifData,
-                        aperature: {
-                            value:
-                                imgAperature.numerator /
-                                imgAperature.denominator,
-                            numerator: imgAperature.numerator,
-                            denominator: imgAperature.denominator,
-                        },
+                        aperture: String(
+                            imgAperature.numerator / imgAperature.denominator
+                        ),
                     };
                 if (imgExposure)
                     exifData = {
                         ...exifData,
-                        exposure: {
-                            value:
-                                imgExposure.numerator / imgExposure.denominator,
-                            numerator: imgExposure.numerator,
-                            denominator: imgExposure.denominator,
-                        },
+                        exposure: `${imgExposure.numerator}/${imgExposure.denominator}`,
                     };
-                if (imgFlash) exifData = { ...exifData, flash: imgFlash };
+                if (imgFlash) exifData = { ...exifData, flash: String(imgFlash) };
                 if (imgCameraFunction)
                     exifData = {
                         ...exifData,
-                        cameraFunction: imgCameraFunction,
+                        cameraFunction: String(imgCameraFunction),
                     };
                 if (imgDate)
                     exifData = {

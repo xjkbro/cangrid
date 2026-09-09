@@ -1,21 +1,18 @@
-import { useState, useEffect, useContext } from "react";
-import { auth, projectFirestore, timestamp } from "../firebase/config";
-import { UserContext } from "../providers/UserContext";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 // Uploads go: browser -> presigned MinIO URL (direct PUT, no file bytes
-// through the Next.js server) -> on success, the resulting public URL is
-// recorded as the image's url. Replaces the old Firebase Storage
-// `storageRef.put(file)` flow.
+// through the Next.js server) -> on success, a Prisma `Image` row is
+// created via /api/images recording the resulting public URL, tags, and
+// EXIF data. Replaces the old Firebase Storage + Firestore write flow.
 const useStorage = (file, tags, caption, exifInfo) => {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
-    const [user] = useAuthState(auth);
-    const { userData } = useContext(UserContext);
+    const { data: session, status } = useSession();
 
     useEffect(() => {
-        if (!file || !user) return;
+        if (!file || status !== "authenticated") return;
 
         let cancelled = false;
 
@@ -27,7 +24,6 @@ const useStorage = (file, tags, caption, exifInfo) => {
                     body: JSON.stringify({
                         filename: file.name,
                         contentType: file.type,
-                        userId: user.uid,
                     }),
                 });
 
@@ -62,29 +58,21 @@ const useStorage = (file, tags, caption, exifInfo) => {
 
                 if (cancelled) return;
 
-                // TODO(#5): this Firestore write is temporary — ticket #5
-                // replaces the whole data-access layer with Prisma-backed
-                // API routes. Only the storage destination changes in this
-                // ticket; the resulting `publicUrl` is what will be written
-                // to the Prisma `Image.url` field once #5 lands.
-                const collectionRef = projectFirestore.collection("images");
-                const userImageCollectionRef = projectFirestore
-                    .doc(`users/${user.uid}`)
-                    .collection("images");
+                const createRes = await fetch("/api/images", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        url: publicUrl,
+                        caption,
+                        tags,
+                        exif: exifInfo,
+                    }),
+                });
 
-                const insert = {
-                    url: publicUrl,
-                    createdAt: timestamp(),
-                    caption,
-                    tags,
-                    exif: exifInfo,
-                    userData: userData.user,
-                    comments: [],
-                    likes: [],
-                    likeCount: 0,
-                };
-                const imgRef = await collectionRef.add(insert);
-                await userImageCollectionRef.add({ imageRef: imgRef });
+                if (!createRes.ok) {
+                    const body = await createRes.json().catch(() => ({}));
+                    throw new Error(body.error || "Failed to save image");
+                }
 
                 if (!cancelled) setUrl(publicUrl);
             } catch (err) {

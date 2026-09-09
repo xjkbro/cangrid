@@ -1,3 +1,9 @@
+// ARCHIVED — this was Cangrid's original backend (Auth + Firestore +
+// Storage) before the migration to Prisma/MariaDB, MinIO, and Auth.js
+// (see GitHub issues #1-#8). Nothing in the app imports this file anymore;
+// it's kept only as a historical reference and is not part of the build.
+// The `firebase`/`react-firebase-hooks` packages have been removed, so this
+// file will not run as-is if ever re-imported.
 import firebase from "firebase";
 import firebaseApp from "firebase/app";
 import "firebase/storage";

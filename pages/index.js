@@ -2,7 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import Title from "../components/Title";
 import ImageGrid from "../components/ImageGrid";
 import Modal from "../components/Modal";
-import { projectFirestore } from "../firebase/config";
+import { prisma } from "../lib/prisma";
+import { imageInclude, transformImage } from "../lib/transformImage";
 import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -43,30 +44,15 @@ export default function Home({ images, bgColor, nightMode, setNightMode }) {
     );
 }
 export async function getServerSideProps(context) {
-    let imgRes = await projectFirestore
-        .collection("images")
-        .orderBy("likeCount", "desc")
-        .get();
-    const images = imgRes.docs
-        .map((doc) => {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        })
-        .map((img) => {
-            return {
-                id: img.id,
-                caption: img.caption,
-                url: img.url,
-                exif: img.exif,
-                tags: img.tags,
-                userData: img.userData,
-                createdAt: img.createdAt.toDate().toString(),
-                comments: img.comments,
-                likes: img.likes,
-            };
-        });
+    // Replaces the Firestore `orderBy("likeCount", "desc")` query — like
+    // counts are no longer a manually-synced field, they're derived from
+    // the `Like` join table via a relation-count order (#5).
+    const imgRes = await prisma.image.findMany({
+        include: imageInclude,
+        orderBy: { likes: { _count: "desc" } },
+        take: 16,
+    });
+    const images = imgRes.map(transformImage);
     // const shuffle = (array) => {
     //     var currentIndex = array.length,
     //         randomIndex;

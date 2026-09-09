@@ -1,7 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
-import { auth, generateUserDocument, getUsernameDoc } from "../firebase/config";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import { UserContext } from "../providers/UserContext";
 
@@ -59,19 +57,34 @@ const UsernameForm = styled.form`
 function CreateUsername() {
     const [username, setUsername] = useState("");
     const [usernameLength, setUsernameLength] = useState(20);
-    const [user, loading] = useAuthState(auth);
+    const { userData } = useContext(UserContext);
+    const user = userData?.user;
     const router = useRouter();
     const [error, setError] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!error) {
-            await generateUserDocument(user, username);
-            router.reload();
+        if (!error && username) {
+            const res = await fetch("/api/users/me", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username }),
+            });
+            if (res.ok) {
+                router.reload();
+            } else {
+                const body = await res.json().catch(() => ({}));
+                setError(true);
+            }
         }
     };
     const UsernameCheck = async (e) => {
-        setError(await getUsernameDoc(e));
+        if (!e) return;
+        const res = await fetch(
+            `/api/users/username-check?username=${encodeURIComponent(e)}`
+        );
+        const { taken } = await res.json();
+        setError(taken);
     };
 
     if (user) {
