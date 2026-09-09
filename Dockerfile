@@ -57,6 +57,18 @@ RUN npx prisma generate
 # never requires live DB access to succeed.
 ARG DATABASE_URL=mysql://user:password@localhost:3306/dummy
 ENV DATABASE_URL=$DATABASE_URL
+# next.config.js reads these to build next/image's remotePatterns allowlist
+# — that's resolved once, at build time, and baked into the compiled
+# output. Setting MINIO_ENDPOINT only as a runtime env var (not here, as a
+# build arg) means next/image is compiled with an empty allowlist and
+# refuses to load any MinIO-hosted image no matter what's set at runtime.
+# Pass these as build args (not just environment variables) in Dokploy.
+ARG MINIO_ENDPOINT
+ARG MINIO_PUBLIC_URL
+ARG MINIO_USE_SSL
+ENV MINIO_ENDPOINT=$MINIO_ENDPOINT
+ENV MINIO_PUBLIC_URL=$MINIO_PUBLIC_URL
+ENV MINIO_USE_SSL=$MINIO_USE_SSL
 RUN npm run build
 
 # ---- runner: minimal runtime image ----
