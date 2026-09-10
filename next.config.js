@@ -1,7 +1,19 @@
-// next/image needs the MinIO public hostname allowlisted; derive it from
-// env rather than hardcoding, since it differs between local dev and prod.
+// next/image needs the MinIO public hostname allowlisted. This is resolved
+// once at `next build` time and compiled into the output — a runtime env
+// var set after the build (e.g. in a platform's "Environment Variables"
+// UI, as opposed to a Docker build arg) can't change it retroactively.
+// There's only one MinIO instance across every environment here (no
+// separate local/prod instances), so the hostname is effectively fixed —
+// falling back to the known value if it isn't provided at build time keeps
+// this working regardless of whether the deploy platform actually passes
+// build args through to `docker build`.
+const DEFAULT_MINIO_ENDPOINT = "https://minio-api.jkbro.dev";
+
 function minioImagePattern() {
-    const raw = process.env.MINIO_PUBLIC_URL || process.env.MINIO_ENDPOINT;
+    const raw =
+        process.env.MINIO_PUBLIC_URL ||
+        process.env.MINIO_ENDPOINT ||
+        DEFAULT_MINIO_ENDPOINT;
     if (!raw) return null;
     try {
         const url = raw.startsWith("http") ? new URL(raw) : new URL(`http://${raw}`);
