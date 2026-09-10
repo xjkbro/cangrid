@@ -9,6 +9,8 @@ import { UserContext } from "../providers/UserContext";
 import { useRouter } from "next/router";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 
 const ProfilePic = styled.img`
     width: 36px;
@@ -205,6 +207,72 @@ const Likes = styled.div`
         cursor: pointer;
     }
 `;
+const Actions = styled.div`
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+`;
+const IconButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--error);
+    }
+`;
+const ConfirmDelete = styled.div`
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.85rem;
+    color: var(--text);
+`;
+const ConfirmButton = styled.button`
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: "Nunito", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: ${(props) => (props.$danger ? "var(--error)" : "var(--text-muted)")};
+`;
+const CaptionField = styled(TextField)`
+    width: 100%;
+    font-family: "Nunito", sans-serif;
+
+    .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+        border-color: var(--accent-strong);
+    }
+    .MuiInputBase-input {
+        font-family: "Nunito", sans-serif;
+        color: var(--text);
+    }
+`;
+const CaptionActions = styled.div`
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+`;
+const CaptionRow = styled.div`
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+
+    ${IconButton} {
+        margin-top: 2px;
+    }
+`;
 
 const Modal = ({ setSelectedImg, selectedImg }) => {
     const { userData, setUserData } = useContext(UserContext);
@@ -214,6 +282,15 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
     const [likeIcon, setLikeIcon] = useState(userLiked == -1 ? false : true);
     let [tempLikes, setTempLikes] = useState(selectedImg.likes.length);
     let [tempCommentsArr, setTempCommentsArr] = useState(selectedImg.comments);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [captionText, setCaptionText] = useState(selectedImg?.caption || "");
+    const [editingCaption, setEditingCaption] = useState(false);
+    const [captionDraft, setCaptionDraft] = useState(captionText);
+    const [savingCaption, setSavingCaption] = useState(false);
+    const isOwner =
+        !!userData?.user?.username &&
+        userData.user.username === selectedImg?.userData?.username;
     const router = useRouter();
 
     const refreshData = () => {
@@ -253,6 +330,30 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
             }
         }
     };
+    const handleDelete = async () => {
+        setDeleting(true);
+        const res = await fetch(`/api/images/${selectedImg.id}`, {
+            method: "DELETE",
+        });
+        setDeleting(false);
+        if (res.ok) {
+            setSelectedImg(null);
+            refreshData();
+        }
+    };
+    const handleSaveCaption = async () => {
+        setSavingCaption(true);
+        const res = await fetch(`/api/images/${selectedImg.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ caption: captionDraft }),
+        });
+        setSavingCaption(false);
+        if (res.ok) {
+            setCaptionText(captionDraft);
+            setEditingCaption(false);
+        }
+    };
     return (
         <BackDrop
             id="backdrop"
@@ -285,21 +386,53 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                                 {selectedImg?.userData?.username}
                             </ProfileName>
                         </a>
-                        <Likes>
-                            <span>{tempLikes}</span>
-                            {likeIcon ? (
-                                <FavoriteIcon
-                                    id="like"
-                                    onClick={handleLike}
-                                    style={{ color: "#e0575c" }}
-                                />
-                            ) : (
-                                <FavoriteBorderIcon
-                                    id="like"
-                                    onClick={handleLike}
-                                />
-                            )}
-                        </Likes>
+                        {confirmDelete ? (
+                            <ConfirmDelete>
+                                <span>Delete this photo?</span>
+                                <ConfirmButton
+                                    type="button"
+                                    $danger
+                                    onClick={handleDelete}
+                                    disabled={deleting}
+                                >
+                                    {deleting ? "Deleting…" : "Yes"}
+                                </ConfirmButton>
+                                <ConfirmButton
+                                    type="button"
+                                    onClick={() => setConfirmDelete(false)}
+                                    disabled={deleting}
+                                >
+                                    No
+                                </ConfirmButton>
+                            </ConfirmDelete>
+                        ) : (
+                            <Actions>
+                                <Likes>
+                                    <span>{tempLikes}</span>
+                                    {likeIcon ? (
+                                        <FavoriteIcon
+                                            id="like"
+                                            onClick={handleLike}
+                                            style={{ color: "#e0575c" }}
+                                        />
+                                    ) : (
+                                        <FavoriteBorderIcon
+                                            id="like"
+                                            onClick={handleLike}
+                                        />
+                                    )}
+                                </Likes>
+                                {isOwner && (
+                                    <IconButton
+                                        type="button"
+                                        aria-label="Delete photo"
+                                        onClick={() => setConfirmDelete(true)}
+                                    >
+                                        <DeleteOutlineIcon fontSize="small" />
+                                    </IconButton>
+                                )}
+                            </Actions>
+                        )}
                     </ModalUpload>
                     <TabBar>
                         <TabButton
@@ -320,10 +453,62 @@ const Modal = ({ setSelectedImg, selectedImg }) => {
                     {activeTab === "details" ? (
                         <TabPanel>
                             <Caption>
-                                {selectedImg?.caption !== "" ? (
-                                    selectedImg?.caption
+                                {editingCaption ? (
+                                    <>
+                                        <CaptionField
+                                            variant="outlined"
+                                            multiline
+                                            minRows={2}
+                                            value={captionDraft}
+                                            onChange={(e) =>
+                                                setCaptionDraft(e.target.value)
+                                            }
+                                            autoFocus
+                                        />
+                                        <CaptionActions>
+                                            <ConfirmButton
+                                                type="button"
+                                                onClick={handleSaveCaption}
+                                                disabled={savingCaption}
+                                            >
+                                                {savingCaption
+                                                    ? "Saving…"
+                                                    : "Save"}
+                                            </ConfirmButton>
+                                            <ConfirmButton
+                                                type="button"
+                                                onClick={() => {
+                                                    setCaptionDraft(captionText);
+                                                    setEditingCaption(false);
+                                                }}
+                                                disabled={savingCaption}
+                                            >
+                                                Cancel
+                                            </ConfirmButton>
+                                        </CaptionActions>
+                                    </>
                                 ) : (
-                                    <i>No caption</i>
+                                    <CaptionRow>
+                                        <span>
+                                            {captionText !== "" ? (
+                                                captionText
+                                            ) : (
+                                                <i>No caption</i>
+                                            )}
+                                        </span>
+                                        {isOwner && (
+                                            <IconButton
+                                                type="button"
+                                                aria-label="Edit caption"
+                                                onClick={() => {
+                                                    setCaptionDraft(captionText);
+                                                    setEditingCaption(true);
+                                                }}
+                                            >
+                                                <EditOutlinedIcon fontSize="small" />
+                                            </IconButton>
+                                        )}
+                                    </CaptionRow>
                                 )}
                             </Caption>
                             <MetaTagContainer>
