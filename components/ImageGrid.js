@@ -36,6 +36,17 @@ const ImageGrid = ({ images, setSelectedImg }) => {
                                         objectFit: "cover",
                                         width: "100%",
                                         height: "auto",
+                                        // Explicit, not implied by the 300x300
+                                        // width/height props above — those only
+                                        // give next/image a placeholder ratio to
+                                        // reserve space before the real photo
+                                        // loads. Once it loads, the browser
+                                        // recomputes `height: auto` from the
+                                        // photo's real aspect ratio unless this
+                                        // is pinned, which is why non-square
+                                        // uploads were breaking the grid into a
+                                        // masonry layout after load.
+                                        aspectRatio: "1 / 1",
                                     }}
                                     alt="uploaded pic"
                                     onClick={() => setSelectedImg(doc)}
