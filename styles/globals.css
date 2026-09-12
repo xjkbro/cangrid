@@ -86,8 +86,19 @@ h4 {
 .img-grid {
     margin: 35px auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    /* minmax(0, 1fr), not bare 1fr — a bare 1fr track won't shrink below
+       its content's natural size, and a next/image thumbnail's natural
+       size is its width/height props (300px), so without the explicit
+       0 minimum, 4 columns demand 4*300px+gaps and overflow any narrower
+       container instead of actually sharing the available width. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-gap: 15px;
+}
+
+@media screen and (max-width: 900px) {
+    .img-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }
 .img-wrap {
     overflow: hidden;
@@ -179,7 +190,7 @@ h4 {
     .img-grid {
         margin: 25px auto;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-gap: 5px;
     }
 
